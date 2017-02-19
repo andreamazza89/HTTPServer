@@ -1,4 +1,4 @@
-package com.andreamazzarella;
+package com.andreamazzarella.http_server;
 
 import org.junit.Test;
 
@@ -32,6 +32,7 @@ public class HTTPServerShould {
 
         socketOne.getOutputStream().write("\n".getBytes()); // This will fail if the connection is not alive
         socketTwo.getOutputStream().write("\n".getBytes()); // This will fail if the connection is not alive
+
 
         socketOne.close();
         socketTwo.close();

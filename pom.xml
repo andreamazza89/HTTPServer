@@ -24,7 +24,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.andreamazzarella.Main</mainClass>
+                            <mainClass>com.andreamazzarella.http_server.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

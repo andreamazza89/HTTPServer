@@ -1,4 +1,4 @@
-package com.andreamazzarella;
+package com.andreamazzarella.http_server;
 
 class InputParser {
     private static final int DEFAULT_PORT_NUMBER = 5000;
