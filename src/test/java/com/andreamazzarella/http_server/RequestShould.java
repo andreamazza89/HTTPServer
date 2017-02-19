@@ -41,4 +41,49 @@ public class RequestShould {
 
         assertEquals("POST /path/to/resource HTTP/1.1\n\n", request.toString());
     }
+
+    @Test
+    public void extractTheGetMethod() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.GET, request.method());
+    }
+
+    @Test
+    public void extractThePostMethod() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("POST / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.POST, request.method());
+    }
+
+    @Test
+    public void extractTheOptionsMethod() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("OPTIONS / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.OPTIONS, request.method());
+    }
+
+    @Test
+    public void extractTheDeleteMethod() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("DELETE / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.DELETE, request.method());
+    }
+
+    @Test
+    public void extractThePutMethod() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("PUT / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.PUT, request.method());
+    }
 }

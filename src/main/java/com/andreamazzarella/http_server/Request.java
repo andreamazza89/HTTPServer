@@ -2,6 +2,11 @@ package com.andreamazzarella.http_server;
 
 class Request {
 
+
+    public enum Method {
+        POST, OPTIONS, DELETE, PUT, GET
+    }
+
     private static final int INDEX_OF_REQUEST_LINE = 0;
     private static final int INDEX_OF_REQUEST_URI = 1;
     private static final String CARRIAGE_RETURN_LINE_FEED = "\n";
@@ -10,15 +15,30 @@ class Request {
     private final String requestMessage;
     private final String[] tokenisedRequestMessage;
     private final String requestLine;
+    private final String[] tokenisedRequestLine;
 
     Request(DataExchange socketConnection) {
         this.requestMessage = socketConnection.readLine();
         this.tokenisedRequestMessage = tokenise(requestMessage, CARRIAGE_RETURN_LINE_FEED);
         this.requestLine = tokenisedRequestMessage[INDEX_OF_REQUEST_LINE];
+        this.tokenisedRequestLine = tokenise(requestLine, SPACE);
     }
 
-    private String[] tokenise(String joinedTokens, String separator) {
-        return joinedTokens.split(separator);
+    Method method() {
+        switch (tokenisedRequestLine[0]) {
+            case "GET":
+                return Method.GET;
+            case "POST":
+                return Method.POST;
+            case "PUT":
+                return Method.PUT;
+            case "OPTIONS":
+                return Method.OPTIONS;
+            case "DELETE":
+                return Method.DELETE;
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -27,8 +47,12 @@ class Request {
     }
 
     String extractRequestURI() {
-        String[] tokenisedRequestLine = tokenise(requestLine, SPACE);
         return tokenisedRequestLine[INDEX_OF_REQUEST_URI];
     }
+
+    private String[] tokenise(String joinedTokens, String separator) {
+        return joinedTokens.split(separator);
+    }
+
 
 }

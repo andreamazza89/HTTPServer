@@ -14,7 +14,7 @@ public class RouterShould {
 
         router.respondToRequest();
 
-        assertEquals("HTTP/1.1 200 OK\n", socketConnection.messageReceived());
+        assertEquals("HTTP/1.1 200 OK\n\n", socketConnection.messageReceived());
     }
 
     @Test
@@ -25,7 +25,7 @@ public class RouterShould {
 
         router.respondToRequest();
 
-        assertEquals("HTTP/1.1 404 Not Found\n", socketConnection.messageReceived());
+        assertEquals("HTTP/1.1 404 Not Found\n\n", socketConnection.messageReceived());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class RouterShould {
 
         router.respondToRequest();
 
-        assertEquals("HTTP/1.1 200 OK\nAllow: GET,HEAD,POST,OPTIONS,PUT\n", socketConnection.messageReceived());
+        assertEquals("HTTP/1.1 200 OK\nAllow: GET,HEAD,POST,OPTIONS,PUT\n\n", socketConnection.messageReceived());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class RouterShould {
 
         router.respondToRequest();
 
-        assertEquals("HTTP/1.1 200 OK\nAllow: GET,OPTIONS\n", socketConnection.messageReceived());
+        assertEquals("HTTP/1.1 200 OK\nAllow: GET,OPTIONS\n\n", socketConnection.messageReceived());
     }
 
 }
