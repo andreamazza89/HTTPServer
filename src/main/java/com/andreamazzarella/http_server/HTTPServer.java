@@ -34,7 +34,17 @@ class HTTPServer {
 
     private void respondToRequest(Socket socket) {
         SocketConnection socketConnection = new SocketConnection(socket);
-        Router router = new Router(socketConnection);
+
+        ////////////////////maybe move into main?//////////////////////////////////////////
+        Routes routes = new Routes();
+        routes.addRoute("/", new Request.Method[] {Request.Method.GET});
+        routes.addRoute("/method_options", new Request.Method[] {Request.Method.GET, Request.Method.HEAD,
+                Request.Method.POST, Request.Method.OPTIONS, Request.Method.PUT});
+        routes.addRoute("/method_options2", new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
+        routes.addRoute("/form", new Request.Method[] {Request.Method.POST, Request.Method.PUT});
+        ////////////////////////////////////////////////////////////////////////////////
+
+        Router router = new Router(socketConnection, routes);
         router.respondToRequest();
     }
 

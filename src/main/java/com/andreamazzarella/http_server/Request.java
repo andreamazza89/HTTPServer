@@ -4,7 +4,7 @@ class Request {
 
 
     public enum Method {
-        POST, OPTIONS, DELETE, PUT, GET
+        POST, OPTIONS, DELETE, PUT, HEAD, GET
     }
 
     private static final int INDEX_OF_REQUEST_LINE = 0;
@@ -28,6 +28,8 @@ class Request {
         switch (tokenisedRequestLine[0]) {
             case "GET":
                 return Method.GET;
+            case "HEAD":
+                return Method.HEAD;
             case "POST":
                 return Method.POST;
             case "PUT":

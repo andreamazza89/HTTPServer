@@ -86,4 +86,13 @@ public class RequestShould {
 
         assertEquals(Request.Method.PUT, request.method());
     }
+
+    @Test
+    public void extractTheHeadMethod() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("HEAD / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.HEAD, request.method());
+    }
 }
