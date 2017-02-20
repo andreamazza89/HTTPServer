@@ -13,26 +13,30 @@ class Router {
     void respondToRequest() {
         //I feel reading the incoming request message should happen here and then the Request is just given the raw message
         Request request = new Request(socketConnection);
-        String response;
+        String response = "no response";
 
 ///////////////////////////////////////
 System.out.println(request.toString());
 //////////////////////////////////////
 
-        String uri = request.extractRequestURI();
+        String route = request.extractRequestURI();
 
-        if (!routes.isRouteAvailable(uri)) {
+        if (!routes.doesRouteExist(route)) {
             response = "HTTP/1.1 404 Not Found\n\n";
         } else if (request.method() == Request.Method.OPTIONS) {
-            Request.Method[] methods = routes.methodsAllowed(uri);
+            Request.Method[] methods = routes.methodsAllowed(route);
             String methodsAllowed = "";
             for (Request.Method method : methods) {
                 methodsAllowed += method.toString() + ",";
             }
             methodsAllowed = methodsAllowed.substring(0, methodsAllowed.length()-1);
             response = "HTTP/1.1 200 OK\nAllow: " + methodsAllowed + "\n\n";
-        } else {
-            response = "HTTP/1.1 200 OK\n\n";
+        } else if (request.method() == Request.Method.GET) {
+            if (routes.isRedirectRoute(route)) {
+                response = "HTTP/1.1 302 Found\nLocation: "+routes.redirectLocation(route)+"\n\n";
+            } else {
+                response = "HTTP/1.1 200 OK\n\n";
+            }
         }
 
         socketConnection.write(response);

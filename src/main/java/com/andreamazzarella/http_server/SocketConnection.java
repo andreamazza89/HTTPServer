@@ -28,6 +28,7 @@ public class SocketConnection implements DataExchange {
 
     @Override
     public void write(String data) {
-        writer.println(data);
+        writer.print(data);
     }
+
 }

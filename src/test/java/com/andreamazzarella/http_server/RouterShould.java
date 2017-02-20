@@ -15,6 +15,8 @@ public class RouterShould {
         routes.addRoute("/method_options", new Request.Method[] {Request.Method.GET, Request.Method.HEAD,
                 Request.Method.POST, Request.Method.OPTIONS, Request.Method.PUT});
         routes.addRoute("/method_options2", new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
+        routes.addRoute("/redirect",  new Request.Method[] {Request.Method.GET});
+        routes.setRedirect("/redirect", "http://localhost:5000/");
     }
 
     @Test
@@ -59,6 +61,17 @@ public class RouterShould {
         router.respondToRequest();
 
         assertEquals("HTTP/1.1 200 OK\nAllow: GET,OPTIONS\n\n", socketConnection.messageReceived());
+    }
+
+    @Test
+    public void provideLocationForRedirect() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET /redirect HTTP/1.1");
+        Router router = new Router(socketConnection, routes);
+
+        router.respondToRequest();
+
+        assertEquals("HTTP/1.1 302 Found\nLocation: http://localhost:5000/\n\n", socketConnection.messageReceived());
     }
 
 }

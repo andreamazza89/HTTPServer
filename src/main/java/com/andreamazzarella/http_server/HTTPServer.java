@@ -42,6 +42,8 @@ class HTTPServer {
                 Request.Method.POST, Request.Method.OPTIONS, Request.Method.PUT});
         routes.addRoute("/method_options2", new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
         routes.addRoute("/form", new Request.Method[] {Request.Method.POST, Request.Method.PUT});
+        routes.addRoute("/redirect", new Request.Method[] {Request.Method.GET});
+        routes.setRedirect("/redirect", "http://localhost:5000/");
         ////////////////////////////////////////////////////////////////////////////////
 
         Router router = new Router(socketConnection, routes);
