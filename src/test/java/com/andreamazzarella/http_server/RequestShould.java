@@ -13,7 +13,7 @@ public class RequestShould {
         socketConnection.setRequestTo("GET /path/to/resource HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals("/path/to/resource", request.extractRequestURI());
+        assertEquals("/path/to/resource", request.uri());
     }
 
     @Test
@@ -22,25 +22,7 @@ public class RequestShould {
         socketConnection.setRequestTo("POST /path/to/lol/resource HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals("/path/to/lol/resource", request.extractRequestURI());
-    }
-
-    @Test
-    public void haveAStringRepresentationOfASimpleRequest() {
-        FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("GET /path/to/resource HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
-
-        assertEquals("GET /path/to/resource HTTP/1.1\n\n", request.toString());
-    }
-
-    @Test
-    public void haveAStringRepresentationOfAnotherSimpleRequest() {
-        FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("POST /path/to/resource HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
-
-        assertEquals("POST /path/to/resource HTTP/1.1\n\n", request.toString());
+        assertEquals("/path/to/lol/resource", request.uri());
     }
 
     @Test
@@ -95,5 +77,43 @@ public class RequestShould {
         Request request = new Request(socketConnection);
 
         assertEquals(Request.Method.HEAD, request.method());
+    }
+
+    @Test
+    public void extractTheBodyIfPresentExampleOne() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        String requestBody = "I am a body??";
+        socketConnection.setRequestTo("HEAD / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
+        Request request = new Request(socketConnection);
+
+        assertEquals(requestBody, request.body());
+    }
+
+    @Test
+    public void extractTheBodyIfPresentExampleTwo() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        String requestBody = "I am definitely a body!";
+        socketConnection.setRequestTo("HEAD / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
+        Request request = new Request(socketConnection);
+
+        assertEquals(requestBody, request.body());
+    }
+
+    @Test
+    public void extractTheHeadersIfPresentExampleOne() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET / HTTP/1.1\nField-Name: Field-value\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals("Field-value", request.getHeader("Field-Name"));
+    }
+
+    @Test
+    public void extractTheHeadersIfPresentExampleTwo() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET / HTTP/1.1\nField-Name: different-value\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals("different-value", request.getHeader("Field-Name"));
     }
 }

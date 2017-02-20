@@ -15,7 +15,7 @@ class Router {
         String response = routes.generateResponse(request);
         socketConnection.write(response);
 ///////////////////////////////////////
-        System.out.println(request.toString());
+        System.out.println(request.uri());
 //////////////////////////////////////
     }
 }

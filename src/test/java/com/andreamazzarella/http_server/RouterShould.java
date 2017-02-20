@@ -12,7 +12,7 @@ public class RouterShould {
     public void forwardTheGeneratedResponseToTheClient() {
         Routes routes = new StubbedRoutes();
         FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("double request message");
+        socketConnection.setRequestTo("double request message\n\n");
         Router router = new Router(socketConnection, routes);
 
         router.respondToClient();

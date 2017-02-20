@@ -31,4 +31,13 @@ public class SocketConnection implements DataExchange {
         writer.print(data);
     }
 
+    @Override
+    public void read(char[] buffer, int startIndex, int contentLenth) {
+        try {
+            reader.read(buffer, startIndex, contentLenth);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
 }
