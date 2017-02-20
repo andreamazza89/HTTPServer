@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server;
 
-class Request {
+public class Request {
 
 
     public enum Method {
@@ -55,6 +55,5 @@ class Request {
     private String[] tokenise(String joinedTokens, String separator) {
         return joinedTokens.split(separator);
     }
-
 
 }

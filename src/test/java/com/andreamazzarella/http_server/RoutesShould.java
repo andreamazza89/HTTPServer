@@ -1,50 +1,93 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.support.FakeSocketConnection;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.net.URI;
+
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
 
 public class RoutesShould {
 
-    @Test
-    public void knowIfARouteDoesNotExist() {
-        Routes routes = new Routes();
+    private static final Routes routes = new Routes();
 
-        assertEquals(false, routes.doesRouteExist("/"));
+    @Before
+    public void addRoutes() {
+        Route root = new Route(URI.create("/"));
+        Route methodOptions = new Route(URI.create("/method_options"));
+        Route methodOptionsTwo = new Route(URI.create("/method_options2"));
+        Route redirect = new Route(URI.create("/redirect"));
+
+        root.allowMethods(new Request.Method[] {Request.Method.GET});
+        methodOptions.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.HEAD,
+                Request.Method.POST, Request.Method.OPTIONS, Request.Method.PUT});
+        methodOptionsTwo.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
+        redirect.allowMethods(new Request.Method[] {Request.Method.GET});
+
+        redirect.setRedirect(URI.create("http://localhost:5000/"));
+
+        routes.addRoute(root);
+        routes.addRoute(methodOptions);
+        routes.addRoute(methodOptionsTwo);
+        routes.addRoute(redirect);
     }
 
     @Test
-    public void knowIfARouteExists() {
-        Routes routes = new Routes();
-        routes.addRoute("/", new Request.Method[] {Request.Method.GET, Request.Method.POST});
+    public void respondWithA200ToASimpleGet() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET / HTTP/1.1");
+        Request request = new Request(socketConnection);
 
-        assertEquals(true, routes.doesRouteExist("/"));
+        String response = routes.generateResponse(request);
+
+        assertEquals("HTTP/1.1 200 OK\n\n", response);
     }
 
     @Test
-    public void reportOnWhichMethodsAreAllowed() {
-        Routes routes = new Routes();
-        routes.addRoute("/", new Request.Method[] {Request.Method.GET, Request.Method.POST});
+    public void respondWith404WhenResourceDoesNotExist() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("HEAD /foobar HTTP/1.1");
+        Request request = new Request(socketConnection);
 
-        assertArrayEquals(new Request.Method[] {Request.Method.GET, Request.Method.POST}, routes.methodsAllowed("/"));
+        String response = routes.generateResponse(request);
+
+        assertEquals("HTTP/1.1 404 Not Found\n\n", response);
     }
 
     @Test
-    public void knowIfARouteIsToBeRedirected() {
-        Routes routes = new Routes();
-        routes.addRoute("/no_redirect", new Request.Method[] {Request.Method.GET});
+    public void includeAllowHeaderWhenRequestMethodIsOPTIONSExampleOne() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("OPTIONS /method_options HTTP/1.1");
+        Request request = new Request(socketConnection);
 
-        assertEquals(false, routes.isRedirectRoute("/no_redirect"));
+        String response = routes.generateResponse(request);
+
+        assertEquals("HTTP/1.1 200 OK\nAllow: GET,HEAD,POST,OPTIONS,PUT\n\n", response);
     }
 
     @Test
-    public void allowARouteToBeRedirected() {
-        Routes routes = new Routes();
-        routes.addRoute("/redirect", new Request.Method[] {Request.Method.GET});
-        routes.setRedirect("/redirect", "/go/to/this/uri");
+    public void includeAllowHeaderWhenRequestMethodIsOPTIONSExampleTwo() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("OPTIONS /method_options2 HTTP/1.1");
+        Request request = new Request(socketConnection);
 
-        assertEquals(true, routes.isRedirectRoute("/redirect"));
-        assertEquals("/go/to/this/uri", routes.redirectLocation("/redirect"));
+        String response = routes.generateResponse(request);
+
+        assertEquals("HTTP/1.1 200 OK\nAllow: GET,OPTIONS\n\n", response);
     }
+
+    @Test
+    public void provideLocationForRedirect() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET /redirect HTTP/1.1");
+        Request request = new Request(socketConnection);
+
+        String response = routes.generateResponse(request);
+
+        assertEquals("HTTP/1.1 302 Found\nLocation: http://localhost:5000/\n\n", response);
+    }
+
+
+
 }

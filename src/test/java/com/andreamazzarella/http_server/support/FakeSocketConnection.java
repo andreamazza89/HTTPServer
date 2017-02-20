@@ -1,4 +1,6 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.support;
+
+import com.andreamazzarella.http_server.DataExchange;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,7 +10,7 @@ public class FakeSocketConnection implements DataExchange {
     private final ByteArrayOutputStream messagesReceived;
     private String request;
 
-    FakeSocketConnection() {
+    public FakeSocketConnection() {
         this.messagesReceived = new ByteArrayOutputStream();
     }
 

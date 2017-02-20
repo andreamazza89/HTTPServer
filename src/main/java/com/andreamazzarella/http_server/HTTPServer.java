@@ -3,6 +3,7 @@ package com.andreamazzarella.http_server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URI;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,17 +38,31 @@ class HTTPServer {
 
         ////////////////////maybe move into main?//////////////////////////////////////////
         Routes routes = new Routes();
-        routes.addRoute("/", new Request.Method[] {Request.Method.GET});
-        routes.addRoute("/method_options", new Request.Method[] {Request.Method.GET, Request.Method.HEAD,
+
+        Route root = new Route(URI.create("/"));
+        Route methodOptions = new Route(URI.create("/method_options"));
+        Route methodOptionsTwo = new Route(URI.create("/method_options2"));
+        Route form = new Route(URI.create("/form"));
+        Route redirect = new Route(URI.create("/redirect"));
+
+        root.allowMethods(new Request.Method[] {Request.Method.GET});
+        methodOptions.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.HEAD,
                 Request.Method.POST, Request.Method.OPTIONS, Request.Method.PUT});
-        routes.addRoute("/method_options2", new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
-        routes.addRoute("/form", new Request.Method[] {Request.Method.POST, Request.Method.PUT});
-        routes.addRoute("/redirect", new Request.Method[] {Request.Method.GET});
-        routes.setRedirect("/redirect", "http://localhost:5000/");
+        methodOptionsTwo.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
+        form.allowMethods(new Request.Method[] {Request.Method.POST, Request.Method.PUT});
+        redirect.allowMethods(new Request.Method[] {Request.Method.GET});
+
+        redirect.setRedirect(URI.create("http://localhost:5000/"));
+
+        routes.addRoute(root);
+        routes.addRoute(methodOptions);
+        routes.addRoute(methodOptionsTwo);
+        routes.addRoute(form);
+        routes.addRoute(redirect);
         ////////////////////////////////////////////////////////////////////////////////
 
         Router router = new Router(socketConnection, routes);
-        router.respondToRequest();
+        router.respondToClient();
     }
 
     private void closeSocket(Socket socket) {

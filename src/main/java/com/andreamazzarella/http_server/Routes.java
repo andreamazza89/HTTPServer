@@ -1,39 +1,43 @@
 package com.andreamazzarella.http_server;
 
-import java.util.Hashtable;
-import java.util.Map;
+import java.net.URI;
+import java.util.*;
 
-class Routes {
+public class Routes {
 
-    private Map<String, Request.Method[]> routes = new Hashtable<>();
-    private Map<String, String> redirectable = new Hashtable<>();
+    private List<Route> routes = new ArrayList<>();
 
-    void addRoute(String route, Request.Method[] methods) {
-        routes.put(route, methods);
+    void addRoute(Route route) {
+        routes.add(route);
     }
 
-    boolean doesRouteExist(String route) {
-        return routes.containsKey(route);
+    public String generateResponse(Request request) {
+        URI resource = URI.create(request.extractRequestURI());
+        Optional<Route> route = findRoute(resource);
+        String response = "";
+
+        if (!route.isPresent()) {
+            response = "HTTP/1.1 404 Not Found\n\n";
+        } else if (request.method() == Request.Method.OPTIONS) {
+            Request.Method[] methods = route.get().methodsAllowed();
+            String methodsAllowed = "";
+            for (Request.Method method : methods) {
+                methodsAllowed += method.toString() + ",";
+            }
+            methodsAllowed = methodsAllowed.substring(0, methodsAllowed.length()-1);
+            response = "HTTP/1.1 200 OK\nAllow: " + methodsAllowed + "\n\n";
+        } else if (request.method() == Request.Method.GET) {
+            if (route.get().isRedirectRoute()) {
+                response = "HTTP/1.1 302 Found\nLocation: "+route.get().redirectLocation()+"\n\n";
+            } else {
+                response = "HTTP/1.1 200 OK\n\n";
+            }
+        }
+        return response;
     }
 
-
-
-    /////////////this is specific to an individual route
-
-    Request.Method[] methodsAllowed(String route) {
-        return routes.get(route);
-    }
-
-    public void setRedirect(String route, String location) {
-        redirectable.put(route, location);
-    }
-
-    public boolean isRedirectRoute(String route) {
-        return redirectable.containsKey(route);
-    }
-
-    public String redirectLocation(String route) {
-        return redirectable.get(route);
+    private Optional<Route> findRoute(URI resource) {
+        return routes.stream().filter((route) -> route.getResource().equals(resource)).findFirst();
     }
 
 }
