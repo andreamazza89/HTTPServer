@@ -3,6 +3,8 @@ package com.andreamazzarella.http_server;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
+import java.net.URI;
+
 import static junit.framework.TestCase.assertEquals;
 
 public class RequestShould {
@@ -13,7 +15,7 @@ public class RequestShould {
         socketConnection.setRequestTo("GET /path/to/resource HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals("/path/to/resource", request.uri());
+        assertEquals(URI.create("/path/to/resource"), request.uri());
     }
 
     @Test
@@ -22,7 +24,7 @@ public class RequestShould {
         socketConnection.setRequestTo("POST /path/to/lol/resource HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals("/path/to/lol/resource", request.uri());
+        assertEquals(URI.create("/path/to/lol/resource"), request.uri());
     }
 
     @Test

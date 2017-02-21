@@ -36,7 +36,7 @@ class HTTPServer {
     private void respondToRequest(Socket socket) {
         SocketConnection socketConnection = new SocketConnection(socket);
 
-        ////////////////////maybe move into main?//////////////////////////////////////////
+        ////////////////////maybe move into main? yes please////////////////////////////
         Routes routes = new Routes();
 
         Route root = new Route(URI.create("/"));
@@ -61,8 +61,10 @@ class HTTPServer {
         routes.addRoute(redirect);
         ////////////////////////////////////////////////////////////////////////////////
 
-        Router router = new Router(socketConnection, routes);
-        router.respondToClient();
+         Request request = new Request(socketConnection);
+         Route route = routes.findRoute(request.uri());
+         String response = ResponseGenerator.createResponse(request, route);
+         socketConnection.write(response);
     }
 
     private void closeSocket(Socket socket) {

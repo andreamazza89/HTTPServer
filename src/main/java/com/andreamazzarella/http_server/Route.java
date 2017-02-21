@@ -7,13 +7,13 @@ public class Route {
     private Request.Method[] methodsAllowed;
     private URI resourceToRedirect;
     private boolean isRedirectRoute;
-    private URI resource;
+    private URI uri;
 
-    public Route(URI resource) {
-        this.resource = resource;
+    Route(URI resource) {
+        this.uri = resource;
     }
 
-    public void allowMethods(Request.Method[] methods) {
+    void allowMethods(Request.Method[] methods) {
         methodsAllowed = methods;
     }
 
@@ -21,21 +21,20 @@ public class Route {
         return methodsAllowed;
     }
 
-    public boolean isRedirectRoute() {
+    boolean isRedirectRoute() {
         return isRedirectRoute;
     }
 
-    public void setRedirect(URI resourceToRedirect) {
+    void setRedirect(URI resourceToRedirect) {
         this.isRedirectRoute = true;
         this.resourceToRedirect = resourceToRedirect;
     }
 
-
-    public URI redirectLocation() {
+    URI redirectLocation() {
         return resourceToRedirect;
     }
 
-    public URI getResource() {
-        return resource;
+    public URI uri() {
+        return uri;
     }
 }

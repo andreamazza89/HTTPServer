@@ -7,7 +7,7 @@ import java.net.URI;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
-public class RouteShould {
+public class ExistingRouteShould {
 
     @Test
     public void reportOnWhichMethodsAreAllowed() {

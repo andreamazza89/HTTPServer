@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import java.net.URI;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -81,8 +82,8 @@ public class Request {
         return headers.get(fieldName + ":");
     }
 
-    String uri() {
-        return tokenisedRequestLine[INDEX_OF_REQUEST_URI];
+    URI uri() {
+        return URI.create(tokenisedRequestLine[INDEX_OF_REQUEST_URI]);
     }
 
     String body() {

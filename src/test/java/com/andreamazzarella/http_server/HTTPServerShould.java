@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 public class HTTPServerShould {
 
+    @Ignore
     @Test
     public void acceptAConnectionOnTheGivenPortNumber() throws IOException {
         HTTPServer server = new HTTPServer(4242, "./lol/cats/path");
@@ -22,6 +24,7 @@ public class HTTPServerShould {
         socket.close();
     }
 
+    @Ignore
     @Test
     public void acceptMultipleConnectionsOnTheGivenPortNumber() throws IOException {
         HTTPServer server = new HTTPServer(4242, "./lol/cats/path");
@@ -38,6 +41,7 @@ public class HTTPServerShould {
         socketTwo.close();
     }
 
+    @Ignore
     @Test
     public void setTheDirectoryPathToTheOneProvided_SCAFFOLD_TEST() {
         HTTPServer server = new HTTPServer(4242, "./lol/cats/path");
