@@ -19,7 +19,6 @@ class ResponseGenerator {
                if (route.isRedirectRoute()) {
                    return "HTTP/1.1 302 Found\nLocation: " + route.redirectLocation() + "\n\n";
                } else {
-                   // retrieve the message body and then add it to the 200
                    File file = new File("resources/form");
                    FileInputStream fis;
                    byte[] data = new byte[(int) file.length()];
@@ -65,5 +64,16 @@ class ResponseGenerator {
                /////////////////////////////////////////////////////////////////////////////////////////////
                /////////////////////////////////////////////////////////////////////////////////////////////
        }
+
+//       switch (request.method()) {
+//           case GET:
+//               return GetResponse.respond(route, somethingToHandleFileSystem)
+//           case OPTIONS:
+//                return OptionsResponse.respond(route)
+//           case POST:
+//                return PostResponse.respond(route, request, somethingToHandleFileSystem)
+//           default:
+//               return "PLEASE HANDLE THIS CASE, PROBS SHOULD BE AN INTERNAL ERROR, RETRY OR SOMETHING";
+//       }
    }
 }
