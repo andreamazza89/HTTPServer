@@ -12,6 +12,19 @@ class Router {
 
     void respondToClient() {
         Request request = new Request(socketConnection);
+
+
+
+
+        // get route from routes
+        // ask route to generate response instead
+
+
+
+
+
+
+
         String response = routes.generateResponse(request);
         socketConnection.write(response);
 ///////////////////////////////////////
