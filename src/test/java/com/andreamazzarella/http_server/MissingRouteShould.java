@@ -11,10 +11,10 @@ public class MissingRouteShould {
 
     @Test
     public void onlyAllowPutRequests() {
-        Route route = new MissingRoute(URI.create("/missing/route"));
+        Resource resource = new MissingResource(URI.create("/missing/resource"));
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("\n\n");
-        Request.Method[] methodsAllowed = route.methodsAllowed();
+        Request.Method[] methodsAllowed = resource.methodsAllowed();
         assertArrayEquals(new Request.Method[]{Request.Method.PUT}, methodsAllowed);
     }
 }

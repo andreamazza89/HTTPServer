@@ -15,14 +15,55 @@ import static org.junit.Assert.assertEquals;
 public class ResponseGeneratorShould {
 
     @Test
+    public void respondWith405WhenMethodIsNotAllowed() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("DELETE /get_only_route HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource resource = new Resource(URI.create("/get_only_route"));
+        resource.allowMethods(new Request.Method[] {Request.Method.GET});
+
+        String response = ResponseGenerator.createResponse(request, resource);
+
+        assertEquals("HTTP/1.1 405 Not Allowed\n\n", response);
+    }
+
+    @Test
+    public void respondWithATeaPotMessageForATeaPotResource() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET /teapot HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource resource = new Resource(URI.create("/teapot"));
+        resource.allowMethods(new Request.Method[] {Request.Method.GET});
+        resource.setTeaPot();
+
+        String response = ResponseGenerator.createResponse(request, resource);
+
+        assertEquals("HTTP/1.1 418 I'm a Teapot\n\nI'm a teapot", response);
+    }
+
+    @Test
+    public void respondWithRedirectWhenResourceIsRedirect() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET /redirect HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource resource = new Resource(URI.create("/redirect"));
+        resource.allowMethods(new Request.Method[] {Request.Method.GET});
+        resource.setRedirect(URI.create("/go/here"));
+
+        String response = ResponseGenerator.createResponse(request, resource);
+
+        assertEquals("HTTP/1.1 302 Found\nLocation: /go/here\n\n", response);
+    }
+
+    @Test
     public void respondWithA200ToASimpleGet() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET / HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
-        Route route = new Route(URI.create("/"));
-        route.allowMethods(new Request.Method[] {Request.Method.GET});
+        Resource resource = new Resource(URI.create("/"));
+        resource.allowMethods(new Request.Method[] {Request.Method.GET});
 
-        String response = ResponseGenerator.createResponse(request, route);
+        String response = ResponseGenerator.createResponse(request, resource);
 
         assertEquals("HTTP/1.1 200 OK\n\n", response);
     }
@@ -32,7 +73,7 @@ public class ResponseGeneratorShould {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET /form HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
-        Route route = new Route(URI.create("/form"));
+        Resource route = new Resource(URI.create("/form"));
         route.allowMethods(new Request.Method[] {Request.Method.GET});
 
         File resource = new File("resources/form");
@@ -55,10 +96,10 @@ public class ResponseGeneratorShould {
         String messageBody = "ciao";
         socketConnection.setRequestTo("POST /form HTTP/1.1\nContent-Length: " + messageBody.getBytes().length + "\n\n" + messageBody);
         Request request = new Request(socketConnection);
-        Route route = new Route(URI.create("/form"));
-        route.allowMethods(new Request.Method[] {Request.Method.POST});
+        Resource resource = new Resource(URI.create("/form"));
+        resource.allowMethods(new Request.Method[] {Request.Method.POST});
 
-        String response = ResponseGenerator.createResponse(request, route);
+        String response = ResponseGenerator.createResponse(request, resource);
         assertEquals("HTTP/1.1 200 OK\n\n", response);
 
         File file = new File("resources/form");
@@ -83,9 +124,9 @@ public class ResponseGeneratorShould {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("HEAD /foobar HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
-        Route route = new MissingRoute(URI.create("i/do/not/exist"));
+        Resource resource = new MissingResource(URI.create("i/do/not/exist"));
 
-        String response = ResponseGenerator.createResponse(request, route);
+        String response = ResponseGenerator.createResponse(request, resource);
 
         assertEquals("HTTP/1.1 404 Not Found\n\n", response);
     }
@@ -95,11 +136,11 @@ public class ResponseGeneratorShould {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("OPTIONS /method_options HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
-        Route route = new Route(URI.create("/form"));
-        route.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.HEAD, Request.Method.POST,
+        Resource resource = new Resource(URI.create("/form"));
+        resource.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.HEAD, Request.Method.POST,
                 Request.Method.OPTIONS, Request.Method.PUT});
 
-        String response = ResponseGenerator.createResponse(request, route);
+        String response = ResponseGenerator.createResponse(request, resource);
 
         assertEquals("HTTP/1.1 200 OK\nAllow: GET,HEAD,POST,OPTIONS,PUT\n\n", response);
     }
@@ -109,10 +150,10 @@ public class ResponseGeneratorShould {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("OPTIONS /method_options2 HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
-        Route route = new Route(URI.create("/form"));
-        route.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
+        Resource resource = new Resource(URI.create("/form"));
+        resource.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
 
-        String response = ResponseGenerator.createResponse(request, route);
+        String response = ResponseGenerator.createResponse(request, resource);
 
         assertEquals("HTTP/1.1 200 OK\nAllow: GET,OPTIONS\n\n", response);
     }
@@ -122,11 +163,11 @@ public class ResponseGeneratorShould {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET /redirect HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
-        Route route = new Route(URI.create("/redirect"));
-        route.allowMethods(new Request.Method[] {Request.Method.GET});
-        route.setRedirect(URI.create("http://localhost:5000/"));
+        Resource resource = new Resource(URI.create("/redirect"));
+        resource.allowMethods(new Request.Method[] {Request.Method.GET});
+        resource.setRedirect(URI.create("http://localhost:5000/"));
 
-        String response = ResponseGenerator.createResponse(request, route);
+        String response = ResponseGenerator.createResponse(request, resource);
 
         assertEquals("HTTP/1.1 302 Found\nLocation: http://localhost:5000/\n\n", response);
     }

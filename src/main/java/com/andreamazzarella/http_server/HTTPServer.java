@@ -37,13 +37,17 @@ class HTTPServer {
         SocketConnection socketConnection = new SocketConnection(socket);
 
         ////////////////////maybe move into main? yes please////////////////////////////
-        Routes routes = new Routes();
+        Resources resources = new Resources();
+        URI resourcesBasePath = URI.create("./resources/");
+        Blaah fileSystem = new Blaah(resourcesBasePath);
 
-        Route root = new Route(URI.create("/"));
-        Route methodOptions = new Route(URI.create("/method_options"));
-        Route methodOptionsTwo = new Route(URI.create("/method_options2"));
-        Route form = new Route(URI.create("/form"));
-        Route redirect = new Route(URI.create("/redirect"));
+        Resource root = new Resource(URI.create("/"), fileSystem);
+        Resource methodOptions = new Resource(URI.create("/method_options"), fileSystem);
+        Resource methodOptionsTwo = new Resource(URI.create("/method_options2"), fileSystem);
+        Resource form = new Resource(URI.create("/form"), fileSystem);
+        Resource redirect = new Resource(URI.create("/redirect"), fileSystem);
+        Resource coffee = new Resource(URI.create("/coffee"), fileSystem);
+        Resource tea = new Resource(URI.create("/tea"), fileSystem);
 
         root.allowMethods(new Request.Method[] {Request.Method.GET});
         methodOptions.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.HEAD,
@@ -51,19 +55,23 @@ class HTTPServer {
         methodOptionsTwo.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
         form.allowMethods(new Request.Method[] {Request.Method.POST, Request.Method.PUT});
         redirect.allowMethods(new Request.Method[] {Request.Method.GET});
+        tea.allowMethods(new Request.Method[] {Request.Method.GET});
 
         redirect.setRedirect(URI.create("http://localhost:5000/"));
+        coffee.setTeaPot();
 
-        routes.addRoute(root);
-        routes.addRoute(methodOptions);
-        routes.addRoute(methodOptionsTwo);
-        routes.addRoute(form);
-        routes.addRoute(redirect);
+        resources.addRoute(root);
+        resources.addRoute(methodOptions);
+        resources.addRoute(methodOptionsTwo);
+        resources.addRoute(form);
+        resources.addRoute(redirect);
+        resources.addRoute(tea);
+        resources.addRoute(coffee);
         ////////////////////////////////////////////////////////////////////////////////
 
          Request request = new Request(socketConnection);
-         Route route = routes.findRoute(request.uri());
-         String response = ResponseGenerator.createResponse(request, route);
+         Resource resource = resources.findRoute(request.uri());
+         String response = ResponseGenerator.createResponse(request, resource);
          socketConnection.write(response);
     }
 

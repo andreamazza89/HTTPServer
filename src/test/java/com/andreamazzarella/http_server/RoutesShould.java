@@ -10,22 +10,22 @@ public class RoutesShould {
 
     @Test
     public void provideAMissingRouteIfNoneMatchesTheGivenURI() {
-        Routes routes = new Routes();
+        Resources resources = new Resources();
 
-        Route route = routes.findRoute(URI.create("i/am/not/a/real/path"));
+        Resource resource = resources.findRoute(URI.create("i/am/not/a/real/path"));
 
-        assertEquals(MissingRoute.class, route.getClass());
+        assertEquals(MissingResource.class, resource.getClass());
     }
 
     @Test
     public void provideTheRouteAssociatedToTheGivenURI() {
-        Routes routes = new Routes();
-        Route root = new Route(URI.create("/"));
+        Resources resources = new Resources();
+        Resource root = new Resource(URI.create("/"));
         root.allowMethods(new Request.Method[] {Request.Method.GET});
-        routes.addRoute(root);
+        resources.addRoute(root);
         
-        Route route = routes.findRoute(URI.create("/"));
+        Resource resource = resources.findRoute(URI.create("/"));
 
-        assertEquals(root, route);
+        assertEquals(root, resource);
     }
 }

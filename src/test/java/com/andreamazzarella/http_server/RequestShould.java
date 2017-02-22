@@ -84,7 +84,7 @@ public class RequestShould {
     @Test
     public void extractTheBodyIfPresentExampleOne() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
-        String requestBody = "I am a body??";
+        String requestBody = "I am a getContent??";
         socketConnection.setRequestTo("HEAD / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
         Request request = new Request(socketConnection);
 
@@ -94,7 +94,7 @@ public class RequestShould {
     @Test
     public void extractTheBodyIfPresentExampleTwo() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
-        String requestBody = "I am definitely a body!";
+        String requestBody = "I am definitely a getContent!";
         socketConnection.setRequestTo("HEAD / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
         Request request = new Request(socketConnection);
 

@@ -1,5 +1,6 @@
 # Checklist
 
+- refactor fakes that use inheritance to use interface instead
 - Refactor Request class, also ensure it handles invalid requests (i.e. at the moment it relies on empty line to read body)
  |--- also add a parse method to separate parsing from initialising
 - Look at Maven warnings when compiling.

@@ -3,8 +3,8 @@ package com.andreamazzarella.http_server;
 import java.util.Optional;
 
 class GetResponse {
-    static String respond(Route route, Blaah blaah) {
-        if (route.isRedirectRoute()) {
+    static String respond(Resource route, Blaah blaah) {
+        if (route.isRedirect()) {
             return "HTTP/1.1 302 Found\nLocation: " + route.redirectLocation() + "\n\n";
         } else {
             Optional<String> resource = blaah.getResource(route.uri());

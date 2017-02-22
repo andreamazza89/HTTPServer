@@ -10,10 +10,10 @@ public class GetResponseShould {
 
     @Test
     public void respondWith200OnlyWhenRouteExistsButResourceDoesNot() {
-        Route route = new Route(URI.create("/my_resource"));
-        Blaah blaah = new Blaah(route.uri());
+        Resource resource = new Resource(URI.create("/my_resource"));
+        Blaah blaah = new Blaah(resource.uri());
 
-        String response = GetResponse.respond(route, blaah);
+        String response = GetResponse.respond(resource, blaah);
 
         assertEquals("HTTP/1.1 200 OK\n\n", response);
     }

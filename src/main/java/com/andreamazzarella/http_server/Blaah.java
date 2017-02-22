@@ -4,31 +4,30 @@ import java.io.*;
 import java.net.URI;
 import java.util.Optional;
 
-class Blaah {
+public class Blaah {
 
     private final URI resourcesBasePath;
 
-    Blaah(URI resourcesPath) {
+    public Blaah(URI resourcesPath) {
         this.resourcesBasePath = resourcesPath;
     }
 
-    Optional<String> getResource(URI uri) {
+    public Optional<String> getResource(URI uri) {
         File resource = new File(resourcesBasePath.getPath(), uri.getPath());
 
-        if (resource.exists()) {
+        if (resource.exists() && resource.length() > 0) {
             try {
                 FileReader reader = new FileReader(resource);
                 return Optional.of(new BufferedReader(reader).readLine());
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
-
         } else {
             return Optional.empty();
         }
     }
 
-    void addResource(URI uri, String resourceContent) {
+    public void addResource(URI uri, String resourceContent) {
         File resource = new File(resourcesBasePath.getPath(), uri.getPath());
         try {
             String path = resource.getCanonicalPath();
@@ -38,5 +37,10 @@ class Blaah {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteResource(URI uri) {
+        File resource = new File(resourcesBasePath.getPath(), uri.getPath());
+        resource.delete();
     }
 }

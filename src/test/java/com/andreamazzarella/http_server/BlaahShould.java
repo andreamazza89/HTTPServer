@@ -13,9 +13,18 @@ public class BlaahShould {
 
     @Test
     public void supportMissingResources() {
-        Blaah blaah = new Blaah(URI.create("/resources"));
+        Blaah blaah = new Blaah(URI.create("./resources/"));
 
         assertEquals(Optional.empty(), blaah.getResource(URI.create("/inexistent/resource")));
+    }
+
+    @Test
+    public void supportEmptyResources() {
+        Blaah blaah = new Blaah(URI.create("./resources/"));
+        URI pathToResource = URI.create("/my_brand_new_empty_resource");
+        blaah.addResource(pathToResource, "");
+
+        assertEquals(Optional.empty(), blaah.getResource(pathToResource));
     }
 
     @Test
@@ -53,6 +62,18 @@ public class BlaahShould {
 
     }
 
+    @Test
+    public void deleteAnExistingResource() {
+        Blaah blaah = new Blaah(URI.create("./resources/"));
+
+        URI pathToResource = URI.create("/my_brand_new_resource");
+        blaah.addResource(pathToResource, "what a handsome resource");
+
+        blaah.deleteResource(pathToResource);
+
+        assertEquals(Optional.empty(), blaah.getResource(pathToResource));
+    }
+
     @After
     public void tearDown() {
         File resource = new File("./resources");
@@ -62,5 +83,4 @@ public class BlaahShould {
             currentFile.delete();
         }
     }
-
 }

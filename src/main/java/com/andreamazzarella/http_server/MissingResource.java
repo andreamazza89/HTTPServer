@@ -2,9 +2,9 @@ package com.andreamazzarella.http_server;
 
 import java.net.URI;
 
-class MissingRoute extends Route {
+class MissingResource extends Resource {
 
-    MissingRoute(URI resource) {
+    MissingResource(URI resource) {
         super(resource);
     }
 
