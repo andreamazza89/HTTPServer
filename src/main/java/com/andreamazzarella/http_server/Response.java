@@ -1,35 +1,36 @@
 package com.andreamazzarella.http_server;
 
-import java.util.Arrays;
+class Response {
+    static final String STATUS_TWO_HUNDRED = "HTTP/1.1 200 OK\n";
+    static final String STATUS_THREE_OH_TWO = "HTTP/1.1 302 Found\n";
+    static final String STATUS_FOUR_OH_FOUR = "HTTP/1.1 404 Not Found\n";
+    static final String STATUS_FOUR_OH_FIVE = "HTTP/1.1 405 Not Allowed\n";
+    static final String STATUS_FOUR_ONE_EIGHT = "HTTP/1.1 418 I'm a Teapot\n";
 
-class ResponseGenerator {
-    static final String TWO_HUNDRED = "HTTP/1.1 200 OK\n";
-    static final String THREE_OH_TWO = "HTTP/1.1 302 Found\n";
-    static final String FOUR_OH_FOUR = "HTTP/1.1 404 Not Found\n";
-    static final String FOUR_OH_FIVE = "HTTP/1.1 405 Not Allowed\n";
-    static final String FOUR_ONE_EIGHT = "HTTP/1.1 418 I'm a Teapot\n";
+    static final String TEA_POT_RESPONSE = STATUS_FOUR_ONE_EIGHT + "\n" + "I'm a teapot";
 
-    static String createResponse(Request request, Resource resource) {
+    static String createResponse(Request request, DynamicResource resource) {
 
 
-        if (resource.getClass() == MissingResource.class) {
-            return FOUR_OH_FOUR + "\n";
-        }
-
-        if (!Arrays.asList(resource.methodsAllowed()).contains(request.method())) {
-            return FOUR_OH_FIVE + "\n";
-        }
-
-        if (resource.isTeaPot()) {
-            return FOUR_ONE_EIGHT + "\n" + "I'm a teapot";
-        }
-
-        if (resource.isRedirect()) {
-            return THREE_OH_TWO + "Location: " + resource.redirectLocation() + "\n\n";
-        }
-
-        resource.execute(request);
-        return TWO_HUNDRED + resource.getResponseHeaders() + "\n" + resource.getContent();
+//        if (resource.getClass() == MissingResource.class) {
+//            return FOUR_OH_FOUR + "\n";
+//        }
+//
+//        if (!Arrays.asList(resource.methodsAllowed()).contains(request.method())) {
+//            return FOUR_OH_FIVE + "\n";
+//        }
+//
+//        if (resource.isTeaPot()) {
+//            return FOUR_ONE_EIGHT + "\n" + "I'm a teapot";
+//        }
+//
+//        if (resource.isRedirect()) {
+//            return THREE_OH_TWO + "Location: " + resource.redirectLocation() + "\n\n";
+//        }
+//
+//        resource.execute(request);
+//        return TWO_HUNDRED + resource.getResponseHeaders() + "\n" + resource.getContent();
+        return null;
     }
 }
 

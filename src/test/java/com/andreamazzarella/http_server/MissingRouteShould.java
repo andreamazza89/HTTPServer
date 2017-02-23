@@ -9,12 +9,12 @@ import static org.junit.Assert.assertArrayEquals;
 
 public class MissingRouteShould {
 
-    @Test
-    public void onlyAllowPutRequests() {
-        Resource resource = new MissingResource(URI.create("/missing/resource"));
-        FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("\n\n");
-        Request.Method[] methodsAllowed = resource.methodsAllowed();
-        assertArrayEquals(new Request.Method[]{Request.Method.PUT}, methodsAllowed);
-    }
+//    @Test
+//    public void onlyAllowPutRequests() {
+//        Resource resource = new MissingResource(URI.create("/missing/resource"));
+//        FakeSocketConnection socketConnection = new FakeSocketConnection();
+//        socketConnection.setRequestTo("\n\n");
+//        Request.Method[] methodsAllowed = resource.methodsAllowed();
+//        assertArrayEquals(new Request.Method[]{Request.Method.PUT}, methodsAllowed);
+//    }
 }

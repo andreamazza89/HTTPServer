@@ -1,6 +1,7 @@
 package com.andreamazzarella.http_server;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -37,7 +38,7 @@ class HTTPServer {
     private void respondToRequest(Socket socket) {
         SocketConnection socketConnection = new SocketConnection(socket);
         Request request = new Request(socketConnection);
-        Resource resource = resources.findRoute(request.uri());
+        Resource resource = resources.findResource(request.uri());
         String response = resource.generateResponse(request);
         socketConnection.write(response);
     }

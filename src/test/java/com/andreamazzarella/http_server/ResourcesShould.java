@@ -6,13 +6,13 @@ import java.net.URI;
 
 import static junit.framework.TestCase.assertEquals;
 
-public class RoutesShould {
+public class ResourcesShould {
 
     @Test
     public void provideAMissingRouteIfNoneMatchesTheGivenURI() {
         Resources resources = new Resources();
 
-        Resource resource = resources.findRoute(URI.create("i/am/not/a/real/path"));
+        Resource resource = resources.findResource(URI.create("i/am/not/a/real/path"));
 
         assertEquals(MissingResource.class, resource.getClass());
     }
@@ -20,11 +20,10 @@ public class RoutesShould {
     @Test
     public void provideTheRouteAssociatedToTheGivenURI() {
         Resources resources = new Resources();
-        Resource root = new Resource(URI.create("/"));
-        root.allowMethods(new Request.Method[] {Request.Method.GET});
+        Resource root = new DynamicResource(URI.create("/"));
         resources.addRoute(root);
         
-        Resource resource = resources.findRoute(URI.create("/"));
+        Resource resource = resources.findResource(URI.create("/"));
 
         assertEquals(root, resource);
     }

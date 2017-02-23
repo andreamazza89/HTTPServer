@@ -10,17 +10,12 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
-public class ResourceShould {
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // being a teapot and being a redirect should be exclusive. At the moment this system does not prevent clients from
-    // setting the resource to both being a teapot and a redirected one...I should implement the logic that prevents this
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public class DynamicResourceShould {
 
     @Test
     public void reportOnWhichMethodsAreAllowed() {
         URI resourcePath = URI.create("/");
-        Resource resource = new Resource(resourcePath);
+        DynamicResource resource = new DynamicResource(resourcePath);
         resource.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.POST});
 
         assertArrayEquals(new Request.Method[] {Request.Method.GET, Request.Method.POST}, resource.methodsAllowed());
@@ -29,7 +24,7 @@ public class ResourceShould {
     @Test
     public void knowIfTheResourceIsNotToBeRedirected() {
         URI resourcePath = URI.create("/no_redirect");
-        Resource resource = new Resource(resourcePath);
+        DynamicResource resource = new DynamicResource(resourcePath);
 
         assertEquals(false, resource.isRedirect());
     }
@@ -37,7 +32,7 @@ public class ResourceShould {
     @Test
     public void allowTheResourceToBeRedirected() {
         URI resourcePath = URI.create("/redirect");
-        Resource resource = new Resource(resourcePath);
+        DynamicResource resource = new DynamicResource(resourcePath);
         resource.allowMethods(new Request.Method[] {Request.Method.GET});
         resource.setRedirect(URI.create("/go/to/this/uri"));
 
@@ -48,7 +43,7 @@ public class ResourceShould {
     @Test
     public void knowIfTheResourceIsNotATeaPot() {
         URI resourcePath = URI.create("/no_tea_for_you");
-        Resource resource = new Resource(resourcePath);
+        DynamicResource resource = new DynamicResource(resourcePath);
 
         assertEquals(false, resource.isTeaPot());
     }
@@ -56,7 +51,7 @@ public class ResourceShould {
     @Test
     public void knowIfTheResourceIsATeaPot() {
         URI resourcePath = URI.create("/no_tea_for_you");
-        Resource resource = new Resource(resourcePath);
+        DynamicResource resource = new DynamicResource(resourcePath);
         resource.setTeaPot();
 
         assertEquals(true, resource.isTeaPot());
@@ -67,7 +62,7 @@ public class ResourceShould {
         URI resourcePath = URI.create("/the_resource_I_want_is_here");
         Blaah blaah = new FakeBlaah(URI.create("./resources/"));
         blaah.addResource(resourcePath, "Hello, is it me you are looking for");
-        Resource resource = new Resource(resourcePath, blaah);
+        DynamicResource resource = new DynamicResource(resourcePath, blaah);
 
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET " + resourcePath +"HTTP/1.1\n\n");
@@ -84,7 +79,7 @@ public class ResourceShould {
     public void postContentToAResource() {
         URI resourcePath = URI.create("/the_resource_I_want_is_here");
         Blaah blaah = new FakeBlaah(URI.create("./resources/"));
-        Resource resource = new Resource(resourcePath, blaah);
+        DynamicResource resource = new DynamicResource(resourcePath, blaah);
 
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         String messageBody = "Mariah Carey";
@@ -103,7 +98,7 @@ public class ResourceShould {
     public void putContentToAResource() {
         URI resourcePath = URI.create("/the_resource_I_want_is_here");
         Blaah blaah = new FakeBlaah(URI.create("./resources/"));
-        Resource resource = new Resource(resourcePath, blaah);
+        DynamicResource resource = new DynamicResource(resourcePath, blaah);
 
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         String messageBody = "Mariah Carey";
@@ -123,7 +118,7 @@ public class ResourceShould {
         URI resourcePath = URI.create("/the_resource_I_want_is_here");
         Blaah blaah = new FakeBlaah(URI.create("./resources/"));
         blaah.addResource(resourcePath, "Please destroy the evidence");
-        Resource resource = new Resource(resourcePath, blaah);
+        DynamicResource resource = new DynamicResource(resourcePath, blaah);
 
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("DELETE " + resourcePath + "HTTP/1.1\n\n");
@@ -141,7 +136,7 @@ public class ResourceShould {
         URI resourcePath = URI.create("/the_resource_I_want_is_here");
         Blaah blaah = new FakeBlaah(URI.create("./resources/"));
         blaah.addResource(resourcePath, "Please destroy the evidence");
-        Resource resource = new Resource(resourcePath, blaah);
+        DynamicResource resource = new DynamicResource(resourcePath, blaah);
         resource.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
 
         FakeSocketConnection socketConnection = new FakeSocketConnection();

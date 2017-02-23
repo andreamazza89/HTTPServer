@@ -13,8 +13,8 @@ class Resources {
         resources.add(resource);
     }
 
-    Resource findRoute(URI uri) {
-        Optional<Resource> routeFound = resources.stream().filter((route) -> route.uri().equals(uri)).findFirst();
+    Resource findResource(URI uri) {
+        Optional<Resource> routeFound = resources.stream().filter((resourcePath) -> resourcePath.uri().get().equals(uri)).findFirst();
         return routeFound.orElse(new MissingResource(uri));
     }
 }

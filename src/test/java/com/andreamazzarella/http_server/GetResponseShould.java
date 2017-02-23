@@ -10,8 +10,8 @@ public class GetResponseShould {
 
     @Test
     public void respondWith200OnlyWhenRouteExistsButResourceDoesNot() {
-        Resource resource = new Resource(URI.create("/my_resource"));
-        Blaah blaah = new Blaah(resource.uri());
+        DynamicResource resource = new DynamicResource(URI.create("/my_resource"));
+        Blaah blaah = new Blaah(resource.uri().get());
 
         String response = GetResponse.respond(resource, blaah);
 
