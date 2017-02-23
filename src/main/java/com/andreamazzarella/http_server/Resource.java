@@ -87,7 +87,7 @@ public class Resource {
                for (Request.Method method : methodsAllowed) {
                    methodsAllowedHeader += method.toString() + ",";
                }
-               responseHeaders += "Allow: " + methodsAllowedHeader.substring(0, methodsAllowedHeader.length() - 1);
+               responseHeaders += "Allow: " + methodsAllowedHeader.substring(0, methodsAllowedHeader.length() - 1) + "\n";
                break;
         }
     }

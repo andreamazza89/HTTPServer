@@ -68,56 +68,56 @@ public class ResponseGeneratorShould {
         assertEquals("HTTP/1.1 200 OK\n\n", response);
     }
 
-    @Test
-    public void includeResourceContentInBodyIfExisting() throws IOException {
-        FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("GET /form HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
-        Resource route = new Resource(URI.create("/form"));
-        route.allowMethods(new Request.Method[] {Request.Method.GET});
+//    @Test
+//    public void includeResourceContentInBodyIfExisting() throws IOException {
+//        FakeSocketConnection socketConnection = new FakeSocketConnection();
+//        socketConnection.setRequestTo("GET /form HTTP/1.1\n\n");
+//        Request request = new Request(socketConnection);
+//        Resource route = new Resource(URI.create("/form"));
+//        route.allowMethods(new Request.Method[] {Request.Method.GET});
+//
+//        File resource = new File("resources/form");
+//        String path = resource.getCanonicalPath();
+//        PrintWriter printWriter = new PrintWriter(path);
+//        printWriter.print("resource data");
+//        printWriter.close();
+//
+//
+//        String response = ResponseGenerator.createResponse(request, route);
+//
+//        assertEquals("HTTP/1.1 200 OK\n\nresource data", response);
+//
+//        new File(path).delete();
+//    }
 
-        File resource = new File("resources/form");
-        String path = resource.getCanonicalPath();
-        PrintWriter printWriter = new PrintWriter(path);
-        printWriter.print("resource data");
-        printWriter.close();
-
-
-        String response = ResponseGenerator.createResponse(request, route);
-
-        assertEquals("HTTP/1.1 200 OK\n\nresource data", response);
-
-        new File(path).delete();
-    }
-
-    @Test
-    public void createAResourceWithTheGivenData() {
-        FakeSocketConnection socketConnection = new FakeSocketConnection();
-        String messageBody = "ciao";
-        socketConnection.setRequestTo("POST /form HTTP/1.1\nContent-Length: " + messageBody.getBytes().length + "\n\n" + messageBody);
-        Request request = new Request(socketConnection);
-        Resource resource = new Resource(URI.create("/form"));
-        resource.allowMethods(new Request.Method[] {Request.Method.POST});
-
-        String response = ResponseGenerator.createResponse(request, resource);
-        assertEquals("HTTP/1.1 200 OK\n\n", response);
-
-        File file = new File("resources/form");
-        FileInputStream fis;
-        byte[] data = new byte[(int) file.length()];
-        try {
-            fis = new FileInputStream(file);
-            fis.read(data);
-            fis.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assertEquals("ciao", new String(data));
-
-        file.delete();
-    }
+//    @Test
+//    public void createAResourceWithTheGivenData() {
+//        FakeSocketConnection socketConnection = new FakeSocketConnection();
+//        String messageBody = "ciao";
+//        socketConnection.setRequestTo("POST /form HTTP/1.1\nContent-Length: " + messageBody.getBytes().length + "\n\n" + messageBody);
+//        Request request = new Request(socketConnection);
+//        Resource resource = new Resource(URI.create("/form"));
+//        resource.allowMethods(new Request.Method[] {Request.Method.POST});
+//
+//        String response = ResponseGenerator.createResponse(request, resource);
+//        assertEquals("HTTP/1.1 200 OK\n\n", response);
+//
+//        File file = new File("resources/form");
+//        FileInputStream fis;
+//        byte[] data = new byte[(int) file.length()];
+//        try {
+//            fis = new FileInputStream(file);
+//            fis.read(data);
+//            fis.close();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        assertEquals("ciao", new String(data));
+//
+//        file.delete();
+//    }
 
     @Test
     public void respondWith404WhenResourceDoesNotExist() {

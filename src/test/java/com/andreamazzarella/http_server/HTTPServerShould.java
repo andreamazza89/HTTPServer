@@ -14,7 +14,7 @@ public class HTTPServerShould {
     @Ignore
     @Test
     public void acceptAConnectionOnTheGivenPortNumber() throws IOException {
-        HTTPServer server = new HTTPServer(4242, "./lol/cats/path");
+        HTTPServer server = new HTTPServer(4242, "./lol/cats/path", new Resources());
         Executors.newSingleThreadExecutor().submit(server::start);
 
         Socket socket = new Socket("localhost", 4242);
@@ -27,7 +27,7 @@ public class HTTPServerShould {
     @Ignore
     @Test
     public void acceptMultipleConnectionsOnTheGivenPortNumber() throws IOException {
-        HTTPServer server = new HTTPServer(4242, "./lol/cats/path");
+        HTTPServer server = new HTTPServer(4242, "./lol/cats/path", new Resources());
         Executors.newSingleThreadExecutor().submit(server::start);
 
         Socket socketOne = new Socket("localhost", 4242);
@@ -44,7 +44,7 @@ public class HTTPServerShould {
     @Ignore
     @Test
     public void setTheDirectoryPathToTheOneProvided_SCAFFOLD_TEST() {
-        HTTPServer server = new HTTPServer(4242, "./lol/cats/path");
+        HTTPServer server = new HTTPServer(4242, "./lol/cats/path", new Resources());
 
         assertEquals("./lol/cats/path", server.getPublicDirectoryPath());
     }

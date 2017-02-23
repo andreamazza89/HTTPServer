@@ -3,17 +3,18 @@ package com.andreamazzarella.http_server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URI;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class HTTPServer {
     private final int portNumber;
     private final String publicDirectoryPath;
+    private final Resources resources;
 
-    HTTPServer(int portNumber, String publicDirectoryPath) {
+    HTTPServer(int portNumber, String publicDirectoryPath, Resources resources) {
         this.portNumber = portNumber;
         this.publicDirectoryPath = publicDirectoryPath;
+        this.resources = resources;
     }
 
     void start() {
@@ -35,44 +36,10 @@ class HTTPServer {
 
     private void respondToRequest(Socket socket) {
         SocketConnection socketConnection = new SocketConnection(socket);
-
-        ////////////////////maybe move into main? yes please////////////////////////////
-        Resources resources = new Resources();
-        URI resourcesBasePath = URI.create("./resources/");
-        Blaah fileSystem = new Blaah(resourcesBasePath);
-
-        Resource root = new Resource(URI.create("/"), fileSystem);
-        Resource methodOptions = new Resource(URI.create("/method_options"), fileSystem);
-        Resource methodOptionsTwo = new Resource(URI.create("/method_options2"), fileSystem);
-        Resource form = new Resource(URI.create("/form"), fileSystem);
-        Resource redirect = new Resource(URI.create("/redirect"), fileSystem);
-        Resource coffee = new Resource(URI.create("/coffee"), fileSystem);
-        Resource tea = new Resource(URI.create("/tea"), fileSystem);
-
-        root.allowMethods(new Request.Method[] {Request.Method.GET});
-        methodOptions.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.HEAD,
-                Request.Method.POST, Request.Method.OPTIONS, Request.Method.PUT});
-        methodOptionsTwo.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
-        form.allowMethods(new Request.Method[] {Request.Method.POST, Request.Method.PUT});
-        redirect.allowMethods(new Request.Method[] {Request.Method.GET});
-        tea.allowMethods(new Request.Method[] {Request.Method.GET});
-
-        redirect.setRedirect(URI.create("http://localhost:5000/"));
-        coffee.setTeaPot();
-
-        resources.addRoute(root);
-        resources.addRoute(methodOptions);
-        resources.addRoute(methodOptionsTwo);
-        resources.addRoute(form);
-        resources.addRoute(redirect);
-        resources.addRoute(tea);
-        resources.addRoute(coffee);
-        ////////////////////////////////////////////////////////////////////////////////
-
-         Request request = new Request(socketConnection);
-         Resource resource = resources.findRoute(request.uri());
-         String response = ResponseGenerator.createResponse(request, resource);
-         socketConnection.write(response);
+        Request request = new Request(socketConnection);
+        Resource resource = resources.findRoute(request.uri());
+        String response = resource.generateResponse(request);
+        socketConnection.write(response);
     }
 
     private void closeSocket(Socket socket) {

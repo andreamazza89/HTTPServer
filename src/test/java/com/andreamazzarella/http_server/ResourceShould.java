@@ -150,6 +150,6 @@ public class ResourceShould {
 
         resource.execute(request);
 
-        assertEquals("Allow: GET,OPTIONS", resource.getResponseHeaders());
+        assertEquals("Allow: GET,OPTIONS\n", resource.getResponseHeaders());
     }
 }
