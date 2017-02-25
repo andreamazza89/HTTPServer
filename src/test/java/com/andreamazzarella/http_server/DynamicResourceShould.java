@@ -15,7 +15,7 @@ public class DynamicResourceShould {
     @Test
     public void getContent() {
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
-        URI resourcePath = URI.create("path_to_dynamic_resource");
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
         String resourceContent = "Stale content";
         fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
         FakeSocketConnection socketConnection = new FakeSocketConnection();
@@ -29,7 +29,7 @@ public class DynamicResourceShould {
     @Test
     public void onlyAllowConfiguredMethods() {
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
-        URI resourcePath = URI.create("path_to_dynamic_resource");
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("PATCH " + resourcePath + " HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
@@ -41,7 +41,7 @@ public class DynamicResourceShould {
     @Test
     public void respondToOptionsWithMethodsAllowedExampleOne() {
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
-        URI resourcePath = URI.create("path_to_dynamic_resource");
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("OPTIONS " + resourcePath + " HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
@@ -55,7 +55,7 @@ public class DynamicResourceShould {
     @Test
     public void respondToOptionsWithMethodsAllowedExampleTwo() {
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
-        URI resourcePath = URI.create("path_to_dynamic_resource");
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("OPTIONS " + resourcePath + " HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
@@ -69,7 +69,7 @@ public class DynamicResourceShould {
     @Test
     public void notIncludeResourceContentWithHead() {
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
-        URI resourcePath = URI.create("path_to_dynamic_resource");
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
         fileSystem.addOrReplaceResource(resourcePath, "I am an elusive resource".getBytes());
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("HEAD " + resourcePath + " HTTP/1.1\n\n");
@@ -82,7 +82,7 @@ public class DynamicResourceShould {
     @Test
     public void getEmptyContent() {
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
-        URI resourcePath = URI.create("path_to_dynamic_resource");
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET " + resourcePath + " HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
@@ -94,7 +94,7 @@ public class DynamicResourceShould {
     @Test
     public void postContent() {
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
-        URI resourcePath = URI.create("path_to_dynamic_resource");
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
         String requestBody = "Freshly baked new content";
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("POST " + resourcePath + " HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
@@ -107,7 +107,7 @@ public class DynamicResourceShould {
 
     @Test
     public void putContent() {
-        URI resourcePath = URI.create("path_to_dynamic_resource");
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
         String resourceContent = "Something has to change";
         String newResourceContent = "There, happy now?";
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
@@ -123,7 +123,7 @@ public class DynamicResourceShould {
 
     @Test
     public void deleteContent() {
-        URI resourcePath = URI.create("path_to_dynamic_resource");
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
         String resourceContent = "Something has to disappear";
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
         fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
@@ -134,5 +134,16 @@ public class DynamicResourceShould {
 
         assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
         assertEquals(Optional.empty(), fileSystem.getDynamicResource(resourcePath));
+    }
+
+    @Test
+    public void includeRequestParametersInResponseBody() {
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET " + resourcePath + "?var1=lol&var2=cats" + " HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, new FakeFileSystem(URI.create("/double/path")), new Request.Method[] {Request.Method.GET});
+
+        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + "var1 = lol\nvar2 = cats").getBytes(), dynamicResource.generateResponse(request));
     }
 }

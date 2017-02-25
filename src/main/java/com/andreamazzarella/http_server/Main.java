@@ -30,6 +30,7 @@ public class Main {
         Resource methodOptionsTwo = new DynamicResource(URI.create("/method_options2"), dynamicFilesystem, new Request.Method[]
                 {Request.Method.GET, Request.Method.OPTIONS});
         Resource tea = new DynamicResource(URI.create("/tea"), dynamicFilesystem, new Request.Method[] {Request.Method.GET});
+        Resource parameters = new DynamicResource(URI.create("/parameters"), dynamicFilesystem, new Request.Method[] {Request.Method.GET});
         Resource coffee = new TeaPotResource(URI.create("/coffee"));
         Resource fileOne = new StaticResource(URI.create("/file1"), staticFilesystem);
         Resource imageJPEG = new StaticResource(URI.create("/image.jpeg"), staticFilesystem);
@@ -43,6 +44,7 @@ public class Main {
         resources.addResource(methodOptions);
         resources.addResource(methodOptionsTwo);
         resources.addResource(tea);
+        resources.addResource(parameters);
         resources.addResource(coffee);
         resources.addResource(fileOne);
         resources.addResource(imageJPEG);

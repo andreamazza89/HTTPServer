@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class DynamicResource implements Resource {
 
@@ -36,7 +37,8 @@ public class DynamicResource implements Resource {
                 case GET:
                     byte[] statusAndHeaders = (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
                     byte[] body = fileSystem.getDynamicResource(request.uri()).orElse("".getBytes());
-                    return concatenateData(statusAndHeaders, body);
+                    byte[] parameters = serialiseParameters(request);
+                    return concatenateData(statusAndHeaders, body, parameters);
                 case HEAD:
                     return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
                 case POST:
@@ -56,6 +58,14 @@ public class DynamicResource implements Resource {
         }
     }
 
+    private byte[] serialiseParameters(Request request) {
+        String serialisedParameters = "";
+        Set<String> parameterKeys = request.getParams().keySet();
+        for (String parameterKey : parameterKeys) {
+            serialisedParameters += String.format("%s = %s\n", parameterKey, request.getParams().get(parameterKey));
+        }
+        return serialisedParameters.trim().getBytes();
+    }
     private String generateAllowedMethodsHeader() {
         String allowedMethodsHeader = "Allow: ";
         for (Request.Method method : methodsAllowed) {

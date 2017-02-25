@@ -1,12 +1,13 @@
 package com.andreamazzarella.http_server;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Request {
-
-
 
     public enum Method {
         POST, OPTIONS, DELETE, PUT, HEAD, UNRECOGNISED_METHOD, GET
@@ -19,6 +20,7 @@ public class Request {
     private static final String CARRIAGE_RETURN_LINE_FEED = "\n";
     private static final String SPACE = " ";
 
+    private final Map<String, String> queryParameters = new TreeMap<>();
     private final String requestMessage;
     private final DataExchange socketConnection;
     private final String[] tokenisedRequestMessage;
@@ -35,7 +37,22 @@ public class Request {
         this.tokenisedRequestLine = tokenise(requestLine, SPACE);
 
         parseHeaders();
+        parseParameters();
         parseBody();
+    }
+
+    private void parseParameters() {
+        if (URI.create(tokenisedRequestLine[INDEX_OF_REQUEST_URI]).getQuery() != null) {
+            String[] parameters = URI.create(tokenisedRequestLine[INDEX_OF_REQUEST_URI]).getRawQuery().split("&");
+            for (String parameter : parameters) {
+                String[] blah = parameter.split("=");
+                try {
+                    queryParameters.put(URLDecoder.decode(blah[0], "UTF-8"), URLDecoder.decode(blah[1], "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void parseHeaders() {
@@ -80,6 +97,10 @@ public class Request {
 
     String getHeader(String fieldName) {
         return headers.get(fieldName + ":");
+    }
+
+    Map<String,String> getParams() {
+        return queryParameters;
     }
 
     URI uri() {

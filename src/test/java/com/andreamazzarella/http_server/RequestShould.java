@@ -3,7 +3,10 @@ package com.andreamazzarella.http_server;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -126,5 +129,18 @@ public class RequestShould {
         Request request = new Request(socketConnection);
 
         assertEquals("different-value", request.getHeader("Field-Name"));
+    }
+
+    @Test
+    public void extractQueryParameters() throws MalformedURLException {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        String params = "variable_1=Operators%20%3C&ciao=miao";
+        socketConnection.setRequestTo("GET /parameters?"+params+" HTTP/1.1\nField-Name: different-value\n\n");
+        Request request = new Request(socketConnection);
+
+        Map<String, String> parameters = request.getParams();
+
+        assertEquals("Operators <", parameters.get("variable_1"));
+        assertEquals( "miao", parameters.get("ciao"));
     }
 }
