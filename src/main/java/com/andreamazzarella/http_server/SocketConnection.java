@@ -10,7 +10,7 @@ public class SocketConnection implements DataExchange {
 
     SocketConnection(Socket socket) {
         try {
-            this.writer = new PrintStream(socket.getOutputStream(), true);
+            this.writer = new PrintStream(socket.getOutputStream(), true, "UTF-8");
             this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -27,11 +27,6 @@ public class SocketConnection implements DataExchange {
     }
 
     @Override
-    public void write(String data) {
-        writer.print(data);
-    }
-
-    @Override
     public void read(char[] buffer, int startIndex, int contentLenth) {
         try {
             reader.read(buffer, startIndex, contentLenth);
@@ -40,4 +35,12 @@ public class SocketConnection implements DataExchange {
         }
     }
 
+    @Override
+    public void write(byte[] data) {
+        try {
+            writer.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -9,7 +9,7 @@ public class DynamicResource implements Resource {
     private URI DynamicResourceToRedirect;
     private boolean isRedirectRoute;
     private Optional<URI> uri;
-    private Blaah blaah;
+    private FileSystem fileSystem;
     private boolean isTeaPot;
     private Optional<String> DynamicResourceContent = Optional.empty();
     private String responseHeaders = "";
@@ -18,9 +18,9 @@ public class DynamicResource implements Resource {
         this.uri = Optional.of(DynamicResourcePath);
     }
 
-    public DynamicResource(URI DynamicResourcePath, Blaah blaah) {
+    public DynamicResource(URI DynamicResourcePath, FileSystem fileSystem) {
         this.uri = Optional.of(DynamicResourcePath);
-        this.blaah = blaah;
+        this.fileSystem = fileSystem;
     }
 
     void allowMethods(Request.Method[] methods) {
@@ -62,40 +62,11 @@ public class DynamicResource implements Resource {
     }
 
     public void execute(Request request) {
-        switch (request.method()) {
-            case GET:
-                if (uri().toString().equals("/")) {
-                    ////////////////////////////////
-                    ///////////////////////////////////
-                    // "Andrea should implement this: if path is root then create links and shit"
-                    //also needs testing
-                } else {
-                    this.DynamicResourceContent = blaah.getResource(uri.get());
-                    // this.DynamicResourceContent += make request.parameters into suitable string;
-                }
-                break;
-            case POST:
-                blaah.addResource(request.uri(), request.body());
-                break;
-            case PUT:
-                blaah.addResource(request.uri(), request.body());
-                break;
-            case DELETE:
-                blaah.deleteResource(uri.get());
-                break;
-            case OPTIONS:
-               String methodsAllowedHeader = "";
-               for (Request.Method method : methodsAllowed) {
-                   methodsAllowedHeader += method.toString() + ",";
-               }
-               responseHeaders += "Allow: " + methodsAllowedHeader.substring(0, methodsAllowedHeader.length() - 1) + "\n";
-               break;
-        }
     }
 
     @Override
-    public String generateResponse(Request request) {
-        return Response.STATUS_TWO_HUNDRED + "\n";
+    public byte[] generateResponse(Request request) {
+        return "not implemented yet: DynamicResource".getBytes();
     }
 
     String getResponseHeaders() {

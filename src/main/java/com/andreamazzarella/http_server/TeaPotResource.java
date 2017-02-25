@@ -12,8 +12,8 @@ public class TeaPotResource implements Resource {
     }
 
     @Override
-    public String generateResponse(Request request) {
-        return Response.TEA_POT_RESPONSE;
+    public byte[] generateResponse(Request request) {
+        return Response.TEA_POT_RESPONSE.getBytes();
     }
 
     @Override

@@ -21,7 +21,7 @@ public class ResourcesShould {
     public void provideTheRouteAssociatedToTheGivenURI() {
         Resources resources = new Resources();
         Resource root = new DynamicResource(URI.create("/"));
-        resources.addRoute(root);
+        resources.addResource(root);
         
         Resource resource = resources.findResource(URI.create("/"));
 

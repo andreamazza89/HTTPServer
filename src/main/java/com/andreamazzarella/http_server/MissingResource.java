@@ -5,12 +5,9 @@ import java.util.Optional;
 
 class MissingResource implements Resource {
 
-    MissingResource(URI uri) {
-    }
-
     @Override
-    public String generateResponse(Request request) {
-        return "not implemented yet";
+    public byte[] generateResponse(Request request) {
+        return Response.NOT_FOUND_RESPONSE.getBytes();
     }
 
     @Override

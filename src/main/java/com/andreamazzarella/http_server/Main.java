@@ -14,43 +14,29 @@ public class Main {
     }
 
     private static Resources generateResources() {
+        URI publicPath = URI.create("/Users/Andrea/Dropbox/Programming/repos/java/cob_spec/public/");
+
         Resources resources = new Resources();
+        FileSystem staticFilesystem = new FileSystem(publicPath);
+        DirectoryExplorer directoryExplorer = new DirectoryExplorer(publicPath);
 
         Resource teapot = new TeaPotResource(URI.create("/coffee"));
-        Resource root = new DynamicResource(URI.create("/"));
+        Resource root = new IndexResource(URI.create("/"), directoryExplorer);
+        Resource fileOne = new StaticResource(URI.create("/file1"), staticFilesystem);
+        Resource imageJPEG = new StaticResource(URI.create("/image.jpeg"), staticFilesystem);
+        Resource imagePNG = new StaticResource(URI.create("/image.png"), staticFilesystem);
+        Resource imageGIF = new StaticResource(URI.create("/image.gif"), staticFilesystem);
+        Resource textFile = new StaticResource(URI.create("/text-file.txt"), staticFilesystem);
+        Resource redirect = new RedirectedResource(URI.create("/redirect"), URI.create("http://localhost:5000/"));
 
-        resources.addRoute(teapot);
-        resources.addRoute(root);
-
-//        URI resourcesBasePath = URI.create("./resources/");
-//        Blaah fileSystem = new Blaah(resourcesBasePath);
-//
-//        DynamicResource root = new DynamicResource(URI.create("/"), fileSystem);
-//        DynamicResource methodOptions = new DynamicResource(URI.create("/method_options"), fileSystem);
-//        DynamicResource methodOptionsTwo = new DynamicResource(URI.create("/method_options2"), fileSystem);
-//        DynamicResource form = new DynamicResource(URI.create("/form"), fileSystem);
-//        DynamicResource redirect = new DynamicResource(URI.create("/redirect"), fileSystem);
-//        DynamicResource coffee = new DynamicResource(URI.create("/coffee"), fileSystem);
-//        DynamicResource tea = new DynamicResource(URI.create("/tea"), fileSystem);
-//
-//        root.allowMethods(new Request.Method[] {Request.Method.GET});
-//        methodOptions.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.HEAD,
-//                Request.Method.POST, Request.Method.OPTIONS, Request.Method.PUT});
-//        methodOptionsTwo.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
-//        form.allowMethods(new Request.Method[] {Request.Method.POST, Request.Method.PUT});
-//        redirect.allowMethods(new Request.Method[] {Request.Method.GET});
-//        tea.allowMethods(new Request.Method[] {Request.Method.GET});
-//
-//        redirect.setRedirect(URI.create("http://localhost:5000/"));
-//        coffee.setTeaPot();
-//
-//        resources.addRoute(root);
-//        resources.addRoute(methodOptions);
-//        resources.addRoute(methodOptionsTwo);
-//        resources.addRoute(form);
-//        resources.addRoute(redirect);
-//        resources.addRoute(tea);
-//        resources.addRoute(coffee);
+        resources.addResource(teapot);
+        resources.addResource(root);
+        resources.addResource(fileOne);
+        resources.addResource(imageJPEG);
+        resources.addResource(imagePNG);
+        resources.addResource(imageGIF);
+        resources.addResource(textFile);
+        resources.addResource(redirect);
 
         return resources;
     }

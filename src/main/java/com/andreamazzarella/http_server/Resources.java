@@ -9,12 +9,12 @@ class Resources {
 
     private List<Resource> resources = new ArrayList<>();
 
-    void addRoute(Resource resource) {
+    void addResource(Resource resource) {
         resources.add(resource);
     }
 
     Resource findResource(URI uri) {
         Optional<Resource> routeFound = resources.stream().filter((resourcePath) -> resourcePath.uri().get().equals(uri)).findFirst();
-        return routeFound.orElse(new MissingResource(uri));
+        return routeFound.orElse(new MissingResource());
     }
 }

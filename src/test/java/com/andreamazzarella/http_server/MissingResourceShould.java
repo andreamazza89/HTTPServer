@@ -3,19 +3,17 @@ package com.andreamazzarella.http_server;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
-import java.net.URI;
-
 import static org.junit.Assert.assertArrayEquals;
 
-public class TeaPotResourceShould {
+public class MissingResourceShould {
 
     @Test
-    public void respondWithATeaPotResponse() {
+    public void respondWithAFourOhFour() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("GET /coffee HTTP/1.1\n\n");
+        socketConnection.setRequestTo("GET /missing_resource HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
-        Resource teaPot = new TeaPotResource(URI.create("/coffee"));
+        Resource missingResource = new MissingResource();
 
-        assertArrayEquals(Response.TEA_POT_RESPONSE.getBytes(), teaPot.generateResponse(request));
+        assertArrayEquals(Response.NOT_FOUND_RESPONSE.getBytes(), missingResource.generateResponse(request));
     }
 }

@@ -1,37 +1,20 @@
 package com.andreamazzarella.http_server;
 
 class Response {
-    static final String STATUS_TWO_HUNDRED = "HTTP/1.1 200 OK\n";
-    static final String STATUS_THREE_OH_TWO = "HTTP/1.1 302 Found\n";
-    static final String STATUS_FOUR_OH_FOUR = "HTTP/1.1 404 Not Found\n";
-    static final String STATUS_FOUR_OH_FIVE = "HTTP/1.1 405 Not Allowed\n";
-    static final String STATUS_FOUR_ONE_EIGHT = "HTTP/1.1 418 I'm a Teapot\n";
+    static final String NEWLINE = "\n";
+    static final String END_OF_HEADERS = NEWLINE;
 
-    static final String TEA_POT_RESPONSE = STATUS_FOUR_ONE_EIGHT + "\n" + "I'm a teapot";
+    static final String STATUS_TWO_HUNDRED = "HTTP/1.1 200 OK" + NEWLINE;
+    static final String STATUS_THREE_OH_TWO = "HTTP/1.1 302 Found" + NEWLINE;
+    static final String STATUS_FOUR_OH_FOUR = "HTTP/1.1 404 Not Found" + NEWLINE;
+    static final String STATUS_FOUR_OH_FIVE = "HTTP/1.1 405 Not Allowed" + NEWLINE;
+    static final String STATUS_FOUR_ONE_EIGHT = "HTTP/1.1 418 I'm a Teapot" + NEWLINE;
 
-    static String createResponse(Request request, DynamicResource resource) {
+    static final String CONTENT_TYPE_HEADER_NAME = "Content-Type: ";
 
-
-//        if (resource.getClass() == MissingResource.class) {
-//            return FOUR_OH_FOUR + "\n";
-//        }
-//
-//        if (!Arrays.asList(resource.methodsAllowed()).contains(request.method())) {
-//            return FOUR_OH_FIVE + "\n";
-//        }
-//
-//        if (resource.isTeaPot()) {
-//            return FOUR_ONE_EIGHT + "\n" + "I'm a teapot";
-//        }
-//
-//        if (resource.isRedirect()) {
-//            return THREE_OH_TWO + "Location: " + resource.redirectLocation() + "\n\n";
-//        }
-//
-//        resource.execute(request);
-//        return TWO_HUNDRED + resource.getResponseHeaders() + "\n" + resource.getContent();
-        return null;
-    }
+    static final String TEA_POT_RESPONSE = STATUS_FOUR_ONE_EIGHT + NEWLINE + "I'm a teapot";
+    static final String NOT_ALLOWED_RESPONSE = STATUS_FOUR_OH_FIVE + NEWLINE;
+    static final String NOT_FOUND_RESPONSE = STATUS_FOUR_OH_FOUR + END_OF_HEADERS;
 }
 
 

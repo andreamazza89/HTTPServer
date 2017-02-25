@@ -23,9 +23,9 @@ public class FakeSocketConnection implements DataExchange {
     }
 
     @Override
-    public void write(String data) {
+    public void write(byte[] data) {
         try {
-            messagesReceived.write(data.getBytes());
+            messagesReceived.write(data);
         } catch (IOException e) {
             e.printStackTrace();
         }

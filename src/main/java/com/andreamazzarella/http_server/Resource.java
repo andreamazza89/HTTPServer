@@ -4,6 +4,6 @@ import java.net.URI;
 import java.util.Optional;
 
 public interface Resource {
-    String generateResponse(Request request);
+    byte[] generateResponse(Request request);
     Optional<URI> uri();
 }
