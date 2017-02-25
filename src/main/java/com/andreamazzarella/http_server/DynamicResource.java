@@ -1,47 +1,25 @@
 package com.andreamazzarella.http_server;
 
 import java.net.URI;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class DynamicResource implements Resource {
 
-    private Request.Method[] methodsAllowed;
-    private URI DynamicResourceToRedirect;
-    private boolean isRedirectRoute;
+    private List<Request.Method> methodsAllowed;
     private Optional<URI> uri;
     private FileSystem fileSystem;
-    private boolean isTeaPot;
-    private Optional<String> DynamicResourceContent = Optional.empty();
-    private String responseHeaders = "";
 
     DynamicResource(URI DynamicResourcePath) {
         this.uri = Optional.of(DynamicResourcePath);
     }
 
-    public DynamicResource(URI DynamicResourcePath, FileSystem fileSystem) {
+    DynamicResource(URI DynamicResourcePath, FileSystem fileSystem, Request.Method[] methodsAllowed) {
         this.uri = Optional.of(DynamicResourcePath);
         this.fileSystem = fileSystem;
-    }
-
-    void allowMethods(Request.Method[] methods) {
-        methodsAllowed = methods;
-    }
-
-    public Request.Method[] methodsAllowed() {
-        return methodsAllowed;
-    }
-
-    boolean isRedirect() {
-        return isRedirectRoute;
-    }
-
-    void setRedirect(URI DynamicResourceToRedirect) {
-        this.isRedirectRoute = true;
-        this.DynamicResourceToRedirect = DynamicResourceToRedirect;
-    }
-
-    URI redirectLocation() {
-        return DynamicResourceToRedirect;
+        this.methodsAllowed = Arrays.asList(methodsAllowed);
     }
 
     @Override
@@ -49,27 +27,61 @@ public class DynamicResource implements Resource {
         return uri;
     }
 
-    boolean isTeaPot() {
-        return isTeaPot;
-    }
-
-    void setTeaPot() {
-        isTeaPot = true;
-    }
-
-    String getContent() {
-        return DynamicResourceContent.orElse("");
-    }
-
-    public void execute(Request request) {
-    }
-
     @Override
     public byte[] generateResponse(Request request) {
-        return "not implemented yet: DynamicResource".getBytes();
+        if (!methodsAllowed.contains(request.method())) {
+            return Response.NOT_ALLOWED_RESPONSE.getBytes();
+        } else {
+            switch (request.method()) {
+                case GET:
+                    byte[] statusAndHeaders = (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+                    byte[] body = fileSystem.getDynamicResource(request.uri()).orElse("".getBytes());
+                    return concatenateData(statusAndHeaders, body);
+                case HEAD:
+                    return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+                case POST:
+                    fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
+                    return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+                case PUT:
+                    fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
+                    return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+                case DELETE:
+                    fileSystem.deleteResource(request.uri());
+                    return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+                case OPTIONS:
+                    return (Response.STATUS_TWO_HUNDRED + generateAllowedMethodsHeader() + Response.END_OF_HEADERS).getBytes();
+                default:
+                    throw new RuntimeException("Unhandled method");
+            }
+        }
     }
 
-    String getResponseHeaders() {
-        return responseHeaders;
+    private String generateAllowedMethodsHeader() {
+        String allowedMethodsHeader = "Allow: ";
+        for (Request.Method method : methodsAllowed) {
+            allowedMethodsHeader += method.toString() + ",";
+        }
+        allowedMethodsHeader = allowedMethodsHeader.substring(0, allowedMethodsHeader.length()-1) + "\n";
+        return allowedMethodsHeader;
+    }
+
+    private byte[] concatenateData(byte[]... dataChunks) {
+        int totalDataLength = getTotalDataLength(dataChunks);
+        byte[] result = new byte[totalDataLength];
+        ByteBuffer dataBuffer = ByteBuffer.wrap(result);
+
+        for (byte[] dataChunk : dataChunks) {
+            dataBuffer.put(dataChunk);
+        }
+
+        return result;
+    }
+
+    private int getTotalDataLength(byte[][] dataChunks) {
+        int dataLength = 0;
+        for (byte[] dataChunk : dataChunks) {
+            dataLength += dataChunk.length;
+        }
+        return dataLength;
     }
 }

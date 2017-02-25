@@ -9,7 +9,7 @@ public class Request {
 
 
     public enum Method {
-        POST, OPTIONS, DELETE, PUT, HEAD, GET
+        POST, OPTIONS, DELETE, PUT, HEAD, UNRECOGNISED_METHOD, GET
     }
 
     private static final int INDEX_OF_REQUEST_LINE = 0;
@@ -74,7 +74,7 @@ public class Request {
             case "DELETE":
                 return Method.DELETE;
             default:
-                return null;
+                return Method.UNRECOGNISED_METHOD;
         }
     }
 

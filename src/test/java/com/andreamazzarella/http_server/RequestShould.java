@@ -82,6 +82,15 @@ public class RequestShould {
     }
 
     @Test
+    public void provideMissingMethodIfNotRecognised() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("MADE_UP_METHOD / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.UNRECOGNISED_METHOD, request.method());
+    }
+
+    @Test
     public void extractTheBodyIfPresentExampleOne() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         String requestBody = "I am a getContent??";

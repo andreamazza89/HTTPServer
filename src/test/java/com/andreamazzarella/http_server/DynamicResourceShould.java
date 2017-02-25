@@ -1,143 +1,138 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.support.FakeFileSystem;
+import com.andreamazzarella.http_server.support.FakeSocketConnection;
+import org.junit.Test;
+
+import java.net.URI;
+import java.util.Optional;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
-//public class DynamicResourceShould {
-//
-//    @Test
-//    public void reportOnWhichMethodsAreAllowed() {
-//        URI resourcePath = URI.create("/");
-//        DynamicResource resource = new DynamicResource(resourcePath);
-//        resource.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.POST});
-//
-//        assertArrayEquals(new Request.Method[] {Request.Method.GET, Request.Method.POST}, resource.methodsAllowed());
-//    }
-//
-//    @Test
-//    public void knowIfTheResourceIsNotToBeRedirected() {
-//        URI resourcePath = URI.create("/no_redirect");
-//        DynamicResource resource = new DynamicResource(resourcePath);
-//
-//        assertEquals(false, resource.isRedirect());
-//    }
-//
-//    @Test
-//    public void allowTheResourceToBeRedirected() {
-//        URI resourcePath = URI.create("/redirect");
-//        DynamicResource resource = new DynamicResource(resourcePath);
-//        resource.allowMethods(new Request.Method[] {Request.Method.GET});
-//        resource.setRedirect(URI.create("/go/to/this/uri"));
-//
-//        assertEquals(true, resource.isRedirect());
-//        assertEquals("/go/to/this/uri", resource.redirectLocation().getPath());
-//    }
-//
-//    @Test
-//    public void knowIfTheResourceIsNotATeaPot() {
-//        URI resourcePath = URI.create("/no_tea_for_you");
-//        DynamicResource resource = new DynamicResource(resourcePath);
-//
-//        assertEquals(false, resource.isTeaPot());
-//    }
-//
-//    @Test
-//    public void knowIfTheResourceIsATeaPot() {
-//        URI resourcePath = URI.create("/no_tea_for_you");
-//        DynamicResource resource = new DynamicResource(resourcePath);
-//        resource.setTeaPot();
-//
-//        assertEquals(true, resource.isTeaPot());
-//    }
-//
-//    @Test
-//    public void getTheResourceContent() {
-//        URI resourcePath = URI.create("/the_resource_I_want_is_here");
-//        FileSystem blaah = new FakeFileSystem(URI.create("./resources/"));
-//        blaah.addOrReplaceResource(resourcePath, "Hello, is it me you are looking for");
-//        DynamicResource resource = new DynamicResource(resourcePath, blaah);
-//
-//        FakeSocketConnection socketConnection = new FakeSocketConnection();
-//        socketConnection.setRequestTo("GET " + resourcePath +"HTTP/1.1\n\n");
-//        Request request = new Request(socketConnection);
-//
-//        resource.execute(request);
-//
-//        assertEquals("Hello, is it me you are looking for", resource.getContent());
-//
-//        blaah.deleteResource(resourcePath);
-//    }
-//
-//    @Test
-//    public void postContentToAResource() {
-//        URI resourcePath = URI.create("/the_resource_I_want_is_here");
-//        FileSystem blaah = new FakeFileSystem(URI.create("./resources/"));
-//        DynamicResource resource = new DynamicResource(resourcePath, blaah);
-//
-//        FakeSocketConnection socketConnection = new FakeSocketConnection();
-//        String messageBody = "Mariah Carey";
-//        socketConnection.setRequestTo("POST " + resourcePath + "HTTP/1.1\nContent-Length: "
-//                + messageBody.getBytes().length + "\n\n" + messageBody);
-//        Request request = new Request(socketConnection);
-//
-//        resource.execute(request);
-//
-//        assertEquals(blaah.getResource(resourcePath).get(), messageBody);
-//
-//        blaah.deleteResource(resourcePath);
-//    }
-//
-//    @Test
-//    public void putContentToAResource() {
-//        URI resourcePath = URI.create("/the_resource_I_want_is_here");
-//        FileSystem blaah = new FakeFileSystem(URI.create("./resources/"));
-//        DynamicResource resource = new DynamicResource(resourcePath, blaah);
-//
-//        FakeSocketConnection socketConnection = new FakeSocketConnection();
-//        String messageBody = "Mariah Carey";
-//        socketConnection.setRequestTo("PUT " + resourcePath + "HTTP/1.1\nContent-Length: "
-//                + messageBody.getBytes().length + "\n\n" + messageBody);
-//        Request request = new Request(socketConnection);
-//
-//        resource.execute(request);
-//
-//        assertEquals(blaah.getResource(resourcePath).get(), messageBody);
-//
-//        blaah.deleteResource(resourcePath);
-//    }
-//
-//    @Test
-//    public void deleteAResource() {
-//        URI resourcePath = URI.create("/the_resource_I_want_is_here");
-//        FileSystem blaah = new FakeFileSystem(URI.create("./resources/"));
-//        blaah.addOrReplaceResource(resourcePath, "Please destroy the evidence");
-//        DynamicResource resource = new DynamicResource(resourcePath, blaah);
-//
-//        FakeSocketConnection socketConnection = new FakeSocketConnection();
-//        socketConnection.setRequestTo("DELETE " + resourcePath + "HTTP/1.1\n\n");
-//        Request request = new Request(socketConnection);
-//
-//        resource.execute(request);
-//
-//        assertEquals(blaah.getResource(resourcePath), Optional.empty());
-//
-//        blaah.deleteResource(resourcePath);
-//    }
-//
-//    @Test
-//    public void provideOptionsForAResourceInTheHeaders() {
-//        URI resourcePath = URI.create("/the_resource_I_want_is_here");
-//        FileSystem blaah = new FakeFileSystem(URI.create("./resources/"));
-//        blaah.addOrReplaceResource(resourcePath, "Please destroy the evidence");
-//        DynamicResource resource = new DynamicResource(resourcePath, blaah);
-//        resource.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
-//
-//        FakeSocketConnection socketConnection = new FakeSocketConnection();
-//        socketConnection.setRequestTo("OPTIONS " + resourcePath + "HTTP/1.1\n\n");
-//        Request request = new Request(socketConnection);
-//
-//        resource.execute(request);
-//
-//        assertEquals("Allow: GET,OPTIONS\n", resource.getResponseHeaders());
-//    }
-//}
+public class DynamicResourceShould {
+
+    @Test
+    public void getContent() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("path_to_dynamic_resource");
+        String resourceContent = "Stale content";
+        fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET " + resourcePath + " HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
+
+        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + resourceContent).getBytes(), dynamicResource.generateResponse(request));
+    }
+
+    @Test
+    public void onlyAllowConfiguredMethods() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("path_to_dynamic_resource");
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("PATCH " + resourcePath + " HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
+
+        assertArrayEquals((Response.NOT_ALLOWED_RESPONSE).getBytes(), dynamicResource.generateResponse(request));
+    }
+
+    @Test
+    public void respondToOptionsWithMethodsAllowedExampleOne() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("path_to_dynamic_resource");
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("OPTIONS " + resourcePath + " HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem,
+                new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
+
+        String expectedResponse = Response.STATUS_TWO_HUNDRED + "Allow: GET,OPTIONS\n" + Response.END_OF_HEADERS;
+        assertArrayEquals((expectedResponse).getBytes(), dynamicResource.generateResponse(request));
+    }
+
+    @Test
+    public void respondToOptionsWithMethodsAllowedExampleTwo() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("path_to_dynamic_resource");
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("OPTIONS " + resourcePath + " HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem,
+                new Request.Method[] {Request.Method.POST, Request.Method.OPTIONS});
+
+        String expectedResponse = Response.STATUS_TWO_HUNDRED + "Allow: POST,OPTIONS\n" + Response.END_OF_HEADERS;
+        assertArrayEquals((expectedResponse).getBytes(), dynamicResource.generateResponse(request));
+    }
+
+    @Test
+    public void notIncludeResourceContentWithHead() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("path_to_dynamic_resource");
+        fileSystem.addOrReplaceResource(resourcePath, "I am an elusive resource".getBytes());
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("HEAD " + resourcePath + " HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.HEAD});
+
+        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
+    }
+
+    @Test
+    public void getEmptyContent() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("path_to_dynamic_resource");
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET " + resourcePath + " HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
+
+        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + "").getBytes(), dynamicResource.generateResponse(request));
+    }
+
+    @Test
+    public void postContent() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("path_to_dynamic_resource");
+        String requestBody = "Freshly baked new content";
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("POST " + resourcePath + " HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.POST});
+
+        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
+        assertArrayEquals(requestBody.getBytes(), fileSystem.getDynamicResource(resourcePath).get());
+    }
+
+    @Test
+    public void putContent() {
+        URI resourcePath = URI.create("path_to_dynamic_resource");
+        String resourceContent = "Something has to change";
+        String newResourceContent = "There, happy now?";
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("PUT " + resourcePath + " HTTP/1.1\nContent-Length: " + newResourceContent.getBytes().length + "\n\n" + newResourceContent);
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.PUT});
+
+        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
+        assertArrayEquals(newResourceContent.getBytes(), fileSystem.getDynamicResource(resourcePath).get());
+    }
+
+    @Test
+    public void deleteContent() {
+        URI resourcePath = URI.create("path_to_dynamic_resource");
+        String resourceContent = "Something has to disappear";
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("DELETE " + resourcePath + " HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.DELETE});
+
+        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
+        assertEquals(Optional.empty(), fileSystem.getDynamicResource(resourcePath));
+    }
+}

@@ -22,7 +22,7 @@ public class StaticResource implements Resource {
             byte[] statusLine = Response.STATUS_TWO_HUNDRED.getBytes();
             byte[] contentTypeHeader = generateContentTypeHeader();
             byte[] endOfHeaders = Response.END_OF_HEADERS.getBytes();
-            byte[] resourceContent = filesystem.getResource(uri.get()).get();
+            byte[] resourceContent = filesystem.getDynamicResource(uri.get()).get();
 
             return concatenateData(statusLine, contentTypeHeader, endOfHeaders, resourceContent);
         }

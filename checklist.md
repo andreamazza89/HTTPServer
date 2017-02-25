@@ -1,5 +1,7 @@
 # Checklist
 
+- create new method in fileSystem, getStaticResource, which does not return optional
+- remove duplication of CONCAteNATEDATA
 - perhaps uri() could be removed from the Resource interface?
 - find a better way to compare two bytearrays so that failing tests give better information (string comparison)
 - refactor fakes that use inheritance to use interface instead

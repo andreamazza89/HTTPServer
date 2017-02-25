@@ -17,7 +17,7 @@ public class FileSystem {
         this.resourcesBasePath = resourcesPath;
     }
 
-    public Optional<byte[]> getResource(URI uri) {
+    public Optional<byte[]> getDynamicResource(URI uri) {
         File resource = retrieveResource(uri);
         long resourceLength = resource.length();
 

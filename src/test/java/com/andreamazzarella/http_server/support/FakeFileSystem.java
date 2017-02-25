@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public class FakeFileSystem extends FileSystem {
 
-    private Optional<byte[]> resourceContent;
+    private Optional<byte[]> resourceContent = Optional.empty();
     private String contentType;
 
     public FakeFileSystem(URI resourcesPath) {
@@ -19,7 +19,7 @@ public class FakeFileSystem extends FileSystem {
     }
 
     @Override
-    public Optional<byte[]> getResource(URI uri) {
+    public Optional<byte[]> getDynamicResource(URI uri) {
         return resourceContent;
     }
 

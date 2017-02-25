@@ -16,7 +16,7 @@ public class FileSystemShould {
     public void supportMissingResources() {
         FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
 
-        assertEquals(Optional.empty(), fileSystem.getResource(URI.create("/inexistent/resource")));
+        assertEquals(Optional.empty(), fileSystem.getDynamicResource(URI.create("/inexistent/resource")));
     }
 
     @Test
@@ -25,7 +25,7 @@ public class FileSystemShould {
         URI pathToResource = URI.create("/my_brand_new_empty_resource");
         fileSystem.addOrReplaceResource(pathToResource, "".getBytes());
 
-        assertEquals(Optional.empty(), fileSystem.getResource(pathToResource));
+        assertEquals(Optional.empty(), fileSystem.getDynamicResource(pathToResource));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class FileSystemShould {
         printWriter.print("I am such a resourceful resource!");
         printWriter.close();
 
-        assertArrayEquals("I am such a resourceful resource!".getBytes(), fileSystem.getResource(pathToResource).get());
+        assertArrayEquals("I am such a resourceful resource!".getBytes(), fileSystem.getDynamicResource(pathToResource).get());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class FileSystemShould {
         URI pathToResource = URI.create("/my_brand_new_resource");
         fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
 
-        assertArrayEquals("what a handsome resource".getBytes(), fileSystem.getResource(pathToResource).get());
+        assertArrayEquals("what a handsome resource".getBytes(), fileSystem.getDynamicResource(pathToResource).get());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class FileSystemShould {
         fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
         fileSystem.addOrReplaceResource(pathToResource, "not so fast Giacomo".getBytes());
 
-        assertArrayEquals("not so fast Giacomo".getBytes(), fileSystem.getResource(pathToResource).get());
+        assertArrayEquals("not so fast Giacomo".getBytes(), fileSystem.getDynamicResource(pathToResource).get());
 
     }
 
@@ -91,7 +91,7 @@ public class FileSystemShould {
 
         fileSystem.deleteResource(pathToResource);
 
-        assertEquals(Optional.empty(), fileSystem.getResource(pathToResource));
+        assertEquals(Optional.empty(), fileSystem.getDynamicResource(pathToResource));
     }
 
     @After
