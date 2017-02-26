@@ -16,7 +16,7 @@ public class DynamicResourceShould {
     public void getContent() {
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
         URI resourcePath = URI.create("/path_to_dynamic_resource/");
-        String resourceContent = "Stale content";
+        String resourceContent = "Content";
         fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET " + resourcePath + " HTTP/1.1\n\n");
@@ -24,6 +24,20 @@ public class DynamicResourceShould {
         Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
 
         assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + resourceContent).getBytes(), dynamicResource.generateResponse(request));
+    }
+
+    @Test
+    public void respondWith206WithGetPartialContent() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("/path_to_dynamic_resource/");
+        String resourceContent = "Partial content";
+        fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET " + resourcePath + " HTTP/1.1\nRange: bytes=0-14\n\n");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
+
+        assertArrayEquals((Response.STATUS_TWO_OH_SIX + Response.END_OF_HEADERS + resourceContent).getBytes(), dynamicResource.generateResponse(request));
     }
 
     @Test
@@ -102,7 +116,7 @@ public class DynamicResourceShould {
         Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.POST});
 
         assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
-        assertArrayEquals(requestBody.getBytes(), fileSystem.getDynamicResource(resourcePath).get());
+        assertArrayEquals(requestBody.getBytes(), fileSystem.getResource(resourcePath, null).get());
     }
 
     @Test
@@ -118,7 +132,7 @@ public class DynamicResourceShould {
         Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.PUT});
 
         assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
-        assertArrayEquals(newResourceContent.getBytes(), fileSystem.getDynamicResource(resourcePath).get());
+        assertArrayEquals(newResourceContent.getBytes(), fileSystem.getResource(resourcePath, null).get());
     }
 
     @Test
@@ -133,7 +147,7 @@ public class DynamicResourceShould {
         Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.DELETE});
 
         assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
-        assertEquals(Optional.empty(), fileSystem.getDynamicResource(resourcePath));
+        assertEquals(Optional.empty(), fileSystem.getResource(resourcePath, null));
     }
 
     @Test

@@ -19,7 +19,7 @@ public class FakeFileSystem extends FileSystem {
     }
 
     @Override
-    public Optional<byte[]> getDynamicResource(URI uri) {
+    public Optional<byte[]> getResource(URI uri, String dataRange) {
         return resourceContent;
     }
 

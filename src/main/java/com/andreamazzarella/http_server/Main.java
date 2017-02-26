@@ -37,6 +37,7 @@ public class Main {
         Resource imagePNG = new StaticResource(URI.create("/image.png"), staticFilesystem);
         Resource imageGIF = new StaticResource(URI.create("/image.gif"), staticFilesystem);
         Resource textFile = new StaticResource(URI.create("/text-file.txt"), staticFilesystem);
+        Resource partialContent = new StaticResource(URI.create("/partial_content.txt"), staticFilesystem);
         Resource redirect = new RedirectedResource(URI.create("/redirect"), URI.create("http://localhost:5000/"));
 
         resources.addResource(root);
@@ -51,6 +52,7 @@ public class Main {
         resources.addResource(imagePNG);
         resources.addResource(imageGIF);
         resources.addResource(textFile);
+        resources.addResource(partialContent);
         resources.addResource(redirect);
 
         return resources;

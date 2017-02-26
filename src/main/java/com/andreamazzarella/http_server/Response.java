@@ -5,6 +5,7 @@ class Response {
     static final String END_OF_HEADERS = NEWLINE;
 
     static final String STATUS_TWO_HUNDRED = "HTTP/1.1 200 OK" + NEWLINE;
+    public static final String STATUS_TWO_OH_SIX = "HTTP/1.1 206 Partial Content" + NEWLINE;
     static final String STATUS_THREE_OH_TWO = "HTTP/1.1 302 Found" + NEWLINE;
     static final String STATUS_FOUR_OH_FOUR = "HTTP/1.1 404 Not Found" + NEWLINE;
     static final String STATUS_FOUR_OH_FIVE = "HTTP/1.1 405 Not Allowed" + NEWLINE;

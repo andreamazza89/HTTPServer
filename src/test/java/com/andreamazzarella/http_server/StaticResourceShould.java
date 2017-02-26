@@ -22,12 +22,27 @@ public class StaticResourceShould {
     }
 
     @Test
+    public void respondWith206WithGetPartialContent() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("/resource_path/");
+        String resourceContent = "Partial content";
+        fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
+        fileSystem.setContentTypeTo(resourcePath, "text/plain");
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET " + resourcePath + " HTTP/1.1\nRange: bytes=0-14\n\n");
+        Request request = new Request(socketConnection);
+        Resource staticResource = new StaticResource(resourcePath, fileSystem);
+
+        assertArrayEquals((Response.STATUS_TWO_OH_SIX + "Content-Type: text/plain\n" + Response.END_OF_HEADERS + resourceContent).getBytes(), staticResource.generateResponse(request));
+    }
+
+    @Test
     public void generateAnAppropriateResponseWhenRetrievingExampleOne() throws IOException {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         URI resourcePath = URI.create("resource_path");
         socketConnection.setRequestTo("GET " + resourcePath + " HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
-        FakeFileSystem fileSystem = new FakeFileSystem(URI.create(".resources"));
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./resources"));
         fileSystem.addOrReplaceResource(resourcePath, "this one is a rich source of vitamin D".getBytes());
         fileSystem.setContentTypeTo(resourcePath, "image/jpg");
 
@@ -43,7 +58,7 @@ public class StaticResourceShould {
         URI resourcePath = URI.create("resource_path");
         socketConnection.setRequestTo("GET " + resourcePath + " HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
-        FakeFileSystem fileSystem = new FakeFileSystem(URI.create(".resources"));
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./resources"));
         fileSystem.addOrReplaceResource(resourcePath, "rarely do we see such a resourceful resource, research has shown".getBytes());
         fileSystem.setContentTypeTo(resourcePath, "image/gif");
 

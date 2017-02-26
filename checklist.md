@@ -1,5 +1,6 @@
 # Checklist
 
+- extract data range parser from filesystem
 - create new method in fileSystem, getStaticResource, which does not return optional
 - remove duplication of CONCAteNATEDATA
 - perhaps uri() could be removed from the Resource interface?

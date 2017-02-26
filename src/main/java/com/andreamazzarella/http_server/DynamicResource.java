@@ -35,9 +35,15 @@ public class DynamicResource implements Resource {
         } else {
             switch (request.method()) {
                 case GET:
-                    byte[] statusAndHeaders = (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
-                    byte[] body = fileSystem.getDynamicResource(request.uri()).orElse("".getBytes());
+                    String dataRange = request.getHeader("Range");
+                    byte[] statusAndHeaders;
+                    byte[] body = fileSystem.getResource(request.uri(), dataRange).orElse("".getBytes());;
                     byte[] parameters = serialiseParameters(request);
+                    if (dataRange == null) {
+                        statusAndHeaders = (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+                    } else {
+                        statusAndHeaders = (Response.STATUS_TWO_OH_SIX + Response.END_OF_HEADERS).getBytes();
+                    }
                     return concatenateData(statusAndHeaders, body, parameters);
                 case HEAD:
                     return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();

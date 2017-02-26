@@ -7,7 +7,10 @@ import java.net.URI;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileSystem {
 
@@ -17,19 +20,51 @@ public class FileSystem {
         this.resourcesBasePath = resourcesPath;
     }
 
-    public Optional<byte[]> getDynamicResource(URI uri) {
+    public Optional<byte[]> getResource(URI uri, String dataRange) {
         File resource = retrieveResource(uri);
+        int dataStart = parseDataStart(resource, dataRange);
+        int dataEnd = parseDataEnd(resource, dataRange);
         long resourceLength = resource.length();
 
         if (resource.exists() && resourceLength > 0) {
             try {
-                byte[] resourceContent = Files.readAllBytes(resource.toPath());
-                return Optional.of(resourceContent);
+                byte[] allResourceContent = Files.readAllBytes(resource.toPath());
+                return Optional.of(Arrays.copyOfRange(allResourceContent, dataStart, dataEnd));
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
         } else {
             return Optional.empty();
+        }
+    }
+
+    private int parseDataStart(File resource, String dataRange) {
+        if (dataRange == null) {
+            return 0;
+        }
+
+        Pattern pattern = Pattern.compile(".*=(\\d*)-(\\d*).*");
+        Matcher matcher = pattern.matcher(dataRange);
+        matcher.matches();
+        if (matcher.group(1).equals("")) {
+            return (int)resource.length() - Integer.parseInt(matcher.group(2));
+        } else {
+           return Integer.parseInt(matcher.group(1));
+        }
+    }
+
+    private int parseDataEnd(File resource, String dataRange) {
+        if (dataRange == null) {
+            return (int)resource.length();
+        }
+
+        Pattern pattern = Pattern.compile(".*=(\\d*)-(\\d*).*");
+        Matcher matcher = pattern.matcher(dataRange);
+        matcher.matches();
+        if (matcher.group(2).equals("") || matcher.group(1).equals("")) {
+            return (int)resource.length();
+        } else {
+            return Integer.parseInt(matcher.group(2)) + 1;
         }
     }
 

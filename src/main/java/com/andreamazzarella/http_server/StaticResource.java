@@ -18,11 +18,21 @@ public class StaticResource implements Resource {
     public byte[] generateResponse(Request request) {
         if (request.method() != Request.Method.GET) {
             return Response.NOT_ALLOWED_RESPONSE.getBytes();
-        } else {
+        }
+
+        String dataRange = request.getHeader("Range");
+        if (dataRange == null) {
             byte[] statusLine = Response.STATUS_TWO_HUNDRED.getBytes();
             byte[] contentTypeHeader = generateContentTypeHeader();
             byte[] endOfHeaders = Response.END_OF_HEADERS.getBytes();
-            byte[] resourceContent = filesystem.getDynamicResource(uri.get()).get();
+            byte[] resourceContent = filesystem.getResource(uri.get(), dataRange).get();
+
+            return concatenateData(statusLine, contentTypeHeader, endOfHeaders, resourceContent);
+        } else {
+            byte[] statusLine = Response.STATUS_TWO_OH_SIX.getBytes();
+            byte[] contentTypeHeader = generateContentTypeHeader();
+            byte[] endOfHeaders = Response.END_OF_HEADERS.getBytes();
+            byte[] resourceContent = filesystem.getResource(uri.get(), dataRange).get();
 
             return concatenateData(statusLine, contentTypeHeader, endOfHeaders, resourceContent);
         }
