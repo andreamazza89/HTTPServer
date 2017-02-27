@@ -27,6 +27,37 @@ public class DynamicResourceShould {
     }
 
     @Test
+    public void patchContent() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("/resource_path/");
+        fileSystem.setContentTypeTo(resourcePath, "go ahead, patch me");
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("PATCH " + resourcePath + " HTTP/1.1\nContent-Length: 23\n\n" + "here is a patch for you");
+        Request request = new Request(socketConnection);
+        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.PATCH});
+
+        assertArrayEquals((Response.STATUS_TWO_OH_FOUR + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
+        assertArrayEquals("here is a patch for you".getBytes(), fileSystem.getResource(resourcePath, null).get());
+    }
+
+    @Test
+    public void includeContentTypeIfAvailable() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("/resource_path");
+        String resourceContent = "this one is a rich source of vitamin D";
+        fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
+        fileSystem.setContentTypeTo(resourcePath, "image/jpeg");
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("GET " + resourcePath + " HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        Resource staticResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
+
+        String expectedResponse = Response.STATUS_TWO_HUNDRED + "Content-Type: image/jpeg\n\n" + resourceContent;
+        assertEquals(expectedResponse, new String(staticResource.generateResponse(request)));
+    }
+
+    @Test
     public void respondWith206WithGetPartialContent() {
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
         URI resourcePath = URI.create("/path_to_dynamic_resource/");
