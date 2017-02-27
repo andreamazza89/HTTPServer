@@ -20,7 +20,7 @@ public class ResourcesShould {
     @Test
     public void provideTheRouteAssociatedToTheGivenURI() {
         Resources resources = new Resources();
-        Resource root = new DynamicResource(URI.create("/"));
+        Resource root = new TeaPotResource(URI.create("/"));
         resources.addResource(root);
         
         Resource resource = resources.findResource(URI.create("/"));

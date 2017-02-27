@@ -10,7 +10,7 @@ import java.util.TreeMap;
 public class Request {
 
     public enum Method {
-        POST, OPTIONS, DELETE, PUT, HEAD, UNRECOGNISED_METHOD, GET
+        POST, OPTIONS, DELETE, PUT, HEAD, UNRECOGNISED_METHOD, PATCH, GET
     }
 
     private static final int INDEX_OF_REQUEST_LINE = 0;
@@ -76,6 +76,10 @@ public class Request {
         }
     }
 
+    String getRequestLine() {
+        return requestLine;
+    }
+
     Method method() {
         switch (tokenisedRequestLine[0]) {
             case "GET":
@@ -90,6 +94,8 @@ public class Request {
                 return Method.OPTIONS;
             case "DELETE":
                 return Method.DELETE;
+            case "PATCH":
+                return Method.PATCH;
             default:
                 return Method.UNRECOGNISED_METHOD;
         }

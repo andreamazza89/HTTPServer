@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
@@ -83,6 +84,19 @@ public class FileSystem {
         }
     }
 
+    public void appendResource(URI uri, byte[] resourceContent) {
+        File resource = retrieveResource(uri);
+        if (resource.exists()) {
+            try {
+                Files.write(resource.toPath(), resourceContent, StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            addOrReplaceResource(uri, resourceContent);
+        }
+    }
+
     public void deleteResource(URI uri) {
         File resource = retrieveResource(uri);
         resource.delete();
@@ -92,4 +106,23 @@ public class FileSystem {
         return new File(resourcesBasePath.getPath(), uri.getPath());
     }
 
+    private byte[] concatenateData(byte[]... dataChunks) {
+        int totalDataLength = getTotalDataLength(dataChunks);
+        byte[] result = new byte[totalDataLength];
+        ByteBuffer dataBuffer = ByteBuffer.wrap(result);
+
+        for (byte[] dataChunk : dataChunks) {
+            dataBuffer.put(dataChunk);
+        }
+
+        return result;
+    }
+
+    private int getTotalDataLength(byte[][] dataChunks) {
+        int dataLength = 0;
+        for (byte[] dataChunk : dataChunks) {
+            dataLength += dataChunk.length;
+        }
+        return dataLength;
+    }
 }

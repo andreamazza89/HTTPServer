@@ -3,7 +3,8 @@ package com.andreamazzarella.http_server;
 import org.junit.After;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -111,7 +112,27 @@ public class FileSystemShould {
         fileSystem.addOrReplaceResource(pathToResource, "not so fast Giacomo".getBytes());
 
         assertArrayEquals("not so fast Giacomo".getBytes(), fileSystem.getResource(pathToResource, null).get());
+    }
 
+    @Test
+    public void appendNewContentToAnExistingResource() {
+        FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
+
+        URI pathToResource = URI.create("/my_brand_new_resource");
+        fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
+        fileSystem.appendResource(pathToResource, "not so fast Giacomo".getBytes());
+
+        assertArrayEquals("what a handsome resourcenot so fast Giacomo".getBytes(), fileSystem.getResource(pathToResource, null).get());
+    }
+
+    @Test
+    public void createANewResourceWhenAppendingToInexistingResource() {
+        FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
+
+        URI pathToResource = URI.create("/my_brand_new_resource");
+        fileSystem.appendResource(pathToResource, "not so fast Giacomo".getBytes());
+
+        assertArrayEquals("not so fast Giacomo".getBytes(), fileSystem.getResource(pathToResource, null).get());
     }
 
     @Test

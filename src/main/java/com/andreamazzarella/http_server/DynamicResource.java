@@ -13,10 +13,6 @@ public class DynamicResource implements Resource {
     private Optional<URI> uri;
     private FileSystem fileSystem;
 
-    DynamicResource(URI DynamicResourcePath) {
-        this.uri = Optional.of(DynamicResourcePath);
-    }
-
     DynamicResource(URI DynamicResourcePath, FileSystem fileSystem, Request.Method[] methodsAllowed) {
         this.uri = Optional.of(DynamicResourcePath);
         this.fileSystem = fileSystem;
@@ -32,35 +28,35 @@ public class DynamicResource implements Resource {
     public byte[] generateResponse(Request request) {
         if (!methodsAllowed.contains(request.method())) {
             return Response.NOT_ALLOWED_RESPONSE.getBytes();
-        } else {
-            switch (request.method()) {
-                case GET:
-                    String dataRange = request.getHeader("Range");
-                    byte[] statusAndHeaders;
-                    byte[] body = fileSystem.getResource(request.uri(), dataRange).orElse("".getBytes());;
-                    byte[] parameters = serialiseParameters(request);
-                    if (dataRange == null) {
-                        statusAndHeaders = (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
-                    } else {
-                        statusAndHeaders = (Response.STATUS_TWO_OH_SIX + Response.END_OF_HEADERS).getBytes();
-                    }
-                    return concatenateData(statusAndHeaders, body, parameters);
-                case HEAD:
-                    return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
-                case POST:
-                    fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
-                    return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
-                case PUT:
-                    fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
-                    return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
-                case DELETE:
-                    fileSystem.deleteResource(request.uri());
-                    return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
-                case OPTIONS:
-                    return (Response.STATUS_TWO_HUNDRED + generateAllowedMethodsHeader() + Response.END_OF_HEADERS).getBytes();
-                default:
-                    throw new RuntimeException("Unhandled method");
-            }
+        }
+
+        switch (request.method()) {
+            case GET:
+                String dataRange = request.getHeader("Range");
+                byte[] statusAndHeaders;
+                byte[] body = fileSystem.getResource(request.uri(), dataRange).orElse("".getBytes());
+                byte[] parameters = serialiseParameters(request);
+                if (dataRange == null) {
+                    statusAndHeaders = (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+                } else {
+                    statusAndHeaders = (Response.STATUS_TWO_OH_SIX + Response.END_OF_HEADERS).getBytes();
+                }
+                return concatenateData(statusAndHeaders, body, parameters);
+            case HEAD:
+                return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+            case POST:
+                fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
+                return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+            case PUT:
+                fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
+                return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+            case DELETE:
+                fileSystem.deleteResource(request.uri());
+                return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
+            case OPTIONS:
+                return (Response.STATUS_TWO_HUNDRED + generateAllowedMethodsHeader() + Response.END_OF_HEADERS).getBytes();
+            default:
+                throw new RuntimeException("Unhandled method");
         }
     }
 

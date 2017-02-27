@@ -85,6 +85,15 @@ public class RequestShould {
     }
 
     @Test
+    public void extractThePatchMethod() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("PATCH / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.PATCH, request.method());
+    }
+
+    @Test
     public void provideMissingMethodIfNotRecognised() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("MADE_UP_METHOD / HTTP/1.1\n\n");

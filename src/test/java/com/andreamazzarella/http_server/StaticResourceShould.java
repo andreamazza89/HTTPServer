@@ -37,6 +37,20 @@ public class StaticResourceShould {
     }
 
     @Test
+    public void patchContent() {
+        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+        URI resourcePath = URI.create("/resource_path/");
+        fileSystem.setContentTypeTo(resourcePath, "go ahead, patch me");
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("PATCH " + resourcePath + " HTTP/1.1\nContent-Length: 23\n\n" + "here is a patch for you");
+        Request request = new Request(socketConnection);
+        Resource staticResource = new StaticResource(resourcePath, fileSystem);
+
+        assertArrayEquals((Response.STATUS_TWO_OH_FOUR + Response.END_OF_HEADERS).getBytes(), staticResource.generateResponse(request));
+        assertArrayEquals("here is a patch for you".getBytes(), fileSystem.getResource(resourcePath, null).get());
+    }
+
+    @Test
     public void generateAnAppropriateResponseWhenRetrievingExampleOne() throws IOException {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         URI resourcePath = URI.create("resource_path");

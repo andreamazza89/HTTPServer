@@ -11,11 +11,13 @@ class HTTPServer {
     private final int portNumber;
     private final String publicDirectoryPath;
     private final Resources resources;
+    private final Logger logger;
 
-    HTTPServer(int portNumber, String publicDirectoryPath, Resources resources) {
+    HTTPServer(int portNumber, String publicDirectoryPath, Resources resources, Logger logger) {
         this.portNumber = portNumber;
         this.publicDirectoryPath = publicDirectoryPath;
         this.resources = resources;
+        this.logger = logger;
     }
 
     void start() {
@@ -38,6 +40,7 @@ class HTTPServer {
     private void respondToRequest(Socket socket) {
         SocketConnection socketConnection = new SocketConnection(socket);
         Request request = new Request(socketConnection);
+        logger.log(request);
         Resource resource = resources.findResource(request.uri());
         byte[] response = resource.generateResponse(request);
         socketConnection.write(response);
