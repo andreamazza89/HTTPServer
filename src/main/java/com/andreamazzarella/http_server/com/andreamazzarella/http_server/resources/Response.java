@@ -1,19 +1,19 @@
 package com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources;
 
 public class Response {
-    public static final String NEWLINE = "\n";
+    static final String NEWLINE = "\n";
     public static final String END_OF_HEADERS = NEWLINE;
 
     public static final String STATUS_TWO_HUNDRED = "HTTP/1.1 200 OK" + NEWLINE;
     public static final String STATUS_TWO_OH_FOUR = "HTTP/1.1 204 No content" + NEWLINE;
     public static final String STATUS_TWO_OH_SIX = "HTTP/1.1 206 Partial Content" + NEWLINE;
     public static final String STATUS_THREE_OH_TWO = "HTTP/1.1 302 Found" + NEWLINE;
-    public static final String STATUS_FOUR_OH_ONE = "HTTP/1.1 401 Unauthorized" + NEWLINE;
-    public static final String STATUS_FOUR_OH_FOUR = "HTTP/1.1 404 Not Found" + NEWLINE;
-    public static final String STATUS_FOUR_OH_FIVE = "HTTP/1.1 405 Not Allowed" + NEWLINE;
-    public static final String STATUS_FOUR_ONE_EIGHT = "HTTP/1.1 418 I'm a Teapot" + NEWLINE;
+    private static final String STATUS_FOUR_OH_ONE = "HTTP/1.1 401 Unauthorized" + NEWLINE;
+    private static final String STATUS_FOUR_OH_FOUR = "HTTP/1.1 404 Not Found" + NEWLINE;
+    private static final String STATUS_FOUR_OH_FIVE = "HTTP/1.1 405 Not Allowed" + NEWLINE;
+    private static final String STATUS_FOUR_ONE_EIGHT = "HTTP/1.1 418 I'm a Teapot" + NEWLINE;
 
-    public static final String CONTENT_TYPE_HEADER_NAME = "Content-Type: ";
+    static final String CONTENT_TYPE_HEADER_NAME = "Content-Type: ";
 
     public static final String TEA_POT_RESPONSE = STATUS_FOUR_ONE_EIGHT + END_OF_HEADERS + "I'm a teapot";
     public static final String NOT_ALLOWED_RESPONSE = STATUS_FOUR_OH_FIVE + END_OF_HEADERS;

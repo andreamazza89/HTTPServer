@@ -2,9 +2,6 @@ package com.andreamazzarella.http_server.com.andreamazzarella.http_server.resour
 
 import com.andreamazzarella.http_server.BasicAuthenticator;
 import com.andreamazzarella.http_server.Request;
-import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.MissingResource;
-import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Resource;
-import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.UnauthorisedResource;
 
 import java.util.ArrayList;
 import java.util.List;

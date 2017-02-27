@@ -3,8 +3,6 @@ package com.andreamazzarella.http_server.com.andreamazzarella.http_server.resour
 import com.andreamazzarella.http_server.ArrayOperations;
 import com.andreamazzarella.http_server.FileSystem;
 import com.andreamazzarella.http_server.Request;
-import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Resource;
-import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Response;
 
 import java.net.URI;
 import java.util.Set;
