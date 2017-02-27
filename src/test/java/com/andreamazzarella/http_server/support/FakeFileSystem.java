@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server.support;
 
+import com.andreamazzarella.http_server.ArrayOperations;
 import com.andreamazzarella.http_server.FileSystem;
 
 import java.net.URI;
@@ -36,31 +37,11 @@ public class FakeFileSystem extends FileSystem {
 
     @Override
     public void appendResource(URI uri, byte[] resourceContent) {
-        this.resourceContent = Optional.of(concatenateData(this.resourceContent.orElse("".getBytes()), resourceContent));
+        this.resourceContent = Optional.of(ArrayOperations.concatenateData(this.resourceContent.orElse("".getBytes()), resourceContent));
     }
 
     @Override
     public void deleteResource(URI uri) {
         this.resourceContent = Optional.empty();
-    }
-
-    private byte[] concatenateData(byte[]... dataChunks) {
-        int totalDataLength = getTotalDataLength(dataChunks);
-        byte[] result = new byte[totalDataLength];
-        ByteBuffer dataBuffer = ByteBuffer.wrap(result);
-
-        for (byte[] dataChunk : dataChunks) {
-            dataBuffer.put(dataChunk);
-        }
-
-        return result;
-    }
-
-    private int getTotalDataLength(byte[][] dataChunks) {
-        int dataLength = 0;
-        for (byte[] dataChunk : dataChunks) {
-            dataLength += dataChunk.length;
-        }
-        return dataLength;
     }
 }

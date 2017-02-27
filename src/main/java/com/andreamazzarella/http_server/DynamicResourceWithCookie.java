@@ -29,7 +29,7 @@ public class DynamicResourceWithCookie implements Resource {
         } else {
             status = (Response.STATUS_TWO_OH_SIX).getBytes();
         }
-        return concatenateData(status, setCookieHeader, Response.END_OF_HEADERS.getBytes(), body, cookie);
+        return ArrayOperations.concatenateData(status, setCookieHeader, Response.END_OF_HEADERS.getBytes(), body, cookie);
     }
 
     private byte[] getCookie(Request request) {
@@ -54,25 +54,5 @@ public class DynamicResourceWithCookie implements Resource {
     @Override
     public Optional<URI> uri() {
         return Optional.of(uri);
-    }
-
-    private byte[] concatenateData(byte[]... dataChunks) {
-        int totalDataLength = getTotalDataLength(dataChunks);
-        byte[] result = new byte[totalDataLength];
-        ByteBuffer dataBuffer = ByteBuffer.wrap(result);
-
-        for (byte[] dataChunk : dataChunks) {
-            dataBuffer.put(dataChunk);
-        }
-
-        return result;
-    }
-
-    private int getTotalDataLength(byte[][] dataChunks) {
-        int dataLength = 0;
-        for (byte[] dataChunk : dataChunks) {
-            dataLength += dataChunk.length;
-        }
-        return dataLength;
     }
 }

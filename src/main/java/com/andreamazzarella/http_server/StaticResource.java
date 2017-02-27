@@ -33,7 +33,7 @@ public class StaticResource implements Resource {
                 } else {
                     statusLine = Response.STATUS_TWO_OH_SIX.getBytes();
                 }
-                return concatenateData(statusLine, contentTypeHeader, endOfHeaders, resourceContent);
+                return ArrayOperations.concatenateData(statusLine, contentTypeHeader, endOfHeaders, resourceContent);
             case PATCH:
                 filesystem.addOrReplaceResource(request.uri(), request.body().getBytes());
                 return (Response.STATUS_TWO_OH_FOUR + Response.END_OF_HEADERS).getBytes();
@@ -51,25 +51,5 @@ public class StaticResource implements Resource {
         String mediaType = filesystem.getResourceContentType(uri.get());
         String contentTypeHeader = Response.CONTENT_TYPE_HEADER_NAME + mediaType + Response.NEWLINE;
         return contentTypeHeader.getBytes();
-    }
-
-    private byte[] concatenateData(byte[]... dataChunks) {
-        int totalDataLength = getTotalDataLength(dataChunks);
-        byte[] result = new byte[totalDataLength];
-        ByteBuffer dataBuffer = ByteBuffer.wrap(result);
-
-        for (byte[] dataChunk : dataChunks) {
-            dataBuffer.put(dataChunk);
-        }
-
-        return result;
-    }
-
-    private int getTotalDataLength(byte[][] dataChunks) {
-        int dataLength = 0;
-        for (byte[] dataChunk : dataChunks) {
-            dataLength += dataChunk.length;
-        }
-        return dataLength;
     }
 }

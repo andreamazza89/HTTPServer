@@ -105,24 +105,4 @@ public class FileSystem {
     private File retrieveResource(URI uri) {
         return new File(resourcesBasePath.getPath(), uri.getPath());
     }
-
-    private byte[] concatenateData(byte[]... dataChunks) {
-        int totalDataLength = getTotalDataLength(dataChunks);
-        byte[] result = new byte[totalDataLength];
-        ByteBuffer dataBuffer = ByteBuffer.wrap(result);
-
-        for (byte[] dataChunk : dataChunks) {
-            dataBuffer.put(dataChunk);
-        }
-
-        return result;
-    }
-
-    private int getTotalDataLength(byte[][] dataChunks) {
-        int dataLength = 0;
-        for (byte[] dataChunk : dataChunks) {
-            dataLength += dataChunk.length;
-        }
-        return dataLength;
-    }
 }
