@@ -41,7 +41,7 @@ class HTTPServer {
         SocketConnection socketConnection = new SocketConnection(socket);
         Request request = new Request(socketConnection);
         logger.log(request);
-        Resource resource = resources.findResource(request.uri());
+        Resource resource = resources.findResource(request);
         byte[] response = resource.generateResponse(request);
         socketConnection.write(response);
     }

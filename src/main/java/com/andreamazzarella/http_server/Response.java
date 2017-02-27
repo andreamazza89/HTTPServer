@@ -8,15 +8,17 @@ class Response {
     static final String STATUS_TWO_OH_FOUR = "HTTP/1.1 204 No content" + NEWLINE;
     static final String STATUS_TWO_OH_SIX = "HTTP/1.1 206 Partial Content" + NEWLINE;
     static final String STATUS_THREE_OH_TWO = "HTTP/1.1 302 Found" + NEWLINE;
+    static final String STATUS_FOUR_OH_ONE = "HTTP/1.1 401 Unauthorized" + NEWLINE;
     static final String STATUS_FOUR_OH_FOUR = "HTTP/1.1 404 Not Found" + NEWLINE;
     static final String STATUS_FOUR_OH_FIVE = "HTTP/1.1 405 Not Allowed" + NEWLINE;
     static final String STATUS_FOUR_ONE_EIGHT = "HTTP/1.1 418 I'm a Teapot" + NEWLINE;
 
     static final String CONTENT_TYPE_HEADER_NAME = "Content-Type: ";
 
-    static final String TEA_POT_RESPONSE = STATUS_FOUR_ONE_EIGHT + NEWLINE + "I'm a teapot";
-    static final String NOT_ALLOWED_RESPONSE = STATUS_FOUR_OH_FIVE + NEWLINE;
+    static final String TEA_POT_RESPONSE = STATUS_FOUR_ONE_EIGHT + END_OF_HEADERS + "I'm a teapot";
+    static final String NOT_ALLOWED_RESPONSE = STATUS_FOUR_OH_FIVE + END_OF_HEADERS;
     static final String NOT_FOUND_RESPONSE = STATUS_FOUR_OH_FOUR + END_OF_HEADERS;
+    static final String UNAUTHORISED_RESPONSE = STATUS_FOUR_OH_ONE + "WWW-Authenticate: Basic\n" + END_OF_HEADERS;
 }
 
 

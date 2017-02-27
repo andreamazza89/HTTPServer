@@ -6,6 +6,8 @@ import java.net.URLDecoder;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Request {
 
@@ -61,17 +63,19 @@ public class Request {
             if (headerOrEndOFHeaders.matches("")) {
                 break;
             } else {
-                String[] tokenisedHeader = tokenise(headerOrEndOFHeaders, SPACE);
-                headers.put(tokenisedHeader[INDEX_OF_FIELD_NAME], tokenisedHeader[INDEX_OF_FIELD_VALUE]);
+                Pattern headerField = Pattern.compile("(.+):\\s(.*)");
+                Matcher matcher = headerField.matcher(headerOrEndOFHeaders);
+                matcher.matches();
+                headers.put(matcher.group(1), matcher.group(2));
             }
         }
     }
 
     private void parseBody() {
-        if (headers.containsKey("Content-Length:")) {
-            int contentLenth = Integer.parseInt(headers.get("Content-Length:"));
-            char[] buffer = new char[contentLenth];
-            socketConnection.read(buffer, 0, contentLenth);
+        if (headers.containsKey("Content-Length")) {
+            int contentLength = Integer.parseInt(headers.get("Content-Length"));
+            char[] buffer = new char[contentLength];
+            socketConnection.read(buffer, 0, contentLength);
             requestBody = String.valueOf(buffer);
         }
     }
@@ -102,7 +106,7 @@ public class Request {
     }
 
     String getHeader(String fieldName) {
-        return headers.get(fieldName + ":");
+        return headers.get(fieldName);
     }
 
     Map<String,String> getParams() {

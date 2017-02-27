@@ -24,11 +24,18 @@ public class Main {
         URI dynamicPath = URI.create("./resources");
         URI logsPath = URI.create("./logs");
 
-        Resources resources = new Resources();
+        BasicAuthenticator authenticator = new BasicAuthenticator();
+        authenticator.addUser("admin", "hunter2");
+
+        Resources resources = new Resources(authenticator);
+
         FileSystem staticFilesystem = new FileSystem(publicPath);
         FileSystem dynamicFilesystem = new FileSystem(dynamicPath);
         FileSystem logsFilesystem = new FileSystem(logsPath);
         DirectoryExplorer directoryExplorer = new DirectoryExplorer(publicPath);
+
+        dynamicFilesystem.addOrReplaceResource(URI.create("/cookie"), "Eat".getBytes());
+        dynamicFilesystem.addOrReplaceResource(URI.create("/eat_cookie"), "mmmm ".getBytes());
 
         Resource root = new IndexResource(URI.create("/"), directoryExplorer);
         Resource form = new DynamicResource(URI.create("/form"), dynamicFilesystem, new Request.Method[]
@@ -52,6 +59,8 @@ public class Main {
         Resource partialContent = new StaticResource(URI.create("/partial_content.txt"), staticFilesystem);
         Resource patchContent = new StaticResource(URI.create("/patch-content.txt"), staticFilesystem);
         Resource redirect = new RedirectedResource(URI.create("/redirect"), URI.create("http://localhost:5000/"));
+        Resource cookie = new DynamicResourceWithCookie(URI.create("/cookie"), dynamicFilesystem, new Request.Method[] {Request.Method.GET});
+        Resource eatCookie = new DynamicResourceWithCookie(URI.create("/eat_cookie"), dynamicFilesystem, new Request.Method[] {Request.Method.GET});
 
         resources.addResource(root);
         resources.addResource(form);
@@ -72,6 +81,10 @@ public class Main {
         resources.addResource(partialContent);
         resources.addResource(patchContent);
         resources.addResource(redirect);
+        resources.addResource(cookie);
+        resources.addResource(eatCookie);
+
+        resources.requireAuthenticationFor(logs);
 
         return resources;
     }

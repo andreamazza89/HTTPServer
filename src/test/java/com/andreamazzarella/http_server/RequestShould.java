@@ -106,7 +106,7 @@ public class RequestShould {
     public void extractTheBodyIfPresentExampleOne() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         String requestBody = "I am a getContent??";
-        socketConnection.setRequestTo("HEAD / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
+        socketConnection.setRequestTo("GET / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
         Request request = new Request(socketConnection);
 
         assertEquals(requestBody, request.body());
@@ -116,7 +116,7 @@ public class RequestShould {
     public void extractTheBodyIfPresentExampleTwo() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         String requestBody = "I am definitely a getContent!";
-        socketConnection.setRequestTo("HEAD / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
+        socketConnection.setRequestTo("GET / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
         Request request = new Request(socketConnection);
 
         assertEquals(requestBody, request.body());
@@ -134,10 +134,10 @@ public class RequestShould {
     @Test
     public void extractTheHeadersIfPresentExampleTwo() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("GET / HTTP/1.1\nField-Name: different-value\n\n");
+        socketConnection.setRequestTo("GET / HTTP/1.1\nField-Name: different value\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals("different-value", request.getHeader("Field-Name"));
+        assertEquals("different value", request.getHeader("Field-Name"));
     }
 
     @Test
