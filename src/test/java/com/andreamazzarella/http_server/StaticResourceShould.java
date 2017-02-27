@@ -74,11 +74,11 @@ public class StaticResourceShould {
         Request request = new Request(socketConnection);
         FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./resources"));
         fileSystem.addOrReplaceResource(resourcePath, "rarely do we see such a resourceful resource, research has shown".getBytes());
-        fileSystem.setContentTypeTo(resourcePath, "image/gif");
+        fileSystem.setContentTypeTo(resourcePath, null);
 
         Resource staticResource = new StaticResource(URI.create("/path_to_static_resource"), fileSystem);
 
-        String expectedResponse = Response.STATUS_TWO_HUNDRED + "Content-Type: image/gif\n\n" + "rarely do we see such a resourceful resource, research has shown";
+        String expectedResponse = Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + "rarely do we see such a resourceful resource, research has shown";
         assertArrayEquals(expectedResponse.getBytes(), staticResource.generateResponse(request));
     }
 }
