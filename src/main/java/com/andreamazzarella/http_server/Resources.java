@@ -24,7 +24,7 @@ class Resources {
     }
 
     Resource findResource(Request request) {
-        Optional<Resource> resourceFound = resources.stream().filter((resource) -> resource.uri().get().getPath().equals(request.uri().getPath())).findFirst();
+        Optional<Resource> resourceFound = resources.stream().filter((resource) -> resource.uri().getPath().equals(request.uri().getPath())).findFirst();
 
         if (!resourceFound.isPresent()) {
             return new MissingResource();

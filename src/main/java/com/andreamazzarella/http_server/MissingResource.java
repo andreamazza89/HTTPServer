@@ -1,7 +1,6 @@
 package com.andreamazzarella.http_server;
 
 import java.net.URI;
-import java.util.Optional;
 
 class MissingResource implements Resource {
 
@@ -11,7 +10,7 @@ class MissingResource implements Resource {
     }
 
     @Override
-    public Optional<URI> uri() {
-        return Optional.empty();
+    public URI uri() {
+        return null;
     }
 }

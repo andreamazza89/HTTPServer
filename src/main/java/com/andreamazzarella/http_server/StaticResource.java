@@ -1,17 +1,15 @@
 package com.andreamazzarella.http_server;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
-import java.util.Optional;
 
 public class StaticResource implements Resource {
 
     private final FileSystem filesystem;
-    private final Optional<URI> uri;
+    private final URI uri;
 
     StaticResource(URI uri, FileSystem filesystem) {
         this.filesystem = filesystem;
-        this.uri = Optional.of(uri);
+        this.uri = uri;
     }
 
     @Override
@@ -23,7 +21,7 @@ public class StaticResource implements Resource {
         switch (request.method()) {
             case GET:
                 String dataRange = request.getHeader("Range");
-                byte[] resourceContent = filesystem.getResource(uri.get(), dataRange).get();
+                byte[] resourceContent = filesystem.getResource(uri, dataRange).get();
                 byte[] statusLine;
                 byte[] contentTypeHeader = generateContentTypeHeader();
                 byte[] endOfHeaders = Response.END_OF_HEADERS.getBytes();
@@ -43,12 +41,12 @@ public class StaticResource implements Resource {
     }
 
     @Override
-    public Optional<URI> uri() {
+    public URI uri() {
         return uri;
     }
 
     private byte[] generateContentTypeHeader() {
-        String mediaType = filesystem.getResourceContentType(uri.get());
+        String mediaType = filesystem.getResourceContentType(uri);
         String contentTypeHeader = Response.CONTENT_TYPE_HEADER_NAME + mediaType + Response.NEWLINE;
         return contentTypeHeader.getBytes();
     }

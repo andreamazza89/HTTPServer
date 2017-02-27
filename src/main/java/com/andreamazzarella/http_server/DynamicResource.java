@@ -4,23 +4,22 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public class DynamicResource implements Resource {
 
     private List<Request.Method> methodsAllowed;
-    private Optional<URI> uri;
+    private URI uri;
     private FileSystem fileSystem;
 
     DynamicResource(URI DynamicResourcePath, FileSystem fileSystem, Request.Method[] methodsAllowed) {
-        this.uri = Optional.of(DynamicResourcePath);
+        this.uri = DynamicResourcePath;
         this.fileSystem = fileSystem;
         this.methodsAllowed = Arrays.asList(methodsAllowed);
     }
 
     @Override
-    public Optional<URI> uri() {
+    public URI uri() {
         return uri;
     }
 

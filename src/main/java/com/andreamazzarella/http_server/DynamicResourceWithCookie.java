@@ -1,20 +1,16 @@
 package com.andreamazzarella.http_server;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
-import java.util.Optional;
 import java.util.Set;
 
 public class DynamicResourceWithCookie implements Resource {
 
     private final URI uri;
     private final FileSystem fileSystem;
-    private final Request.Method[] methods;
 
     DynamicResourceWithCookie(URI uri, FileSystem fileSystem, Request.Method[] methods) {
         this.uri = uri;
         this.fileSystem = fileSystem;
-        this.methods = methods;
     }
 
     @Override
@@ -52,7 +48,7 @@ public class DynamicResourceWithCookie implements Resource {
     }
 
     @Override
-    public Optional<URI> uri() {
-        return Optional.of(uri);
+    public URI uri() {
+        return uri;
     }
 }

@@ -1,7 +1,6 @@
 package com.andreamazzarella.http_server;
 
 import java.net.URI;
-import java.util.Optional;
 
 public class RedirectedResource implements Resource {
 
@@ -20,7 +19,7 @@ public class RedirectedResource implements Resource {
     }
 
     @Override
-    public Optional<URI> uri() {
-        return Optional.of(uri);
+    public URI uri() {
+        return uri;
     }
 }

@@ -1,14 +1,13 @@
 package com.andreamazzarella.http_server;
 
 import java.net.URI;
-import java.util.Optional;
 
 public class IndexResource implements Resource {
 
     private final URI uri;
     private final DirectoryExplorer directoryExplorer;
 
-    public IndexResource(URI uri, DirectoryExplorer directoryExplorer) {
+    IndexResource(URI uri, DirectoryExplorer directoryExplorer) {
         this.uri = uri;
         this.directoryExplorer = directoryExplorer;
     }
@@ -20,7 +19,7 @@ public class IndexResource implements Resource {
     }
 
     @Override
-    public Optional<URI> uri() {
-        return Optional.of(uri);
+    public URI uri() {
+        return uri;
     }
 }
