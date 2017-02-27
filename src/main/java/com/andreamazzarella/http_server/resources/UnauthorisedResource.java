@@ -1,4 +1,4 @@
-package com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources;
+package com.andreamazzarella.http_server.resources;
 
 import com.andreamazzarella.http_server.Request;
 

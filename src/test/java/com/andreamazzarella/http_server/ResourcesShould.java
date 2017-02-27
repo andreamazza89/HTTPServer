@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server;
 
-import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.*;
+import com.andreamazzarella.http_server.resources.*;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class ResourcesShould {
     }
 
     @Test
-    public void provideTheResourceAssociatedToTheGivenURI() {
+    public void provideTheResourceAssociatedToTheGivenURIAndMethod() {
         Resources resources = new Resources(new BasicAuthenticator());
         Resource tea = new TeaPotResource(URI.create("/tea"));
         resources.addResource(tea);
@@ -37,6 +37,21 @@ public class ResourcesShould {
         Resource resource = resources.findResource(request);
 
         assertEquals(tea, resource);
+    }
+
+    @Test
+    public void provideMethodNotAllowedIfRequestExistingButMethodDoesNotMatch() {
+        Resources resources = new Resources(new BasicAuthenticator());
+        Resource tea = new TeaPotResource(URI.create("/tea"));
+        resources.addResource(tea);
+
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("POST /tea HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        Resource resource = resources.findResource(request);
+
+        assertEquals(MethodNotAllowedResource.class, resource.getClass());
     }
 
     @Test
@@ -58,7 +73,7 @@ public class ResourcesShould {
     }
 
     @Test
-    public void provideResourceWhenCredentialsAreValid() {
+    public void provideValidatedResourceWhenCredentialsAreValid() {
         BasicAuthenticator authenticator = new BasicAuthenticator();
         authenticator.addUser("admin", "monkey_password");
         Resources resources = new Resources(authenticator);

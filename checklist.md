@@ -1,5 +1,6 @@
 # Checklist
 
+- replace Resource used in Resources example (currently tea) with GetResource, making the test more explicit
 - extract data range parser from filesystem
 - create new method in fileSystem, getStaticResource, which does not return optional
 - remove duplication of CONCAteNATEDATA
