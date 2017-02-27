@@ -84,7 +84,7 @@ public class Request {
         return requestLine;
     }
 
-    Method method() {
+    public Method method() {
         switch (tokenisedRequestLine[0]) {
             case "GET":
                 return Method.GET;
@@ -105,19 +105,19 @@ public class Request {
         }
     }
 
-    String getHeader(String fieldName) {
+    public String getHeader(String fieldName) {
         return headers.get(fieldName);
     }
 
-    Map<String,String> getParams() {
+    public Map<String,String> getParams() {
         return queryParameters;
     }
 
-    URI uri() {
+    public URI uri() {
         return URI.create(tokenisedRequestLine[INDEX_OF_REQUEST_URI]);
     }
 
-    String body() {
+    public String body() {
         return requestBody;
     }
 

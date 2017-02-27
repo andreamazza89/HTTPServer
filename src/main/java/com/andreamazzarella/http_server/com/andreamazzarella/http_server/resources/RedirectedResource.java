@@ -1,4 +1,8 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources;
+
+import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Resource;
+import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Response;
 
 import java.net.URI;
 
@@ -7,7 +11,7 @@ public class RedirectedResource implements Resource {
     private final URI uri;
     private final URI redirectLocation;
 
-    RedirectedResource(URI uri, URI redirectLocation) {
+    public RedirectedResource(URI uri, URI redirectLocation) {
         this.uri = uri;
         this.redirectLocation = redirectLocation;
     }

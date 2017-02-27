@@ -6,14 +6,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class BasicAuthenticator {
+public class BasicAuthenticator {
     private final Map<String, String> users = new HashMap<>();
 
     void addUser(String userName, String password) {
         users.put(userName, password);
     }
 
-    boolean isRequestValid(Request request) {
+    public boolean isRequestValid(Request request) {
         String authorizationHeaderFieldContent = request.getHeader("Authorization");
 
         if (authorizationHeaderFieldContent == null) {

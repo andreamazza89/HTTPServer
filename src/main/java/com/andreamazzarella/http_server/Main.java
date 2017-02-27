@@ -1,5 +1,7 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.*;
+
 import java.io.IOException;
 import java.net.URI;
 

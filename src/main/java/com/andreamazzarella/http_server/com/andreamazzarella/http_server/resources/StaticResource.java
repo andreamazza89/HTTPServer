@@ -1,4 +1,10 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources;
+
+import com.andreamazzarella.http_server.ArrayOperations;
+import com.andreamazzarella.http_server.FileSystem;
+import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Resource;
+import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Response;
 
 import java.net.URI;
 
@@ -7,7 +13,7 @@ public class StaticResource implements Resource {
     private final FileSystem filesystem;
     private final URI uri;
 
-    StaticResource(URI uri, FileSystem filesystem) {
+    public StaticResource(URI uri, FileSystem filesystem) {
         this.filesystem = filesystem;
         this.uri = uri;
     }

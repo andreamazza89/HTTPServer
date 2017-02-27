@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.*;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 

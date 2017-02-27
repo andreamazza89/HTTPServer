@@ -1,5 +1,8 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Resource;
+import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Resources;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
