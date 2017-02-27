@@ -21,4 +21,9 @@ public class TeaPotResource implements Resource {
     public URI uri() {
         return resourcePath;
     }
+
+    @Override
+    public Request.Method method() {
+        return Request.Method.GET;
+    }
 }

@@ -1,5 +1,6 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.resources;
 
+import com.andreamazzarella.http_server.Request;
 import com.andreamazzarella.http_server.resources.IndexResource;
 import com.andreamazzarella.http_server.resources.Resource;
 import com.andreamazzarella.http_server.resources.Response;

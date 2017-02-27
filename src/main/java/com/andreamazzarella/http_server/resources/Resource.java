@@ -7,4 +7,5 @@ import java.net.URI;
 public interface Resource {
     byte[] generateResponse(Request request);
     URI uri();
+    Request.Method method();
 }

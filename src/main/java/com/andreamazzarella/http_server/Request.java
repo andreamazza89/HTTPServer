@@ -31,7 +31,7 @@ public class Request {
     private String requestBody;
     private Map<String, String> headers = new Hashtable<>();
 
-    protected Request(DataExchange socketConnection) {
+    public Request(DataExchange socketConnection) {
         this.requestMessage = socketConnection.readLine();
         this.socketConnection = socketConnection;
         this.tokenisedRequestMessage = tokenise(requestMessage, CARRIAGE_RETURN_LINE_FEED);

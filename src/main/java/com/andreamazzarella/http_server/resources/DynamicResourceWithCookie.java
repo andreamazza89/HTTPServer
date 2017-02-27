@@ -55,4 +55,9 @@ public class DynamicResourceWithCookie implements Resource {
     public URI uri() {
         return uri;
     }
+
+    @Override
+    public Request.Method method() {
+        return Request.Method.GET;
+    }
 }

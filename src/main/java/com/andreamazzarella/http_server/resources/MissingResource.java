@@ -15,4 +15,9 @@ public class MissingResource implements Resource {
     public URI uri() {
         return null;
     }
+
+    @Override
+    public Request.Method method() {
+        return null;
+    }
 }

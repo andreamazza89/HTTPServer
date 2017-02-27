@@ -1,6 +1,7 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.resources;
 
-import com.andreamazzarella.http_server.resources.*;
+import com.andreamazzarella.http_server.BasicAuthenticator;
+import com.andreamazzarella.http_server.Request;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 

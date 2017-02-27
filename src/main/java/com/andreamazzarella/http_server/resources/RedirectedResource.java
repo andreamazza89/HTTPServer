@@ -24,4 +24,9 @@ public class RedirectedResource implements Resource {
     public URI uri() {
         return uri;
     }
+
+    @Override
+    public Request.Method method() {
+        return Request.Method.GET;
+    }
 }

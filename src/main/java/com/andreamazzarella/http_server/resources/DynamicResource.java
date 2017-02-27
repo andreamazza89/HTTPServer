@@ -27,6 +27,11 @@ public class DynamicResource implements Resource {
     }
 
     @Override
+    public Request.Method method() {
+        return Request.Method.GET;
+    }
+
+    @Override
     public byte[] generateResponse(Request request) {
         if (!methodsAllowed.contains(request.method())) {
             return Response.NOT_ALLOWED_RESPONSE.getBytes();

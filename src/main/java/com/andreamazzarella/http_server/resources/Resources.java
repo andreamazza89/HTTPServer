@@ -26,17 +26,21 @@ public class Resources {
     }
 
     public Resource findResource(Request request) {
-        Resource resource = getResourceOrMissingResource(request);
+        Optional<Resource> resourceFound = resources.stream().filter((resource) -> resource.uri().getPath().equals(request.uri().getPath())).findFirst();
 
-        if (resourcesToAuthenticate.contains(resource) && !authenticator.isRequestValid(request)) {
+        if (!resourceFound.isPresent()) {
+            return new MissingResource();
+        }
+
+
+        if (resourceFound.get().method() != request.method()) {
+            return new MethodNotAllowedResource();
+        }
+
+        if (resourcesToAuthenticate.contains(resourceFound.get()) && !authenticator.isRequestValid(request)) {
             return new UnauthorisedResource();
         } else {
-            return resource;
+            return resourceFound.get();
         }
-    }
-
-    private Resource getResourceOrMissingResource(Request request) {
-        Optional<Resource> resourceFound = resources.stream().filter((resource) -> resource.uri().getPath().equals(request.uri().getPath())).findFirst();
-        return resourceFound.orElse(new MissingResource());
     }
 }
