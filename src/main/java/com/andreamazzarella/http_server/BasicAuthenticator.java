@@ -13,7 +13,7 @@ class BasicAuthenticator {
         users.put(userName, password);
     }
 
-    boolean isRequestAuthenticated(Request request) {
+    boolean isRequestValid(Request request) {
         String authorizationHeaderFieldContent = request.getHeader("Authorization");
 
         if (authorizationHeaderFieldContent == null) {

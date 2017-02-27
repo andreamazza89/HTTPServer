@@ -16,7 +16,7 @@ public class BasicAuthenticatorShould {
         socketConnection.setRequestTo("POST /tea HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals(false, authenticator.isRequestAuthenticated(request));
+        assertEquals(false, authenticator.isRequestValid(request));
     }
 
     @Test
@@ -29,7 +29,7 @@ public class BasicAuthenticatorShould {
         socketConnection.setRequestTo("POST /tea HTTP/1.1\nAuthorization: Basic " + encodedCredentials + "\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals(false, authenticator.isRequestAuthenticated(request));
+        assertEquals(false, authenticator.isRequestValid(request));
     }
 
     @Test
@@ -42,6 +42,6 @@ public class BasicAuthenticatorShould {
         socketConnection.setRequestTo("POST /tea HTTP/1.1\nAuthorization: Basic " + encodedCredentials + "\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals(true, authenticator.isRequestAuthenticated(request));
+        assertEquals(true, authenticator.isRequestValid(request));
     }
 }

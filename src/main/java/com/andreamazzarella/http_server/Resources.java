@@ -31,11 +31,7 @@ class Resources {
         }
 
         if (authenticatedResources.contains(resourceFound.get())) {
-            if (authenticator.isRequestAuthenticated(request)) {
-                return resourceFound.get();
-            } else {
-                return new UnauthorisedResource();
-            }
+            return authenticator.isRequestValid(request) ? resourceFound.get() : new UnauthorisedResource();
         } else {
             return resourceFound.get();
         }
