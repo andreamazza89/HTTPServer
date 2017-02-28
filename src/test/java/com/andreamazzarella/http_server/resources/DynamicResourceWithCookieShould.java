@@ -1,8 +1,6 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.resources;
 
-import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.DynamicResourceWithCookie;
-import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Resource;
-import com.andreamazzarella.http_server.com.andreamazzarella.http_server.resources.Response;
+import com.andreamazzarella.http_server.Request;
 import com.andreamazzarella.http_server.support.FakeFileSystem;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;

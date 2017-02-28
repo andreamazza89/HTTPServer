@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class BasicAuthenticator {
     private final Map<String, String> users = new HashMap<>();
 
-    void addUser(String userName, String password) {
+    public void addUser(String userName, String password) {
         users.put(userName, password);
     }
 
