@@ -119,7 +119,7 @@ public class FileSystemShould {
 
         URI pathToResource = URI.create("/my_brand_new_resource");
         fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
-        fileSystem.appendResource(pathToResource, "not so fast Giacomo".getBytes());
+        fileSystem.appendContent(pathToResource, "not so fast Giacomo".getBytes());
 
         assertEquals("what a handsome resourcenot so fast Giacomo", new String(fileSystem.getResource(pathToResource, null).get()));
     }
@@ -129,7 +129,7 @@ public class FileSystemShould {
         FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
 
         URI pathToResource = URI.create("/my_brand_new_resource");
-        fileSystem.appendResource(pathToResource, "not so fast Giacomo".getBytes());
+        fileSystem.appendContent(pathToResource, "not so fast Giacomo".getBytes());
 
         assertEquals("not so fast Giacomo", new String(fileSystem.getResource(pathToResource, null).get()));
     }

@@ -18,7 +18,9 @@ class Logger {
 
     void log(Request request) {
         if (following.contains(request.getUri())) {
-            fileSystem.appendResource(URI.create("/logs"), ArrayOperations.concatenateData(request.getRequestLine().getBytes(), "\n".getBytes()));
+            String requestLine = request.getRequestLine();
+            byte[] requestLineWithNewLine = ArrayOperations.concatenateData(requestLine.getBytes(), "\n".getBytes());
+            fileSystem.appendContent(URI.create("/logs"), requestLineWithNewLine);
         }
     }
 }

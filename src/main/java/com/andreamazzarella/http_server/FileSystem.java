@@ -83,7 +83,7 @@ public class FileSystem {
         }
     }
 
-    public void appendResource(URI uri, byte[] resourceContent) {
+    public void appendContent(URI uri, byte[] resourceContent) {
         File resource = retrieveResource(uri);
         if (resource.exists()) {
             try {

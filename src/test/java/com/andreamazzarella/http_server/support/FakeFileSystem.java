@@ -35,7 +35,7 @@ public class FakeFileSystem extends FileSystem {
     }
 
     @Override
-    public void appendResource(URI uri, byte[] resourceContent) {
+    public void appendContent(URI uri, byte[] resourceContent) {
         this.resourceContent = Optional.of(ArrayOperations.concatenateData(this.resourceContent.orElse("".getBytes()), resourceContent));
     }
 
