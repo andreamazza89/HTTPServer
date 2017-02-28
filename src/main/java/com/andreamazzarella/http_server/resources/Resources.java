@@ -5,7 +5,6 @@ import com.andreamazzarella.http_server.Request;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Resources {
 
@@ -26,21 +25,32 @@ public class Resources {
     }
 
     public Resource findResource(Request request) {
-        Optional<Resource> resourceFound = resources.stream().filter((resource) -> resource.uri().getPath().equals(request.uri().getPath())).findFirst();
-
-        if (!resourceFound.isPresent()) {
+        if (resourcePathDoesNotExist(request)) {
             return new MissingResource();
         }
 
-
-        if (resourceFound.get().method() != request.method()) {
+        if (resourceMethodDoesNotExist(request)) {
             return new MethodNotAllowedResource();
         }
 
-        if (resourcesToAuthenticate.contains(resourceFound.get()) && !authenticator.isRequestValid(request)) {
+        Resource resourceFound = resources.stream()
+                .filter((resource -> resource.uri().getPath().equals(request.uri().getPath()) && resource.method() == request.method()))
+                .findFirst().get();
+
+        if (resourcesToAuthenticate.contains(resourceFound) && !authenticator.isRequestValid(request)) {
             return new UnauthorisedResource();
         } else {
-            return resourceFound.get();
+            return resourceFound;
         }
+    }
+
+    private boolean resourceMethodDoesNotExist(Request request) {
+        return resources.stream()
+                .noneMatch((resource -> resource.uri().getPath().equals(request.uri().getPath()) && resource.method() == request.method()));
+    }
+
+    private boolean resourcePathDoesNotExist(Request request) {
+        return resources.stream()
+                .noneMatch((resource) -> resource.uri().getPath().equals(request.uri().getPath()));
     }
 }

@@ -137,19 +137,19 @@ public class DynamicResourceShould {
         assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + "").getBytes(), dynamicResource.generateResponse(request));
     }
 
-    @Test
-    public void postContent() {
-        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
-        URI resourcePath = URI.create("/path_to_dynamic_resource/");
-        String requestBody = "Freshly baked new content";
-        FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("POST " + resourcePath + " HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
-        Request request = new Request(socketConnection);
-        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.POST});
-
-        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
-        assertArrayEquals(requestBody.getBytes(), fileSystem.getResource(resourcePath, null).get());
-    }
+//    @Test
+//    public void postContent() {
+//        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+//        URI resourcePath = URI.create("/path_to_dynamic_resource/");
+//        String requestBody = "Freshly baked new content";
+//        FakeSocketConnection socketConnection = new FakeSocketConnection();
+//        socketConnection.setRequestTo("POST " + resourcePath + " HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
+//        Request request = new Request(socketConnection);
+//        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.POST});
+//
+//        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
+//        assertArrayEquals(requestBody.getBytes(), fileSystem.getResource(resourcePath, null).get());
+//    }
 
     @Test
     public void putContent() {
@@ -167,20 +167,20 @@ public class DynamicResourceShould {
         assertArrayEquals(newResourceContent.getBytes(), fileSystem.getResource(resourcePath, null).get());
     }
 
-    @Test
-    public void deleteContent() {
-        URI resourcePath = URI.create("/path_to_dynamic_resource/");
-        String resourceContent = "Something has to disappear";
-        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
-        fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
-        FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("DELETE " + resourcePath + " HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
-        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.DELETE});
-
-        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
-        assertEquals(Optional.empty(), fileSystem.getResource(resourcePath, null));
-    }
+//    @Test
+//    public void deleteContent() {
+//        URI resourcePath = URI.create("/path_to_dynamic_resource/");
+//        String resourceContent = "Something has to disappear";
+//        FakeFileSystem fileSystem = new FakeFileSystem(URI.create("./fake_directory"));
+//        fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
+//        FakeSocketConnection socketConnection = new FakeSocketConnection();
+//        socketConnection.setRequestTo("DELETE " + resourcePath + " HTTP/1.1\n\n");
+//        Request request = new Request(socketConnection);
+//        Resource dynamicResource = new DynamicResource(resourcePath, fileSystem, new Request.Method[] {Request.Method.DELETE});
+//
+//        assertArrayEquals((Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes(), dynamicResource.generateResponse(request));
+//        assertEquals(Optional.empty(), fileSystem.getResource(resourcePath, null));
+//    }
 
     @Test
     public void includeRequestParametersInResponseBody() {

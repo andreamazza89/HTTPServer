@@ -54,18 +54,12 @@ public class DynamicResource implements Resource {
                 return concatenateData(statusLine, contentTypeHeader, endOfHeaders, resourceContent, parameters);
             case HEAD:
                 return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
-            case POST:
-                fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
-                return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case PUT:
                 fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
                 return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case PATCH:
                 fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
                 return (Response.STATUS_TWO_OH_FOUR + Response.END_OF_HEADERS).getBytes();
-            case DELETE:
-                fileSystem.deleteResource(request.uri());
-                return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case OPTIONS:
                 return (Response.STATUS_TWO_HUNDRED + generateAllowedMethodsHeader() + Response.END_OF_HEADERS).getBytes();
             default:

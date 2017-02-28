@@ -42,6 +42,7 @@ public class Main {
         Resource root = new IndexResource(URI.create("/"), directoryExplorer);
         Resource form = new DynamicResource(URI.create("/form"), dynamicFilesystem, new Request.Method[]
                 {Request.Method.GET, Request.Method.POST, Request.Method.PUT, Request.Method.DELETE});
+        Resource postForm = new PostDynamicResource(URI.create("/form"), dynamicFilesystem);
         Resource methodOptions = new DynamicResource(URI.create("/method_options"), dynamicFilesystem, new Request.Method[]
                 {Request.Method.GET, Request.Method.HEAD, Request.Method.POST, Request.Method.OPTIONS, Request.Method.PUT});
         Resource methodOptionsTwo = new DynamicResource(URI.create("/method_options2"), dynamicFilesystem, new Request.Method[]
@@ -66,6 +67,7 @@ public class Main {
 
         resources.addResource(root);
         resources.addResource(form);
+        resources.addResource(postForm);
         resources.addResource(methodOptions);
         resources.addResource(methodOptionsTwo);
         resources.addResource(tea);
