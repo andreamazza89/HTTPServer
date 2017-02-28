@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class TeaPotResourceShould {
 
@@ -17,6 +17,6 @@ public class TeaPotResourceShould {
         Request request = new Request(socketConnection);
         Resource teaPot = new TeaPotResource(URI.create("/coffee"));
 
-        assertArrayEquals(Response.TEA_POT_RESPONSE.getBytes(), teaPot.generateResponse(request));
+        assertEquals(Response.TEA_POT_RESPONSE, new String(teaPot.generateResponse(request)));
     }
 }

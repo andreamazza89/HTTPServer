@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;

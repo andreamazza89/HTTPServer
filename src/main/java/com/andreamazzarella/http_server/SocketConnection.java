@@ -1,6 +1,10 @@
 package com.andreamazzarella.http_server;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.UncheckedIOException;
 import java.net.Socket;
 
 public class SocketConnection implements DataExchange {

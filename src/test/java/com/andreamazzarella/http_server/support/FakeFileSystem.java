@@ -4,7 +4,6 @@ import com.andreamazzarella.http_server.ArrayOperations;
 import com.andreamazzarella.http_server.FileSystem;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
 import java.util.Optional;
 
 public class FakeFileSystem extends FileSystem {

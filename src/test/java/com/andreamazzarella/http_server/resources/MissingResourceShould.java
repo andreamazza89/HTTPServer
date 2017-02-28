@@ -4,7 +4,7 @@ import com.andreamazzarella.http_server.Request;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class MissingResourceShould {
 
@@ -15,6 +15,6 @@ public class MissingResourceShould {
         Request request = new Request(socketConnection);
         Resource missingResource = new MissingResource();
 
-        assertArrayEquals(Response.NOT_FOUND_RESPONSE.getBytes(), missingResource.generateResponse(request));
+        assertEquals(Response.NOT_FOUND_RESPONSE, new String(missingResource.generateResponse(request)));
     }
 }

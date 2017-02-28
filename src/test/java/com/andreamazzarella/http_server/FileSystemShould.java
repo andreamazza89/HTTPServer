@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class FileSystemShould {
@@ -39,7 +38,7 @@ public class FileSystemShould {
         File resource = new File("./resources" + pathToResource);
         Files.write(resource.toPath(), "I am such a resourceful resource!".getBytes(), StandardOpenOption.CREATE);
 
-        assertArrayEquals("I am such a resourceful resource!".getBytes(), fileSystem.getResource(pathToResource, null).get());
+        assertEquals("I am such a resourceful resource!", new String(fileSystem.getResource(pathToResource, null).get()));
     }
 
     @Test
@@ -50,7 +49,7 @@ public class FileSystemShould {
         File resource = new File("./resources" + pathToResource);
         Files.write(resource.toPath(), "Please enjoy this resource in chunks...".getBytes(), StandardOpenOption.CREATE);
 
-        assertArrayEquals("Please ".getBytes(), fileSystem.getResource(pathToResource, "bytes=0-6").get());
+        assertEquals("Please ", new String(fileSystem.getResource(pathToResource, "bytes=0-6").get()));
     }
 
     @Test
@@ -61,7 +60,7 @@ public class FileSystemShould {
         File resource = new File("./resources" + pathToResource);
         Files.write(resource.toPath(), "Please enjoy this resource in chunks...".getBytes(), StandardOpenOption.CREATE);
 
-        assertArrayEquals("chunks...".getBytes(), fileSystem.getResource(pathToResource, "bytes=-9").get());
+        assertEquals("chunks...", new String(fileSystem.getResource(pathToResource, "bytes=-9").get()));
     }
 
     @Test
@@ -72,7 +71,7 @@ public class FileSystemShould {
         File resource = new File("./resources" + pathToResource);
         Files.write(resource.toPath(), "Please enjoy this resource in chunks...".getBytes(), StandardOpenOption.CREATE);
 
-        assertArrayEquals("enjoy this resource in chunks...".getBytes(), fileSystem.getResource(pathToResource, "bytes=7-").get());
+        assertEquals("enjoy this resource in chunks...", new String(fileSystem.getResource(pathToResource, "bytes=7-").get()));
     }
 
     @Test
@@ -82,7 +81,7 @@ public class FileSystemShould {
         URI pathToResource = URI.create("/my_brand_new_resource");
         fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
 
-        assertArrayEquals("what a handsome resource".getBytes(), fileSystem.getResource(pathToResource, null).get());
+        assertEquals("what a handsome resource", new String(fileSystem.getResource(pathToResource, null).get()));
     }
 
     @Test
@@ -111,7 +110,7 @@ public class FileSystemShould {
         fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
         fileSystem.addOrReplaceResource(pathToResource, "not so fast Giacomo".getBytes());
 
-        assertArrayEquals("not so fast Giacomo".getBytes(), fileSystem.getResource(pathToResource, null).get());
+        assertEquals("not so fast Giacomo", new String(fileSystem.getResource(pathToResource, null).get()));
     }
 
     @Test
@@ -122,7 +121,7 @@ public class FileSystemShould {
         fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
         fileSystem.appendResource(pathToResource, "not so fast Giacomo".getBytes());
 
-        assertArrayEquals("what a handsome resourcenot so fast Giacomo".getBytes(), fileSystem.getResource(pathToResource, null).get());
+        assertEquals("what a handsome resourcenot so fast Giacomo", new String(fileSystem.getResource(pathToResource, null).get()));
     }
 
     @Test
@@ -132,7 +131,7 @@ public class FileSystemShould {
         URI pathToResource = URI.create("/my_brand_new_resource");
         fileSystem.appendResource(pathToResource, "not so fast Giacomo".getBytes());
 
-        assertArrayEquals("not so fast Giacomo".getBytes(), fileSystem.getResource(pathToResource, null).get());
+        assertEquals("not so fast Giacomo", new String(fileSystem.getResource(pathToResource, null).get()));
     }
 
     @Test

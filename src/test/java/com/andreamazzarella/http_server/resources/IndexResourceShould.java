@@ -1,15 +1,13 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.resources;
 
-import com.andreamazzarella.http_server.resources.IndexResource;
-import com.andreamazzarella.http_server.resources.Resource;
-import com.andreamazzarella.http_server.resources.Response;
+import com.andreamazzarella.http_server.Request;
 import com.andreamazzarella.http_server.support.FakeDirectoryExplorer;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class IndexResourceShould {
 
@@ -24,7 +22,7 @@ public class IndexResourceShould {
         Resource indexResource = new IndexResource(URI.create("/"), directoryExplorer);
 
         String expectedResponse = Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + htmlListing;
-        assertArrayEquals(expectedResponse.getBytes(), indexResource.generateResponse(request));
+        assertEquals(expectedResponse, new String(indexResource.generateResponse(request)));
     }
 
     @Test
@@ -38,6 +36,6 @@ public class IndexResourceShould {
         Resource indexResource = new IndexResource(URI.create("/"), directoryExplorer);
 
         String expectedResponse = Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + htmlListing;
-        assertArrayEquals(expectedResponse.getBytes(), indexResource.generateResponse(request));
+        assertEquals(expectedResponse, new String(indexResource.generateResponse(request)));
     }
 }

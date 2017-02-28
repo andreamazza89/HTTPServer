@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URI;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class DynamicResourceWithCookieShould {
 
@@ -25,7 +25,8 @@ public class DynamicResourceWithCookieShould {
 
         Resource cookieResource = new DynamicResourceWithCookie(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
 
-        assertArrayEquals((Response.STATUS_TWO_HUNDRED + "Set-Cookie: type=cats\n" + Response.END_OF_HEADERS + resourceContent).getBytes(), cookieResource.generateResponse(request));
+        String expectedResponse = Response.STATUS_TWO_HUNDRED + "Set-Cookie: type=cats\n" + Response.END_OF_HEADERS + resourceContent;
+        assertEquals(expectedResponse, new String(cookieResource.generateResponse(request)));
     }
 
     @Test
@@ -41,6 +42,7 @@ public class DynamicResourceWithCookieShould {
 
         Resource cookieResource = new DynamicResourceWithCookie(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
 
-        assertArrayEquals((Response.STATUS_TWO_HUNDRED + "Set-Cookie: type=lols\n" + Response.END_OF_HEADERS + resourceContent).getBytes(), cookieResource.generateResponse(request));
+        String expectedResponse = Response.STATUS_TWO_HUNDRED + "Set-Cookie: type=lols\n" + Response.END_OF_HEADERS + resourceContent;
+        assertEquals(expectedResponse, new String(cookieResource.generateResponse(request)));
     }
 }

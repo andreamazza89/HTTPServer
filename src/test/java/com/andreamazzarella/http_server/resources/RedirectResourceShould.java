@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class RedirectResourceShould {
 
@@ -19,7 +19,7 @@ public class RedirectResourceShould {
         Resource redirectedResource = new RedirectedResource(URI.create("/redirect_this_please"), redirectLocation);
 
         String expectedResponse = Response.STATUS_THREE_OH_TWO + "Location: " + redirectLocation + Response.END_OF_HEADERS;
-        assertArrayEquals(expectedResponse.getBytes(), redirectedResource.generateResponse(request));
+        assertEquals(expectedResponse, new String(redirectedResource.generateResponse(request)));
     }
 
     @Test
@@ -31,6 +31,6 @@ public class RedirectResourceShould {
         Resource redirectedResource = new RedirectedResource(URI.create("/redirect_this_please"), redirectLocation);
 
         String expectedResponse = Response.STATUS_THREE_OH_TWO + "Location: " + redirectLocation + Response.END_OF_HEADERS;
-        assertArrayEquals(expectedResponse.getBytes(), redirectedResource.generateResponse(request));
+        assertEquals(expectedResponse, new String(redirectedResource.generateResponse(request)));
     }
 }
