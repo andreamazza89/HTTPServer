@@ -1,19 +1,24 @@
 package com.andreamazzarella.http_server;
 
-import java.io.*;
+import com.andreamazzarella.http_server.resources.Resource;
+import com.andreamazzarella.http_server.resources.Resources;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URI;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class HTTPServer {
     private final int portNumber;
-    private final String publicDirectoryPath;
+    private final Resources resources;
+    private final Logger logger;
 
-    HTTPServer(int portNumber, String publicDirectoryPath) {
+    HTTPServer(int portNumber, Resources resources, Logger logger) {
         this.portNumber = portNumber;
-        this.publicDirectoryPath = publicDirectoryPath;
+        this.resources = resources;
+        this.logger = logger;
     }
 
     void start() {
@@ -35,34 +40,11 @@ class HTTPServer {
 
     private void respondToRequest(Socket socket) {
         SocketConnection socketConnection = new SocketConnection(socket);
-
-        ////////////////////maybe move into main?//////////////////////////////////////////
-        Routes routes = new Routes();
-
-        Route root = new Route(URI.create("/"));
-        Route methodOptions = new Route(URI.create("/method_options"));
-        Route methodOptionsTwo = new Route(URI.create("/method_options2"));
-        Route form = new Route(URI.create("/form"));
-        Route redirect = new Route(URI.create("/redirect"));
-
-        root.allowMethods(new Request.Method[] {Request.Method.GET});
-        methodOptions.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.HEAD,
-                Request.Method.POST, Request.Method.OPTIONS, Request.Method.PUT});
-        methodOptionsTwo.allowMethods(new Request.Method[] {Request.Method.GET, Request.Method.OPTIONS});
-        form.allowMethods(new Request.Method[] {Request.Method.POST, Request.Method.PUT});
-        redirect.allowMethods(new Request.Method[] {Request.Method.GET});
-
-        redirect.setRedirect(URI.create("http://localhost:5000/"));
-
-        routes.addRoute(root);
-        routes.addRoute(methodOptions);
-        routes.addRoute(methodOptionsTwo);
-        routes.addRoute(form);
-        routes.addRoute(redirect);
-        ////////////////////////////////////////////////////////////////////////////////
-
-        Router router = new Router(socketConnection, routes);
-        router.respondToClient();
+        Request request = new Request(socketConnection);
+        logger.log(request);
+        Resource resource = resources.findResource(request);
+        byte[] response = resource.generateResponse(request);
+        socketConnection.write(response);
     }
 
     private void closeSocket(Socket socket) {
@@ -71,9 +53,5 @@ class HTTPServer {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    String getPublicDirectoryPath() {
-        return publicDirectoryPath;
     }
 }

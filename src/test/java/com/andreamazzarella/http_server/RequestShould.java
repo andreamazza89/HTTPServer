@@ -3,6 +3,10 @@ package com.andreamazzarella.http_server;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.Map;
+
 import static junit.framework.TestCase.assertEquals;
 
 public class RequestShould {
@@ -13,7 +17,7 @@ public class RequestShould {
         socketConnection.setRequestTo("GET /path/to/resource HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals("/path/to/resource", request.uri());
+        assertEquals(URI.create("/path/to/resource"), request.getUri());
     }
 
     @Test
@@ -22,7 +26,7 @@ public class RequestShould {
         socketConnection.setRequestTo("POST /path/to/lol/resource HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals("/path/to/lol/resource", request.uri());
+        assertEquals(URI.create("/path/to/lol/resource"), request.getUri());
     }
 
     @Test
@@ -31,7 +35,7 @@ public class RequestShould {
         socketConnection.setRequestTo("GET / HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals(Request.Method.GET, request.method());
+        assertEquals(Request.Method.GET, request.getMethod());
     }
 
     @Test
@@ -40,7 +44,7 @@ public class RequestShould {
         socketConnection.setRequestTo("POST / HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals(Request.Method.POST, request.method());
+        assertEquals(Request.Method.POST, request.getMethod());
     }
 
     @Test
@@ -49,7 +53,7 @@ public class RequestShould {
         socketConnection.setRequestTo("OPTIONS / HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals(Request.Method.OPTIONS, request.method());
+        assertEquals(Request.Method.OPTIONS, request.getMethod());
     }
 
     @Test
@@ -58,7 +62,7 @@ public class RequestShould {
         socketConnection.setRequestTo("DELETE / HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals(Request.Method.DELETE, request.method());
+        assertEquals(Request.Method.DELETE, request.getMethod());
     }
 
     @Test
@@ -67,7 +71,7 @@ public class RequestShould {
         socketConnection.setRequestTo("PUT / HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals(Request.Method.PUT, request.method());
+        assertEquals(Request.Method.PUT, request.getMethod());
     }
 
     @Test
@@ -76,27 +80,45 @@ public class RequestShould {
         socketConnection.setRequestTo("HEAD / HTTP/1.1\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals(Request.Method.HEAD, request.method());
+        assertEquals(Request.Method.HEAD, request.getMethod());
+    }
+
+    @Test
+    public void extractThePatchMethod() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("PATCH / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.PATCH, request.getMethod());
+    }
+
+    @Test
+    public void provideMissingMethodIfNotRecognised() {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        socketConnection.setRequestTo("MADE_UP_METHOD / HTTP/1.1\n\n");
+        Request request = new Request(socketConnection);
+
+        assertEquals(Request.Method.UNRECOGNISED_METHOD, request.getMethod());
     }
 
     @Test
     public void extractTheBodyIfPresentExampleOne() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
-        String requestBody = "I am a body??";
-        socketConnection.setRequestTo("HEAD / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
+        String requestBody = "I am a getContent??";
+        socketConnection.setRequestTo("GET / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
         Request request = new Request(socketConnection);
 
-        assertEquals(requestBody, request.body());
+        assertEquals(requestBody, request.getBody());
     }
 
     @Test
     public void extractTheBodyIfPresentExampleTwo() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
-        String requestBody = "I am definitely a body!";
-        socketConnection.setRequestTo("HEAD / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
+        String requestBody = "I am definitely a getContent!";
+        socketConnection.setRequestTo("GET / HTTP/1.1\nContent-Length: " + requestBody.getBytes().length + "\n\n" + requestBody);
         Request request = new Request(socketConnection);
 
-        assertEquals(requestBody, request.body());
+        assertEquals(requestBody, request.getBody());
     }
 
     @Test
@@ -111,9 +133,22 @@ public class RequestShould {
     @Test
     public void extractTheHeadersIfPresentExampleTwo() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
-        socketConnection.setRequestTo("GET / HTTP/1.1\nField-Name: different-value\n\n");
+        socketConnection.setRequestTo("GET / HTTP/1.1\nField-Name: different value\n\n");
         Request request = new Request(socketConnection);
 
-        assertEquals("different-value", request.getHeader("Field-Name"));
+        assertEquals("different value", request.getHeader("Field-Name"));
+    }
+
+    @Test
+    public void extractQueryParameters() throws MalformedURLException {
+        FakeSocketConnection socketConnection = new FakeSocketConnection();
+        String params = "variable_1=Operators%20%3C&ciao=miao";
+        socketConnection.setRequestTo("GET /parameters?"+params+" HTTP/1.1\nField-Name: different-value\n\n");
+        Request request = new Request(socketConnection);
+
+        Map<String, String> parameters = request.getParams();
+
+        assertEquals("Operators <", parameters.get("variable_1"));
+        assertEquals( "miao", parameters.get("ciao"));
     }
 }

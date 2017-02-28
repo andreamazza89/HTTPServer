@@ -2,7 +2,12 @@ package com.andreamazzarella.http_server.support;
 
 import com.andreamazzarella.http_server.DataExchange;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 
 public class FakeSocketConnection implements DataExchange {
 
@@ -23,9 +28,9 @@ public class FakeSocketConnection implements DataExchange {
     }
 
     @Override
-    public void write(String data) {
+    public void write(byte[] data) {
         try {
-            messagesReceived.write(data.getBytes());
+            messagesReceived.write(data);
         } catch (IOException e) {
             e.printStackTrace();
         }
