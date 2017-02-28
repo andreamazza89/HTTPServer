@@ -20,18 +20,18 @@ public class BasicAuthenticator {
             return false;
         }
 
-        Pattern encodedCredentialsPattern = Pattern.compile(".*Basic\\s(.+)");
+        Pattern encodedCredentialsPattern = Pattern.compile(".*Basic\\s(?<credentials>.+)");
         Matcher encodedCredentialsMatcher = encodedCredentialsPattern.matcher(authorizationHeaderFieldContent);
         encodedCredentialsMatcher.matches();
-        String encodedUserCredentials = encodedCredentialsMatcher.group(1);
-        String userCredentials = new String(Base64.getDecoder().decode(encodedUserCredentials));
+        String encodedCredentials = encodedCredentialsMatcher.group("credentials");
+        String credentials = new String(Base64.getDecoder().decode(encodedCredentials));
 
-        Pattern decodedCredentialsPattern = Pattern.compile("(.+):(.+)");
-        Matcher decodedCredentialsMatcher = decodedCredentialsPattern.matcher(userCredentials);
+        Pattern decodedCredentialsPattern = Pattern.compile("(?<userName>.+):(?<password>.+)");
+        Matcher decodedCredentialsMatcher = decodedCredentialsPattern.matcher(credentials);
         decodedCredentialsMatcher.matches();
 
-        String requestUserName = decodedCredentialsMatcher.group(1);
-        String requestPassword = decodedCredentialsMatcher.group(2);
+        String requestUserName = decodedCredentialsMatcher.group("userName");
+        String requestPassword = decodedCredentialsMatcher.group("password");
 
         return isUserRegistered(requestUserName) && (isPasswordValid(requestUserName, requestPassword));
 
