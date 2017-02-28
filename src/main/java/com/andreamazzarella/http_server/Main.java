@@ -16,21 +16,30 @@ public class Main {
         InputParser inputParser = new InputParser(args);
         int portNumber = inputParser.parsePortNumber();
         String publicDirectory = inputParser.parseDirectoryPath();
-        FileSystem logsFileSystem = new FileSystem(URI.create("./logs"));
+        String loggingDirectory = "./logs/";
+        String resourcesDirectory = "./resources";
+
+        Resources resources = setUpResources(resourcesDirectory, loggingDirectory, publicDirectory);
+        Logger logger = setUpLogger(loggingDirectory);
+        HTTPServer server = new HTTPServer(portNumber, resources, logger);
+        server.start();
+    }
+
+    private static Logger setUpLogger(String loggingDirectory) {
+        FileSystem logsFileSystem = new FileSystem(URI.create(loggingDirectory));
         Logger logger = new Logger(logsFileSystem);
+
         logger.follow(URI.create("/log"));
         logger.follow(URI.create("/these"));
         logger.follow(URI.create("/requests"));
 
-
-        HTTPServer server = new HTTPServer(portNumber, publicDirectory, generateResources(), logger);
-        server.start();
+        return logger;
     }
 
-    private static Resources generateResources() {
-        URI publicPath = URI.create("/Users/Andrea/Dropbox/Programming/repos/java/cob_spec/public/");
-        URI dynamicPath = URI.create("./resources");
-        URI logsPath = URI.create("./logs");
+    private static Resources setUpResources(String resourcesDirectory, String loggingDirectory, String publicDirectory) {
+        URI dynamicPath = URI.create(resourcesDirectory);
+        URI logsPath = URI.create(loggingDirectory);
+        URI publicPath = URI.create(publicDirectory);
 
         BasicAuthenticator authenticator = new BasicAuthenticator();
         authenticator.addUser("admin", "hunter2");

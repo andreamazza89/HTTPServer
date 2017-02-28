@@ -20,9 +20,9 @@ public class DirectoryExplorerShould {
                 "<html lang=\"en\">\n" +
                     "<head>\n" +
                     "</head>\n" +
-                    "<getBody>\n" +
+                    "<body>\n" +
                         "<p>No files were found</p>\n" +
-                    "</getBody>\n" +
+                    "</body>\n" +
                 "</html>";
 
         assertEquals(expectedListing, directoryExplorer.generateHTMLListing());
@@ -42,10 +42,10 @@ public class DirectoryExplorerShould {
                         "<html lang=\"en\">\n" +
                         "<head>\n" +
                         "</head>\n" +
-                        "<getBody>\n" +
+                        "<body>\n" +
                             "<a href=\"/%s\">%s</a>\n" +
                             "<a href=\"/%s\">%s</a>\n" +
-                        "</getBody>\n" +
+                        "</body>\n" +
                         "</html>", fileOneName, fileOneName, fileTwoName, fileTwoName);
 
         assertEquals(expectedListing, directoryExplorer.generateHTMLListing());

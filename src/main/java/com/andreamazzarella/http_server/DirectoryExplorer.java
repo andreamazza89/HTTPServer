@@ -12,9 +12,9 @@ public class DirectoryExplorer {
                     "<html lang=\"en\">\n" +
                     "<head>\n" +
                     "</head>\n" +
-                    "<getBody>\n" +
+                    "<body>\n" +
                     "%s" +
-                    "</getBody>\n" +
+                    "</body>\n" +
                     "</html>";
 
     private final File directory;

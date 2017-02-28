@@ -17,7 +17,7 @@ public class IndexResource implements Resource {
 
     @Override
     public byte[] generateResponse(Request request) {
-        String response = Response.STATUS_TWO_HUNDRED + "\n" + directoryExplorer.generateHTMLListing();
+        String response = Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + directoryExplorer.generateHTMLListing();
         return response.getBytes();
     }
 

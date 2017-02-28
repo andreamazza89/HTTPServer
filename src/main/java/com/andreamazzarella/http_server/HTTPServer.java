@@ -12,13 +12,11 @@ import java.util.concurrent.Executors;
 
 class HTTPServer {
     private final int portNumber;
-    private final String publicDirectoryPath;
     private final Resources resources;
     private final Logger logger;
 
-    HTTPServer(int portNumber, String publicDirectoryPath, Resources resources, Logger logger) {
+    HTTPServer(int portNumber, Resources resources, Logger logger) {
         this.portNumber = portNumber;
-        this.publicDirectoryPath = publicDirectoryPath;
         this.resources = resources;
         this.logger = logger;
     }
@@ -55,9 +53,5 @@ class HTTPServer {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    String getPublicDirectoryPath() {
-        return publicDirectoryPath;
     }
 }
