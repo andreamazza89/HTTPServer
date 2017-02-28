@@ -28,15 +28,15 @@ public class DynamicResource implements Resource {
 
     @Override
     public byte[] generateResponse(Request request) {
-        if (!methodsAllowed.contains(request.method())) {
+        if (!methodsAllowed.contains(request.getMethod())) {
             return Response.NOT_ALLOWED_RESPONSE.getBytes();
         }
 
-        switch (request.method()) {
+        switch (request.getMethod()) {
             case GET:
                 String dataRange = request.getHeader("Range");
                 byte[] statusLine;
-                byte[] resourceContent = fileSystem.getResource(request.uri(), dataRange).orElse("".getBytes());
+                byte[] resourceContent = fileSystem.getResource(request.getUri(), dataRange).orElse("".getBytes());
                 byte[] contentTypeHeader = generateContentTypeHeader();
                 byte[] endOfHeaders = Response.END_OF_HEADERS.getBytes();
                 byte[] parameters = serialiseParameters(request);
@@ -50,21 +50,21 @@ public class DynamicResource implements Resource {
             case HEAD:
                 return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case POST:
-                fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
+                fileSystem.addOrReplaceResource(request.getUri(), request.getBody().getBytes());
                 return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case PUT:
-                fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
+                fileSystem.addOrReplaceResource(request.getUri(), request.getBody().getBytes());
                 return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case PATCH:
-                fileSystem.addOrReplaceResource(request.uri(), request.body().getBytes());
+                fileSystem.addOrReplaceResource(request.getUri(), request.getBody().getBytes());
                 return (Response.STATUS_TWO_OH_FOUR + Response.END_OF_HEADERS).getBytes();
             case DELETE:
-                fileSystem.deleteResource(request.uri());
+                fileSystem.deleteResource(request.getUri());
                 return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case OPTIONS:
                 return (Response.STATUS_TWO_HUNDRED + generateAllowedMethodsHeader() + Response.END_OF_HEADERS).getBytes();
             default:
-                throw new RuntimeException("Unhandled method");
+                throw new RuntimeException("Unhandled getMethod");
         }
     }
 

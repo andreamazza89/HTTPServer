@@ -15,77 +15,59 @@ public class Request {
         POST, OPTIONS, DELETE, PUT, HEAD, UNRECOGNISED_METHOD, PATCH, GET
     }
 
-    private static final int INDEX_OF_REQUEST_LINE = 0;
+    private static final int INDEX_OF_REQUEST_METHOD = 0;
     private static final int INDEX_OF_REQUEST_URI = 1;
-    private static final int INDEX_OF_FIELD_NAME = 0;
-    private static final int INDEX_OF_FIELD_VALUE = 1;
-    private static final String CARRIAGE_RETURN_LINE_FEED = "\n";
     private static final String SPACE = " ";
+    private static final String END_OF_HEADERS = "";
 
-    private final Map<String, String> queryParameters = new TreeMap<>();
-    private final String requestMessage;
     private final DataExchange socketConnection;
-    private final String[] tokenisedRequestMessage;
+
     private final String requestLine;
-    private final String[] tokenisedRequestLine;
-    private String requestBody;
-    private Map<String, String> headers = new Hashtable<>();
+    private final Method requestMethod;
+    private final Map<String, String> queryParameters = new TreeMap<>();
+    private final Map<String, String> headers = new Hashtable<>();
+    private final String requestBody;
 
     public Request(DataExchange socketConnection) {
-        this.requestMessage = socketConnection.readLine();
         this.socketConnection = socketConnection;
-        this.tokenisedRequestMessage = tokenise(requestMessage, CARRIAGE_RETURN_LINE_FEED);
-        this.requestLine = tokenisedRequestMessage[INDEX_OF_REQUEST_LINE];
-        this.tokenisedRequestLine = tokenise(requestLine, SPACE);
 
-        parseHeaders();
+        this.requestLine = socketConnection.readLine().trim();
+        this.requestMethod = selectMethod();
+
         parseParameters();
-        parseBody();
-    }
+        parseHeaders();
 
-    private void parseParameters() {
-        if (URI.create(tokenisedRequestLine[INDEX_OF_REQUEST_URI]).getQuery() != null) {
-            String[] parameters = URI.create(tokenisedRequestLine[INDEX_OF_REQUEST_URI]).getRawQuery().split("&");
-            for (String parameter : parameters) {
-                String[] blah = parameter.split("=");
-                try {
-                    queryParameters.put(URLDecoder.decode(blah[0], "UTF-8"), URLDecoder.decode(blah[1], "UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void parseHeaders() {
-        while (true) {
-            String headerOrEndOFHeaders = socketConnection.readLine();
-            if (headerOrEndOFHeaders.matches("")) {
-                break;
-            } else {
-                Pattern headerField = Pattern.compile("(.+):\\s(.*)");
-                Matcher matcher = headerField.matcher(headerOrEndOFHeaders);
-                matcher.matches();
-                headers.put(matcher.group(1), matcher.group(2));
-            }
-        }
-    }
-
-    private void parseBody() {
-        if (headers.containsKey("Content-Length")) {
-            int contentLength = Integer.parseInt(headers.get("Content-Length"));
-            char[] buffer = new char[contentLength];
-            socketConnection.read(buffer, 0, contentLength);
-            requestBody = String.valueOf(buffer);
-        }
+        this.requestBody = parseBody();
     }
 
     String getRequestLine() {
         return requestLine;
     }
 
-    public Method method() {
-        switch (tokenisedRequestLine[0]) {
+    public Method getMethod() {
+        return requestMethod;
+    }
+
+    public URI getUri() {
+        return URI.create(requestLine.split(SPACE)[INDEX_OF_REQUEST_URI]);
+    }
+
+    public Map<String,String> getParams() {
+        return queryParameters;
+    }
+
+    public String getHeader(String fieldName) {
+        return headers.get(fieldName);
+    }
+
+    public String getBody() {
+        return requestBody;
+    }
+
+    private Method selectMethod() {
+        String requestMethod = requestLine.split(SPACE)[INDEX_OF_REQUEST_METHOD];
+
+        switch (requestMethod) {
             case "GET":
                 return Method.GET;
             case "HEAD":
@@ -105,24 +87,49 @@ public class Request {
         }
     }
 
-    public String getHeader(String fieldName) {
-        return headers.get(fieldName);
+    private void parseParameters() {
+        URI requestUri = URI.create(requestLine.split(SPACE)[INDEX_OF_REQUEST_URI]);
+        String urlEncodedRequestQuery = requestUri.getRawQuery();
+        if (urlEncodedRequestQuery != null) {
+            String[] parameters = urlEncodedRequestQuery.split("&");
+            for (String parameter : parameters) {
+                String urlEncodedKey = parameter.split("=")[0];
+                String urlEncodedValue = parameter.split("=")[1];
+                queryParameters.put(urlDecode(urlEncodedKey), urlDecode(urlEncodedValue));
+            }
+        }
     }
 
-    public Map<String,String> getParams() {
-        return queryParameters;
+    private String urlDecode(String encodedText) {
+        try {
+            return URLDecoder.decode(encodedText, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("invalid URL encoding");
+        }
     }
 
-    public URI uri() {
-        return URI.create(tokenisedRequestLine[INDEX_OF_REQUEST_URI]);
+    private void parseHeaders() {
+        while (true) {
+            String headerOrEndOFHeaders = socketConnection.readLine();
+            if (headerOrEndOFHeaders.matches(END_OF_HEADERS)) {
+                break;
+            } else {
+                Pattern header = Pattern.compile("(?<headerName>.+):\\s(?<headerValue>.*)");
+                Matcher matcher = header.matcher(headerOrEndOFHeaders);
+                matcher.matches();
+                headers.put(matcher.group("headerName"), matcher.group("headerValue"));
+            }
+        }
     }
 
-    public String body() {
-        return requestBody;
+    private String parseBody() {
+        if (headers.containsKey("Content-Length")) {
+            int contentLength = Integer.parseInt(headers.get("Content-Length"));
+            char[] buffer = new char[contentLength];
+            socketConnection.read(buffer, 0, contentLength);
+            return String.valueOf(buffer);
+        } else {
+            return null;
+        }
     }
-
-    private String[] tokenise(String joinedTokens, String separator) {
-        return joinedTokens.split(separator);
-    }
-
 }

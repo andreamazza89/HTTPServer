@@ -1,5 +1,6 @@
 # Checklist
 
+- make request body optional?
 - extract data range parser from filesystem
 - create new method in fileSystem, getStaticResource, which does not return optional
 - remove duplication of CONCAteNATEDATA

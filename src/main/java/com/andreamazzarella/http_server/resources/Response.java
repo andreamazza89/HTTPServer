@@ -77,7 +77,7 @@ public class Response {
 
 
 
-//       switch (request.method()) {
+//       switch (request.getMethod()) {
 //           case GET:
 //               if (resource.isRedirect()) {
 //                   return "HTTP/1.1 302 Found\nLocation: " + resource.redirectLocation() + "\n\n";
@@ -100,14 +100,14 @@ public class Response {
 //           case OPTIONS:
 //               Request.Method[] methods = resource.methodsAllowed();
 //               String methodsAllowed = "";
-//               for (Request.Method method : methods) {
-//                   methodsAllowed += method.toString() + ",";
+//               for (Request.Method getMethod : methods) {
+//                   methodsAllowed += getMethod.toString() + ",";
 //               }
 //               methodsAllowed = methodsAllowed.substring(0, methodsAllowed.length() - 1);
 //               return "HTTP/1.1 200 OK\nAllow: " + methodsAllowed + "\n\n";
 //           case POST:
 //               String requestBody = request.getContent();
-//               URI resourceUri = request.uri();
+//               URI resourceUri = request.getUri();
 //               File file = new File("resources" + resourceUri.toString());
 //               String path;
 //               try {
@@ -141,7 +141,7 @@ public class Response {
 
 
 
-////       switch (request.method()) {
+////       switch (request.getMethod()) {
 ////           case GET:
 ////               return GetResponse.respond(resource, somethingToHandleFileSystem)
 ////           case OPTIONS:

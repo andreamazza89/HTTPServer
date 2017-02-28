@@ -36,7 +36,7 @@ public class Resources {
     }
 
     private Resource getResourceOrMissingResource(Request request) {
-        Optional<Resource> resourceFound = resources.stream().filter((resource) -> resource.uri().getPath().equals(request.uri().getPath())).findFirst();
+        Optional<Resource> resourceFound = resources.stream().filter((resource) -> resource.uri().getPath().equals(request.getUri().getPath())).findFirst();
         return resourceFound.orElse(new MissingResource());
     }
 }

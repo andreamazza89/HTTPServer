@@ -22,7 +22,7 @@ public class DynamicResourceWithCookie implements Resource {
         String dataRange = request.getHeader("Range");
         byte[] status;
         byte[] setCookieHeader = generateCookieHeader(request);
-        byte[] body = fileSystem.getResource(request.uri(), dataRange).orElse("".getBytes());
+        byte[] body = fileSystem.getResource(request.getUri(), dataRange).orElse("".getBytes());
         byte[] cookie = getCookie(request);
         if (dataRange == null) {
             status = (Response.STATUS_TWO_HUNDRED).getBytes();
