@@ -22,6 +22,7 @@ public class Main {
         Resources resources = setUpResources(resourcesDirectory, loggingDirectory, publicDirectory);
         Logger logger = setUpLogger(loggingDirectory);
         HTTPServer server = new HTTPServer(portNumber, resources, logger);
+        System.out.println("Server running on port: " + portNumber);
         server.start();
     }
 
