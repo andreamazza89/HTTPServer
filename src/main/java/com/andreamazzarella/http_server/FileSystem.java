@@ -38,36 +38,6 @@ public class FileSystem {
         }
     }
 
-    private int parseDataStart(File resource, String dataRange) {
-        if (dataRange == null) {
-            return 0;
-        }
-
-        Pattern pattern = Pattern.compile(".*=(\\d*)-(\\d*).*");
-        Matcher matcher = pattern.matcher(dataRange);
-        matcher.matches();
-        if (matcher.group(1).equals("")) {
-            return (int)resource.length() - Integer.parseInt(matcher.group(2));
-        } else {
-           return Integer.parseInt(matcher.group(1));
-        }
-    }
-
-    private int parseDataEnd(File resource, String dataRange) {
-        if (dataRange == null) {
-            return (int)resource.length();
-        }
-
-        Pattern pattern = Pattern.compile(".*=(\\d*)-(\\d*).*");
-        Matcher matcher = pattern.matcher(dataRange);
-        matcher.matches();
-        if (matcher.group(2).equals("") || matcher.group(1).equals("")) {
-            return (int)resource.length();
-        } else {
-            return Integer.parseInt(matcher.group(2)) + 1;
-        }
-    }
-
     public String getResourceContentType(URI uri) {
         File resource = retrieveResource(uri);
         return URLConnection.guessContentTypeFromName(resource.getName());
@@ -99,6 +69,36 @@ public class FileSystem {
     public void deleteResource(URI uri) {
         File resource = retrieveResource(uri);
         resource.delete();
+    }
+
+    private int parseDataStart(File resource, String dataRange) {
+        if (dataRange == null) {
+            return 0;
+        }
+
+        Pattern pattern = Pattern.compile(".*=(?<startByte>\\d*)-(?<endByte>\\d*).*");
+        Matcher matcher = pattern.matcher(dataRange);
+        matcher.matches();
+        if (matcher.group("startByte").equals("")) {
+            return (int)resource.length() - Integer.parseInt(matcher.group("endByte"));
+        } else {
+           return Integer.parseInt(matcher.group("startByte"));
+        }
+    }
+
+    private int parseDataEnd(File resource, String dataRange) {
+        if (dataRange == null) {
+            return (int)resource.length();
+        }
+
+        Pattern pattern = Pattern.compile(".*=(?<startByte>\\d*)-(?<endByte>\\d*).*");
+        Matcher matcher = pattern.matcher(dataRange);
+        matcher.matches();
+        if (matcher.group("endByte").equals("") || matcher.group("startByte").equals("")) {
+            return (int)resource.length();
+        } else {
+            return Integer.parseInt(matcher.group("endByte")) + 1;
+        }
     }
 
     private File retrieveResource(URI uri) {
