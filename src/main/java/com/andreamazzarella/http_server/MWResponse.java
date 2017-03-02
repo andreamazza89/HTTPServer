@@ -1,7 +1,13 @@
 package com.andreamazzarella.http_server;
 
 public class MWResponse {
-    public MWResponse(int status) {
+    private final int statusCode;
 
+    public MWResponse(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
     }
 }

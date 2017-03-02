@@ -1,7 +1,6 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.middleware;
 
-import com.andreamazzarella.http_server.middleware.MWLogger;
-import com.andreamazzarella.http_server.middleware.MiddleWare;
+import com.andreamazzarella.http_server.MWResponse;
 import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeFileSystem;
 import com.andreamazzarella.http_server.support.FakeMiddleWare;
