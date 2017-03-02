@@ -52,7 +52,7 @@ public class Request {
         }
     }
 
-    Request(String requestLine, List<Header> headers, Optional<byte[]> body) {
+    public Request(String requestLine, List<Header> headers, Optional<byte[]> body) {
         this.requestLine = requestLine;
         this.parameters = parseParameters(requestLine);
         this.headers = headers;
