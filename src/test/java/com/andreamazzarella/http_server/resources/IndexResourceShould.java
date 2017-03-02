@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server.resources;
 
-import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeDirectoryExplorer;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class IndexResourceShould {
         directoryExplorer.setHTMLListingTo(htmlListing);
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET / HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
         Resource indexResource = new IndexResource(URI.create("/"), directoryExplorer);
 
         String expectedResponse = Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + htmlListing;
@@ -32,7 +32,7 @@ public class IndexResourceShould {
         directoryExplorer.setHTMLListingTo(htmlListing);
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET / HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
         Resource indexResource = new IndexResource(URI.create("/"), directoryExplorer);
 
         String expectedResponse = Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS + htmlListing;

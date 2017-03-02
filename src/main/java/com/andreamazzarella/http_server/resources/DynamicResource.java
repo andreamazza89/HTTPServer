@@ -1,12 +1,14 @@
 package com.andreamazzarella.http_server.resources;
 
 import com.andreamazzarella.http_server.FileSystem;
-import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.headers.Header;
+import com.andreamazzarella.http_server.request.Request;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class DynamicResource implements Resource {
@@ -32,9 +34,13 @@ public class DynamicResource implements Resource {
             return Response.NOT_ALLOWED_RESPONSE.getBytes();
         }
 
+        Optional<byte[]> optionalBody = request.getBody();
+        byte[] body = optionalBody.isPresent() ? optionalBody.get() : "".getBytes();
+
         switch (request.getMethod()) {
             case GET:
-                String dataRange = request.getHeader("Range");
+                Header dataRangeHeader = request.getRangeHeader().orElse(null);
+                String dataRange = dataRangeHeader == null ? null : dataRangeHeader.getValue();
                 byte[] statusLine;
                 byte[] resourceContent = fileSystem.getResource(request.getUri(), dataRange).orElse("".getBytes());
                 byte[] contentTypeHeader = generateContentTypeHeader();
@@ -50,13 +56,13 @@ public class DynamicResource implements Resource {
             case HEAD:
                 return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case POST:
-                fileSystem.addOrReplaceResource(request.getUri(), request.getBody().getBytes());
+                fileSystem.addOrReplaceResource(request.getUri(), body);
                 return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case PUT:
-                fileSystem.addOrReplaceResource(request.getUri(), request.getBody().getBytes());
+                fileSystem.addOrReplaceResource(request.getUri(), body);
                 return (Response.STATUS_TWO_HUNDRED + Response.END_OF_HEADERS).getBytes();
             case PATCH:
-                fileSystem.addOrReplaceResource(request.getUri(), request.getBody().getBytes());
+                fileSystem.addOrReplaceResource(request.getUri(), body);
                 return (Response.STATUS_TWO_OH_FOUR + Response.END_OF_HEADERS).getBytes();
             case DELETE:
                 fileSystem.deleteResource(request.getUri());

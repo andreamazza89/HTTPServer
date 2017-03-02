@@ -1,21 +1,20 @@
 package com.andreamazzarella.http_server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.net.Socket;
 
 public class SocketConnection implements DataExchange {
 
-    private BufferedReader reader;
+    private static final int LINE_FEED = 10;
+    private static final int CARRIAGE_RETURN = 13;
+
+    private final InputStream inputStream;
     private PrintStream writer;
 
     SocketConnection(Socket socket) {
         try {
             this.writer = new PrintStream(socket.getOutputStream(), true, "UTF-8");
-            this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.inputStream = socket.getInputStream();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -23,17 +22,30 @@ public class SocketConnection implements DataExchange {
 
     @Override
     public String readLine() {
-        try {
-            return reader.readLine();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        while (true) {
+            int nextCharacter;
+            try {
+                nextCharacter = inputStream.read();
+                if (nextCharacter == LINE_FEED || nextCharacter == CARRIAGE_RETURN) {
+                    inputStream.read(); //this relies on the fact that the request send has two newline characters; would be good not to make this assumption
+                    break;
+                } else {
+                    stringBuilder.append((char)nextCharacter);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        return stringBuilder.toString();
     }
 
     @Override
-    public void read(char[] buffer, int startIndex, int contentLenth) {
+    public void read(byte[] buffer, int startIndex, int contentLength) {
         try {
-            reader.read(buffer, startIndex, contentLenth);
+            inputStream.read(buffer, startIndex, contentLength);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

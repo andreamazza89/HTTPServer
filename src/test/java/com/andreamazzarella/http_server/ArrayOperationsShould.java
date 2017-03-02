@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.ArrayOperations;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;

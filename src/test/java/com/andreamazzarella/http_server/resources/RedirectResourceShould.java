@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server.resources;
 
-import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ public class RedirectResourceShould {
     public void respondWithARedirectMessageExampleOne() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET /redirect_this_please HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
         URI redirectLocation = URI.create("/new/location/");
         Resource redirectedResource = new RedirectedResource(URI.create("/redirect_this_please"), redirectLocation);
 
@@ -26,7 +26,7 @@ public class RedirectResourceShould {
     public void respondWithARedirectMessageExampleTwo() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET /redirect_this_please HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
         URI redirectLocation = URI.create("/newer/location/");
         Resource redirectedResource = new RedirectedResource(URI.create("/redirect_this_please"), redirectLocation);
 

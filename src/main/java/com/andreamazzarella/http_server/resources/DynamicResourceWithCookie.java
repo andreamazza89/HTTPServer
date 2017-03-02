@@ -2,9 +2,11 @@ package com.andreamazzarella.http_server.resources;
 
 import com.andreamazzarella.http_server.ArrayOperations;
 import com.andreamazzarella.http_server.FileSystem;
-import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.headers.Header;
+import com.andreamazzarella.http_server.request.Request;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.Set;
 
 public class DynamicResourceWithCookie implements Resource {
@@ -19,7 +21,8 @@ public class DynamicResourceWithCookie implements Resource {
 
     @Override
     public byte[] generateResponse(Request request) {
-        String dataRange = request.getHeader("Range");
+        Header dataRangeHeader = request.getRangeHeader().orElse(null);
+        String dataRange = dataRangeHeader == null ? null : dataRangeHeader.getValue();
         byte[] status;
         byte[] setCookieHeader = generateCookieHeader(request);
         byte[] body = fileSystem.getResource(request.getUri(), dataRange).orElse("".getBytes());
@@ -33,11 +36,11 @@ public class DynamicResourceWithCookie implements Resource {
     }
 
     private byte[] getCookie(Request request) {
-        String cookie = request.getHeader("Cookie");
-        if (cookie == null) {
-            return "".getBytes();
+        Optional<Header> cookie = request.getCookieHeader();
+        if (cookie.isPresent()) {
+            return cookie.get().getValue().split("=")[1].getBytes();
         } else {
-            return cookie.split("=")[1].getBytes();
+            return "".getBytes();
         }
     }
 

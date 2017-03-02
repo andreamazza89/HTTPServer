@@ -1,12 +1,13 @@
 package com.andreamazzarella.http_server;
 
-import com.andreamazzarella.http_server.resources.DynamicResource;
+import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.resources.DynamicResourceWithCookie;
-import com.andreamazzarella.http_server.resources.IndexResource;
 import com.andreamazzarella.http_server.resources.RedirectedResource;
+import com.andreamazzarella.http_server.resources.TeaPotResource;
+import com.andreamazzarella.http_server.resources.DynamicResource;
+import com.andreamazzarella.http_server.resources.IndexResource;
 import com.andreamazzarella.http_server.resources.Resource;
 import com.andreamazzarella.http_server.resources.Resources;
-import com.andreamazzarella.http_server.resources.TeaPotResource;
 
 import java.io.IOException;
 import java.net.URI;

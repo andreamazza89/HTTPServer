@@ -1,5 +1,7 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.request.Request;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;

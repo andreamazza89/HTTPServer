@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server.resources;
 
-import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ public class TeaPotResourceShould {
     public void respondWithATeaPotResponse() {
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET /coffee HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
         Resource teaPot = new TeaPotResource(URI.create("/coffee"));
 
         assertEquals(Response.TEA_POT_RESPONSE, new String(teaPot.generateResponse(request)));

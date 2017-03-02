@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.resources.Resource;
 import com.andreamazzarella.http_server.resources.Resources;
 
@@ -40,7 +41,9 @@ class HTTPServer {
 
     private void respondToRequest(Socket socket) {
         SocketConnection socketConnection = new SocketConnection(socket);
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
+        // Response response = middlewareStack.generateResponseFor(com.andreamazzarella.http_server.request);
+        // socketConnection.sendResponse(response)
         logger.log(request);
         Resource resource = resources.findResource(request);
         byte[] response = resource.generateResponse(request);

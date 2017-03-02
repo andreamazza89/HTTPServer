@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.FileSystem;
 import org.junit.After;
 import org.junit.Test;
 

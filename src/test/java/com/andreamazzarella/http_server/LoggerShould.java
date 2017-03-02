@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeFileSystem;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class LoggerShould {
         URI resourcePath = URI.create("/looking_at_you");
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("LOG_THIS " + resourcePath + " HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
         Logger logger = new Logger(fileSystem);
         logger.follow(resourcePath);
 
@@ -34,7 +35,7 @@ public class LoggerShould {
         URI resourcePath = URI.create("/dont_care_what_happens_here");
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("LOG_THIS " + resourcePath + " HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
         Logger logger = new Logger(fileSystem);
 
         logger.log(request);
@@ -50,12 +51,12 @@ public class LoggerShould {
         URI resourcePathOne = URI.create("/looking_at_you");
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("LOG_THIS " + resourcePathOne + " HTTP/1.1\n\n");
-        Request requestOne = new Request(socketConnection);
+        Request requestOne = Request.parseFromSocket(socketConnection);
 
         URI resourcePathTwo = URI.create("/log_me");
         FakeSocketConnection socketConnectionTwo = new FakeSocketConnection();
         socketConnectionTwo.setRequestTo("AND_THIS " + resourcePathTwo + " HTTP/1.1\n\n");
-        Request requestTwo = new Request(socketConnectionTwo);
+        Request requestTwo = Request.parseFromSocket(socketConnectionTwo);
 
         Logger logger = new Logger(fileSystem);
         logger.follow(resourcePathOne);

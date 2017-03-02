@@ -1,7 +1,7 @@
 package com.andreamazzarella.http_server.resources;
 
 import com.andreamazzarella.http_server.BasicAuthenticator;
-import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class ResourcesShould {
 
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET /i/am/not/a/real/path HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
 
         Resource resource = resources.findResource(request);
 
@@ -33,7 +33,7 @@ public class ResourcesShould {
 
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET /tea HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
 
         Resource resource = resources.findResource(request);
 
@@ -51,7 +51,7 @@ public class ResourcesShould {
 
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET /tea HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
 
         Resource resource = resources.findResource(request);
 
@@ -71,7 +71,7 @@ public class ResourcesShould {
         String authCredentials = "admin:monkey_password";
         String encodedCredentials = new String(Base64.getEncoder().encode(authCredentials.getBytes()));
         socketConnection.setRequestTo("GET /tea HTTP/1.1\nAuthorization: Basic " + encodedCredentials + "\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
 
         Resource resource = resources.findResource(request);
 

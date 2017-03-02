@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.DirectoryExplorer;
 import org.junit.Test;
 
 import java.io.File;

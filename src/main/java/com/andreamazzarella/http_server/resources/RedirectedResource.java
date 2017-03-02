@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server.resources;
 
-import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.request.Request;
 
 import java.net.URI;
 

@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.InputParser;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

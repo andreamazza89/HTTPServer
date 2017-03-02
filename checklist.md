@@ -3,7 +3,7 @@
 - maybe system should not rely on preexisting directories? (logs & resources need to exist for the system to work, though
 that is also true for the public folder)
 - remove fileSystem vulnerability (should refuse paths that include '..')
-- make request body optional?
+- make com.andreamazzarella.http_server.request body optional?
 - extract data range parser from filesystem
 - refactor fakes that use inheritance to use interface instead?
 - Request should maybe handle invalid requests gracefully?

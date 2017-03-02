@@ -77,7 +77,7 @@ public class Response {
 
 
 
-//       switch (request.getMethod()) {
+//       switch (com.andreamazzarella.http_server.request.getMethod()) {
 //           case GET:
 //               if (resource.isRedirect()) {
 //                   return "HTTP/1.1 302 Found\nLocation: " + resource.redirectLocation() + "\n\n";
@@ -106,8 +106,8 @@ public class Response {
 //               methodsAllowed = methodsAllowed.substring(0, methodsAllowed.length() - 1);
 //               return "HTTP/1.1 200 OK\nAllow: " + methodsAllowed + "\n\n";
 //           case POST:
-//               String requestBody = request.getContent();
-//               URI resourceUri = request.getUri();
+//               String requestBody = com.andreamazzarella.http_server.request.getContent();
+//               URI resourceUri = com.andreamazzarella.http_server.request.getUri();
 //               File file = new File("resources" + resourceUri.toString());
 //               String path;
 //               try {
@@ -141,13 +141,13 @@ public class Response {
 
 
 
-////       switch (request.getMethod()) {
+////       switch (com.andreamazzarella.http_server.request.getMethod()) {
 ////           case GET:
 ////               return GetResponse.respond(resource, somethingToHandleFileSystem)
 ////           case OPTIONS:
 ////                return OptionsResponse.respond(resource)
 ////           case POST:
-////                return PostResponse.respond(resource, request, somethingToHandleFileSystem)
+////                return PostResponse.respond(resource, com.andreamazzarella.http_server.request, somethingToHandleFileSystem)
 ////           default:
 ////               return "PLEASE HANDLE THIS CASE, PROBS SHOULD BE AN INTERNAL ERROR, RETRY OR SOMETHING";
 ////       }

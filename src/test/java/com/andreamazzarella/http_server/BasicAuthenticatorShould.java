@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class BasicAuthenticatorShould {
         BasicAuthenticator authenticator = new BasicAuthenticator();
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("POST /tea HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
 
         assertEquals(false, authenticator.isRequestValid(request));
     }
@@ -27,7 +28,7 @@ public class BasicAuthenticatorShould {
         String authCredentials = "admin:wrong_password";
         String encodedCredentials = new String(Base64.getEncoder().encode(authCredentials.getBytes()));
         socketConnection.setRequestTo("POST /tea HTTP/1.1\nAuthorization: Basic " + encodedCredentials + "\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
 
         assertEquals(false, authenticator.isRequestValid(request));
     }
@@ -40,7 +41,7 @@ public class BasicAuthenticatorShould {
         String authCredentials = "admin:monkey_password";
         String encodedCredentials = new String(Base64.getEncoder().encode(authCredentials.getBytes()));
         socketConnection.setRequestTo("POST /tea HTTP/1.1\nAuthorization: Basic " + encodedCredentials + "\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
 
         assertEquals(true, authenticator.isRequestValid(request));
     }

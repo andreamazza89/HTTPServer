@@ -2,55 +2,60 @@ package com.andreamazzarella.http_server.support;
 
 import com.andreamazzarella.http_server.DataExchange;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 
 public class FakeSocketConnection implements DataExchange {
 
-    private final ByteArrayOutputStream messagesReceived;
-    private BufferedReader request;
+    private static final int LINE_FEED = 10;
+    private static final int CARRIAGE_RETURN = 13;
 
-    public FakeSocketConnection() {
-        this.messagesReceived = new ByteArrayOutputStream();
-    }
+    private InputStream requestInputStream;
+
+
+
+
+
+
 
     @Override
     public String readLine() {
-        try {
-            return request.readLine();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        while (true) {
+            int nextCharacter = 0;
+            try {
+                nextCharacter = requestInputStream.read();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (nextCharacter == LINE_FEED || nextCharacter == CARRIAGE_RETURN) {
+                    break;
+                } else {
+                    stringBuilder.append((char)nextCharacter);
+                }
         }
+
+        return stringBuilder.toString();
     }
 
     @Override
     public void write(byte[] data) {
-        try {
-            messagesReceived.write(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        throw new RuntimeException("method not implemented as not required yet in Fake Object");
     }
 
     @Override
-    public void read(char[] buffer, int startIndex, int contentLenth) {
+    public void read(byte[] buffer, int startIndex, int contentLength) {
         try {
-            request.read(buffer, startIndex, contentLenth);
+            requestInputStream.read(buffer, startIndex, contentLength);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-
-    }
-
-    public String messageReceived() {
-        return messagesReceived.toString();
     }
 
     public void setRequestTo(String request) {
-        this.request = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(request.getBytes())));
+        this.requestInputStream = new ByteArrayInputStream(request.getBytes());
     }
 }

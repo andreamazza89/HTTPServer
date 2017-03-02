@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server.resources;
 
-import com.andreamazzarella.http_server.Request;
+import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeFileSystem;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class DynamicResourceWithCookieShould {
         fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET " + resourcePath + queryParameter + " HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
 
         Resource cookieResource = new DynamicResourceWithCookie(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
 
@@ -38,7 +38,7 @@ public class DynamicResourceWithCookieShould {
         fileSystem.addOrReplaceResource(resourcePath, resourceContent.getBytes());
         FakeSocketConnection socketConnection = new FakeSocketConnection();
         socketConnection.setRequestTo("GET " + resourcePath + queryParameter + " HTTP/1.1\n\n");
-        Request request = new Request(socketConnection);
+        Request request = Request.parseFromSocket(socketConnection);
 
         Resource cookieResource = new DynamicResourceWithCookie(resourcePath, fileSystem, new Request.Method[] {Request.Method.GET});
 

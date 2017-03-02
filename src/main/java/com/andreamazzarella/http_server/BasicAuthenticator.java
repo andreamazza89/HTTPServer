@@ -1,8 +1,12 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.headers.Header;
+import com.andreamazzarella.http_server.request.Request;
+
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,14 +18,17 @@ public class BasicAuthenticator {
     }
 
     public boolean isRequestValid(Request request) {
-        String authorizationHeaderFieldContent = request.getHeader("Authorization");
 
-        if (authorizationHeaderFieldContent == null) {
+        Optional<Header> optionalAuthorizationHeader = request.getAuthorizationHeader();
+
+        if (!optionalAuthorizationHeader.isPresent()) {
             return false;
         }
 
+        Header authorizationHeader = optionalAuthorizationHeader.get();
+
         Pattern encodedCredentialsPattern = Pattern.compile(".*Basic\\s(?<credentials>.+)");
-        Matcher encodedCredentialsMatcher = encodedCredentialsPattern.matcher(authorizationHeaderFieldContent);
+        Matcher encodedCredentialsMatcher = encodedCredentialsPattern.matcher(authorizationHeader.getValue());
         encodedCredentialsMatcher.matches();
         String encodedCredentials = encodedCredentialsMatcher.group("credentials");
         String credentials = new String(Base64.getDecoder().decode(encodedCredentials));
