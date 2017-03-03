@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static com.andreamazzarella.http_server.MWResponse.StatusCode._200;
 import static org.junit.Assert.assertEquals;
 
 public class MWLoggerShould {
@@ -18,7 +19,7 @@ public class MWLoggerShould {
     public void respondWithWhateverResponseIsProvidedByTheNextMiddlewareLayer() {
         Request request = new Request("GET /log/me HTTP/1.1", new ArrayList<>(), Optional.empty());
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        MWResponse expectedResponse = new MWResponse(200);
+        MWResponse expectedResponse = new MWResponse(_200);
         nextLayer.stubResponse(expectedResponse);
         MiddleWare mwLogger = new MWLogger(nextLayer, new FakeFileSystem(URI.create("./logs")));
 
@@ -42,8 +43,8 @@ public class MWLoggerShould {
         logger.follow(resourcePath);
         logger.follow(otherResourcePath);
 
-        logger.log(request);
-        logger.log(otherRequest);
+        logger.generateResponseFor(request);
+        logger.generateResponseFor(otherRequest);
 
         String expectedLog = "LOG_THIS " + resourcePath + " HTTP/1.1\n" + "AND_THIS " + otherResourcePath + " HTTP/1.1\n";
         assertEquals(expectedLog, new String(fileSystem.getResource(loggingPath, null).get()));
@@ -57,12 +58,12 @@ public class MWLoggerShould {
         URI resourcePath = URI.create("/looking_at_you");
         Request request = new Request("LOG_THIS " + resourcePath + " HTTP/1.1", new ArrayList<>(), Optional.empty());
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        MWResponse expectedResponse = new MWResponse(200);
+        MWResponse expectedResponse = new MWResponse(_200);
         nextLayer.stubResponse(expectedResponse);
 
         MWLogger logger = new MWLogger(nextLayer, fileSystem);
 
-        logger.log(request);
+        logger.generateResponseFor(request);
 
         assertEquals(Optional.empty(), fileSystem.getResource(loggingPath, null));
     }

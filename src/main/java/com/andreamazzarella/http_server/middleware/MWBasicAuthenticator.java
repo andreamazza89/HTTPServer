@@ -9,6 +9,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.andreamazzarella.http_server.MWResponse.StatusCode._401;
+
 public class MWBasicAuthenticator implements MiddleWare {
 
     private final Map<String, String> users = new HashMap<>();
@@ -27,28 +29,19 @@ public class MWBasicAuthenticator implements MiddleWare {
     public MWResponse generateResponseFor(Request request) {
         Optional<Header> authorizationHeader = request.getAuthorizationHeader();
 
-        if (routeDoesNotNeedAuthentication(request)) {
-            return new MWResponse(400);
-        }
-
-        if (requestIncludesAuthorizationHeader(authorizationHeader)) {
-            return new MWResponse(401);
-        }
-
-        if (requestCredentialsAreValid(authorizationHeader.get())) {
+        if (routeDoesNotNeedAuthentication(request) || credentialsAreValid(authorizationHeader)) {
             return nextLayer.generateResponseFor(request);
         } else {
-            return new MWResponse(401);
+            return new MWResponse(_401);
         }
-
-    }
-
-    private boolean requestIncludesAuthorizationHeader(Optional<Header> optionalAuthorizationHeader) {
-        return !optionalAuthorizationHeader.isPresent();
     }
 
     private boolean routeDoesNotNeedAuthentication(Request request) {
         return !routesRequiringAuthentication.contains(request.getUri());
+    }
+
+    private boolean credentialsAreValid(Optional<Header> authorizationHeader) {
+        return authorizationHeader.isPresent() && requestCredentialsAreValid(authorizationHeader.get());
     }
 
     void addUser(String userName, String password) {

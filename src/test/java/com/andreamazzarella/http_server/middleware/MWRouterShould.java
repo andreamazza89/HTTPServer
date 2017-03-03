@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.andreamazzarella.http_server.MWResponse.StatusCode._200;
+import static com.andreamazzarella.http_server.MWResponse.StatusCode._404;
+import static com.andreamazzarella.http_server.MWResponse.StatusCode._418;
 import static org.junit.Assert.assertEquals;
 
 public class MWRouterShould {
@@ -19,7 +22,7 @@ public class MWRouterShould {
     @Test
     public void delegateResponseGenerationToAControllerIfOneExistsForTheRequestPathExampleOne() {
         FakeMiddleWare controller = new FakeMiddleWare();
-        controller.stubResponse(new MWResponse(200));
+        controller.stubResponse(new MWResponse(_200));
         Map<URI, MiddleWare> routes = new HashMap<>();
         URI test_path = URI.create("/test_route");
         routes.put(test_path, controller);
@@ -28,13 +31,13 @@ public class MWRouterShould {
 
         MWResponse response = router.generateResponseFor(request);
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals(_200, response.getStatusCode());
     }
 
     @Test
     public void delegateResponseGenerationToAControllerIfOneExistsForTheRequestPathExampleTwo() {
         FakeMiddleWare controller = new FakeMiddleWare();
-        controller.stubResponse(new MWResponse(299));
+        controller.stubResponse(new MWResponse(_418));
         Map<URI, MiddleWare> routes = new HashMap<>();
         URI test_path = URI.create("/test_route");
         routes.put(test_path, controller);
@@ -43,7 +46,7 @@ public class MWRouterShould {
 
         MWResponse response = router.generateResponseFor(request);
 
-        assertEquals(299, response.getStatusCode());
+        assertEquals(_418, response.getStatusCode());
     }
 
     @Test
@@ -52,12 +55,12 @@ public class MWRouterShould {
         filesystem.setResourceExistsFlagTo(true);
         Request request = new Request("GET /path_to_static_resource HTTP/1.1", new ArrayList<>(), Optional.empty());
         FakeMiddleWare staticResourcesController = new FakeMiddleWare();
-        staticResourcesController.stubResponse(new MWResponse(200));
+        staticResourcesController.stubResponse(new MWResponse(_200));
         MiddleWare router = new MWRouter(new HashMap<>(), staticResourcesController,filesystem);
 
         MWResponse response = router.generateResponseFor(request);
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals(_200, response.getStatusCode());
     }
 
     @Test
@@ -67,6 +70,6 @@ public class MWRouterShould {
 
         MWResponse response = router.generateResponseFor(request);
 
-        assertEquals(404, response.getStatusCode());
+        assertEquals(_404, response.getStatusCode());
     }
 }

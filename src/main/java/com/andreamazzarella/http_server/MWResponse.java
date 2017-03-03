@@ -1,14 +1,35 @@
 package com.andreamazzarella.http_server;
 
 public class MWResponse {
-    private final int statusCode;
+
+    public final String END_OF_HEADERS = "\n";
+
+    public enum StatusCode {
+        _200("HTTP/1.1 200 OK\n"),
+        _401("HTTP/1.1 401 Unauthorized\n"),
+        _404("HTTP/1.1 404 Not Found\n"),
+        _418("HTTP/1.1 418 I'm a teapot\n");
+
+        private final String status;
+
+        StatusCode(String status) {
+            this.status = status;
+        }
+
+        public String getStatusLine() {
+            return status;
+        }
+    }
+
+
+    private final StatusCode statusCode;
     private byte[] body;
 
-    public MWResponse(int statusCode) {
+    public MWResponse(StatusCode statusCode) {
         this.statusCode = statusCode;
     }
 
-    public int getStatusCode() {
+    public StatusCode getStatusCode() {
         return statusCode;
     }
 
@@ -18,5 +39,9 @@ public class MWResponse {
 
     public byte[] body() {
         return body;
+    }
+
+    byte[] toByteArray() {
+        return (statusCode.getStatusLine() + END_OF_HEADERS).getBytes();
     }
 }

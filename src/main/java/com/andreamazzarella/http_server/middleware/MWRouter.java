@@ -7,6 +7,8 @@ import com.andreamazzarella.http_server.request.Request;
 import java.net.URI;
 import java.util.Map;
 
+import static com.andreamazzarella.http_server.MWResponse.StatusCode._404;
+
 public class MWRouter implements MiddleWare {
 
     private final Map<URI, MiddleWare> routes;
@@ -21,8 +23,7 @@ public class MWRouter implements MiddleWare {
 
     @Override
     public MWResponse generateResponseFor(Request request) {
-
-        if (routes.keySet().contains(request.getUri())) {
+        if (controllerForRouteExists(request)) {
             MiddleWare controller = routes.get(request.getUri());
             return controller.generateResponseFor(request);
         }
@@ -30,7 +31,11 @@ public class MWRouter implements MiddleWare {
         if (staticFilesystem.doesResourceExist(request.getUri())) {
             return staticResourcesController.generateResponseFor(request);
         } else {
-            return new MWResponse(404);
+            return new MWResponse(_404);
         }
+    }
+
+    private boolean controllerForRouteExists(Request request) {
+        return routes.keySet().contains(request.getUri());
     }
 }

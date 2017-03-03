@@ -22,6 +22,7 @@ public class MWLogger implements MiddleWare {
 
     @Override
     public MWResponse generateResponseFor(Request request) {
+        log(request);
         return nextLayer.generateResponseFor(request);
     }
 
@@ -29,7 +30,7 @@ public class MWLogger implements MiddleWare {
         following.add(resourcePath);
     }
 
-    void log(Request request) {
+    private void log(Request request) {
         if (following.contains(request.getUri())) {
             String requestLine = request.getRequestLine();
             byte[] requestLineWithNewLine = ArrayOperations.concatenateData(requestLine.getBytes(), "\n".getBytes());
