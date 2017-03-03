@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server;
 
-public class MWResponse {
+public class Response {
 
     public final String END_OF_HEADERS = "\n";
 
@@ -25,7 +25,7 @@ public class MWResponse {
     private final StatusCode statusCode;
     private byte[] body;
 
-    public MWResponse(StatusCode statusCode) {
+    public Response(StatusCode statusCode) {
         this.statusCode = statusCode;
     }
 

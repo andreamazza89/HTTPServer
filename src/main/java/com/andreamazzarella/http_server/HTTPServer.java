@@ -1,8 +1,7 @@
 package com.andreamazzarella.http_server;
 
+import com.andreamazzarella.http_server.middleware.MiddleWare;
 import com.andreamazzarella.http_server.request.Request;
-import com.andreamazzarella.http_server.resources.Resource;
-import com.andreamazzarella.http_server.resources.Resources;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -13,13 +12,11 @@ import java.util.concurrent.Executors;
 
 class HTTPServer {
     private final int portNumber;
-    private final Resources resources;
-    private final Logger logger;
+    private final MiddleWare middleWareStack;
 
-    HTTPServer(int portNumber, Resources resources, Logger logger) {
+    HTTPServer(int portNumber, MiddleWare middleWareStack) {
         this.portNumber = portNumber;
-        this.resources = resources;
-        this.logger = logger;
+        this.middleWareStack = middleWareStack;
     }
 
     void start() {
@@ -42,12 +39,8 @@ class HTTPServer {
     private void respondToRequest(Socket socket) {
         SocketConnection socketConnection = new SocketConnection(socket);
         Request request = Request.parseFromSocket(socketConnection);
-        // Response response = middlewareStack.generateResponseFor(com.andreamazzarella.http_server.request);
-        // socketConnection.sendResponse(response)
-        logger.log(request);
-        Resource resource = resources.findResource(request);
-        byte[] response = resource.generateResponse(request);
-        socketConnection.write(response);
+        Response response =  middleWareStack.generateResponseFor(request);
+        socketConnection.write(response.toByteArray());
     }
 
     private void closeSocket(Socket socket) {

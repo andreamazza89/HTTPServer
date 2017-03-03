@@ -1,4 +1,4 @@
-package com.andreamazzarella.http_server.headers;
+package com.andreamazzarella.http_server;
 
 public class Header {
 

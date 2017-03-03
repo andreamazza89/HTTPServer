@@ -1,7 +1,7 @@
 package com.andreamazzarella.http_server.middleware;
 
-import com.andreamazzarella.http_server.MWResponse;
-import com.andreamazzarella.http_server.headers.Header;
+import com.andreamazzarella.http_server.Response;
+import com.andreamazzarella.http_server.Header;
 import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeMiddleWare;
 import org.junit.Test;
@@ -12,21 +12,21 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import static com.andreamazzarella.http_server.MWResponse.StatusCode._200;
-import static com.andreamazzarella.http_server.MWResponse.StatusCode._401;
-import static com.andreamazzarella.http_server.MWResponse.StatusCode._418;
+import static com.andreamazzarella.http_server.Response.StatusCode._200;
+import static com.andreamazzarella.http_server.Response.StatusCode._401;
+import static com.andreamazzarella.http_server.Response.StatusCode._418;
 import static org.junit.Assert.assertEquals;
 
-public class MWBasicAuthenticatorShould {
+public class BasicAuthenticatorShould {
 
     @Test
     public void generateANotAuthorisedResponseIfAuthenticationHeaderIsMissing() {
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        MWBasicAuthenticator basicAuthenticator = new MWBasicAuthenticator(nextLayer);
+        BasicAuthenticator basicAuthenticator = new BasicAuthenticator(nextLayer);
         basicAuthenticator.requireAuthenticationFor(URI.create("/i_am_not_so_authentic"));
         Request request = new Request("GET /i_am_not_so_authentic HTTP/1.1", new ArrayList<>(), Optional.empty());
 
-        MWResponse response = basicAuthenticator.generateResponseFor(request);
+        Response response = basicAuthenticator.generateResponseFor(request);
 
         assertEquals(_401, response.getStatusCode());
     }
@@ -34,11 +34,11 @@ public class MWBasicAuthenticatorShould {
     @Test
     public void respondWithWhateverResponseIsProvidedByTheNextMiddlewareLayerIfRouteDoesNotRequireAuthenticationExampleOne() {
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        nextLayer.stubResponse(new MWResponse(_418));
-        MWBasicAuthenticator basicAuthenticator = new MWBasicAuthenticator(nextLayer);
+        nextLayer.stubResponse(new Response(_418));
+        BasicAuthenticator basicAuthenticator = new BasicAuthenticator(nextLayer);
         Request request = new Request("GET /i_am_not_so_authentic HTTP/1.1", new ArrayList<>(), Optional.empty());
 
-        MWResponse response = basicAuthenticator.generateResponseFor(request);
+        Response response = basicAuthenticator.generateResponseFor(request);
 
         assertEquals(_418, response.getStatusCode());
     }
@@ -46,11 +46,11 @@ public class MWBasicAuthenticatorShould {
     @Test
     public void respondWithWhateverResponseIsProvidedByTheNextMiddlewareLayerIfRouteDoesNotRequireAuthenticationExampleTwo() {
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        nextLayer.stubResponse(new MWResponse(_200));
-        MWBasicAuthenticator basicAuthenticator = new MWBasicAuthenticator(nextLayer);
+        nextLayer.stubResponse(new Response(_200));
+        BasicAuthenticator basicAuthenticator = new BasicAuthenticator(nextLayer);
         Request request = new Request("GET /i_am_not_so_authentic HTTP/1.1", new ArrayList<>(), Optional.empty());
 
-        MWResponse response = basicAuthenticator.generateResponseFor(request);
+        Response response = basicAuthenticator.generateResponseFor(request);
 
         assertEquals(_200, response.getStatusCode());
     }
@@ -58,8 +58,8 @@ public class MWBasicAuthenticatorShould {
     @Test
     public void respondWithWhateverResponseIsProvidedByTheNextMiddlewareLayerIfCredentialsAreValid() {
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        nextLayer.stubResponse(new MWResponse(_418));
-        MWBasicAuthenticator basicAuthenticator = new MWBasicAuthenticator(nextLayer);
+        nextLayer.stubResponse(new Response(_418));
+        BasicAuthenticator basicAuthenticator = new BasicAuthenticator(nextLayer);
         basicAuthenticator.requireAuthenticationFor(URI.create("/i_am_not_so_authentic"));
         basicAuthenticator.addUser("admin", "monkey_password");
         String authCredentials = "admin:monkey_password";
@@ -68,7 +68,7 @@ public class MWBasicAuthenticatorShould {
         headers.add(new Header(Header.AUTHORIZATION_HEADER_NAME, "Basic: " + encodedCredentials));
         Request request = new Request("GET /i_am_not_so_authentic HTTP/1.1", headers, Optional.empty());
 
-        MWResponse response = basicAuthenticator.generateResponseFor(request);
+        Response response = basicAuthenticator.generateResponseFor(request);
 
         assertEquals(_418, response.getStatusCode());
     }
@@ -76,7 +76,7 @@ public class MWBasicAuthenticatorShould {
     @Test
     public void generateANotAuthorisedResponseIfAuthenticationFails() {
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        MWBasicAuthenticator basicAuthenticator = new MWBasicAuthenticator(nextLayer);
+        BasicAuthenticator basicAuthenticator = new BasicAuthenticator(nextLayer);
         basicAuthenticator.requireAuthenticationFor(URI.create("/i_am_not_so_authentic"));
         basicAuthenticator.addUser("admin", "monkey_password");
         String authCredentials = "admin:wrong_password";
@@ -85,7 +85,7 @@ public class MWBasicAuthenticatorShould {
         headers.add(new Header(Header.AUTHORIZATION_HEADER_NAME, "Basic: " + encodedCredentials));
         Request request = new Request("GET /i_am_not_so_authentic HTTP/1.1", headers, Optional.empty());
 
-        MWResponse response = basicAuthenticator.generateResponseFor(request);
+        Response response = basicAuthenticator.generateResponseFor(request);
 
         assertEquals(_401, response.getStatusCode());
     }

@@ -1,7 +1,7 @@
 package com.andreamazzarella.http_server.middleware;
 
-import com.andreamazzarella.http_server.MWResponse;
-import com.andreamazzarella.http_server.headers.Header;
+import com.andreamazzarella.http_server.Response;
+import com.andreamazzarella.http_server.Header;
 import com.andreamazzarella.http_server.request.Request;
 
 import java.net.URI;
@@ -9,15 +9,15 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.andreamazzarella.http_server.MWResponse.StatusCode._401;
+import static com.andreamazzarella.http_server.Response.StatusCode._401;
 
-public class MWBasicAuthenticator implements MiddleWare {
+public class BasicAuthenticator implements MiddleWare {
 
     private final Map<String, String> users = new HashMap<>();
     private List<URI> routesRequiringAuthentication = new ArrayList<>();
     private final MiddleWare nextLayer;
 
-    MWBasicAuthenticator(MiddleWare nextLayer) {
+    public BasicAuthenticator(MiddleWare nextLayer) {
         this.nextLayer = nextLayer;
     }
 
@@ -26,13 +26,13 @@ public class MWBasicAuthenticator implements MiddleWare {
     }
 
     @Override
-    public MWResponse generateResponseFor(Request request) {
+    public Response generateResponseFor(Request request) {
         Optional<Header> authorizationHeader = request.getAuthorizationHeader();
 
         if (routeDoesNotNeedAuthentication(request) || credentialsAreValid(authorizationHeader)) {
             return nextLayer.generateResponseFor(request);
         } else {
-            return new MWResponse(_401);
+            return new Response(_401);
         }
     }
 

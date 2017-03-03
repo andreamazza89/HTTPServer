@@ -2,26 +2,26 @@ package com.andreamazzarella.http_server.middleware;
 
 import com.andreamazzarella.http_server.ArrayOperations;
 import com.andreamazzarella.http_server.FileSystem;
-import com.andreamazzarella.http_server.MWResponse;
+import com.andreamazzarella.http_server.Response;
 import com.andreamazzarella.http_server.request.Request;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MWLogger implements MiddleWare {
+public class Logger implements MiddleWare {
 
     private final MiddleWare nextLayer;
     private final FileSystem fileSystem;
     private final List<URI> following = new ArrayList<>();
 
-    MWLogger(MiddleWare nextLayer, FileSystem fileSystem) {
+    public Logger(MiddleWare nextLayer, FileSystem fileSystem) {
         this.nextLayer = nextLayer;
         this.fileSystem = fileSystem;
     }
 
     @Override
-    public MWResponse generateResponseFor(Request request) {
+    public Response generateResponseFor(Request request) {
         log(request);
         return nextLayer.generateResponseFor(request);
     }
