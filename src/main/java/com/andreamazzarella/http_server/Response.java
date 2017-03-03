@@ -43,6 +43,10 @@ public class Response {
         return this;
     }
 
+    public Response setBody(String body) {
+        return setBody(body.getBytes());
+    }
+
     public Optional<byte[]> getBody() {
         return body;
     }

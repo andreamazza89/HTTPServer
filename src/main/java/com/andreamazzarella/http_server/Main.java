@@ -2,6 +2,7 @@ package com.andreamazzarella.http_server;
 
 import com.andreamazzarella.http_server.middleware.*;
 import com.andreamazzarella.http_server.middleware.controllers.StaticAssetsController;
+import com.andreamazzarella.http_server.middleware.controllers.TeaPotController;
 import com.andreamazzarella.http_server.request.Request;
 
 import java.io.IOException;
@@ -27,8 +28,10 @@ public class Main {
 
     private static MiddleWare createMiddleWareStack(String publicDirectory, String loggingDirectory) {
         Map<URI, MiddleWare> routes = new HashMap<>();
-        MiddleWare bogusIndex = new Bogus();
+        MiddleWare teapotRoute = new TeaPotController();
+MiddleWare bogusIndex = new Bogus();
         routes.put(URI.create("/"), bogusIndex);
+        routes.put(URI.create("/coffee"), teapotRoute);
 
         FileSystem loggingFileSystem = new FileSystem(URI.create(loggingDirectory));
         FileSystem staticFileSystem = new FileSystem(URI.create(publicDirectory));
