@@ -21,7 +21,8 @@ public class LoggerShould {
         FakeMiddleWare nextLayer = new FakeMiddleWare();
         Response expectedResponse = new Response(_200);
         nextLayer.stubResponse(expectedResponse);
-        MiddleWare mwLogger = new Logger(nextLayer, new FakeFileSystem(URI.create("./logs")));
+        URI logsPath = URI.create("/logs");
+        MiddleWare mwLogger = new Logger(nextLayer, new FakeFileSystem(URI.create("./logs")), logsPath);
 
         Response actualResponse = mwLogger.generateResponseFor(request);
 
@@ -30,8 +31,8 @@ public class LoggerShould {
 
     @Test
     public void logRequestsItIsFollowingToTheFileSystemWriterProvided() {
-        URI loggingPath = URI.create("./logs");
-        FakeFileSystem fileSystem = new FakeFileSystem(loggingPath);
+        URI loggingDirectory = URI.create("./logs");
+        FakeFileSystem fileSystem = new FakeFileSystem(loggingDirectory);
 
         URI resourcePath = URI.create("/looking_at_you");
         Request request = new Request("LOG_THIS " + resourcePath + " HTTP/1.1", new ArrayList<>(), Optional.empty());
@@ -39,7 +40,8 @@ public class LoggerShould {
         URI otherResourcePath = URI.create("/log_me");
         Request otherRequest = new Request("AND_THIS " + otherResourcePath + " HTTP/1.1", new ArrayList<>(), Optional.empty());
 
-        Logger logger = new Logger(new FakeMiddleWare(), fileSystem);
+        URI logsPath = URI.create("/logs");
+        Logger logger = new Logger(new FakeMiddleWare(), fileSystem, logsPath);
         logger.follow(resourcePath);
         logger.follow(otherResourcePath);
 
@@ -47,13 +49,13 @@ public class LoggerShould {
         logger.generateResponseFor(otherRequest);
 
         String expectedLog = "LOG_THIS " + resourcePath + " HTTP/1.1\n" + "AND_THIS " + otherResourcePath + " HTTP/1.1\n";
-        assertEquals(expectedLog, new String(fileSystem.getResource(loggingPath, null).get()));
+        assertEquals(expectedLog, new String(fileSystem.getResource(logsPath, null)));
     }
 
     @Test
     public void notLogARequestItIsNotFollowing() {
-        URI loggingPath = URI.create("./logs");
-        FakeFileSystem fileSystem = new FakeFileSystem(loggingPath);
+        URI loggingDirectory = URI.create("./logs");
+        FakeFileSystem fileSystem = new FakeFileSystem(loggingDirectory);
 
         URI resourcePath = URI.create("/looking_at_you");
         Request request = new Request("LOG_THIS " + resourcePath + " HTTP/1.1", new ArrayList<>(), Optional.empty());
@@ -61,10 +63,11 @@ public class LoggerShould {
         Response expectedResponse = new Response(_200);
         nextLayer.stubResponse(expectedResponse);
 
-        Logger logger = new Logger(nextLayer, fileSystem);
+        URI logsPath = URI.create("/logs");
+        Logger logger = new Logger(nextLayer, fileSystem, logsPath);
 
         logger.generateResponseFor(request);
 
-        assertEquals(Optional.empty(), fileSystem.getResource(loggingPath, null));
+        assertEquals(false, fileSystem.doesResourceExist(logsPath));
     }
 }

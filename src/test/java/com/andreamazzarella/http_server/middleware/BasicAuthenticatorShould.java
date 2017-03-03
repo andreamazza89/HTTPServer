@@ -34,31 +34,34 @@ public class BasicAuthenticatorShould {
     @Test
     public void respondWithWhateverResponseIsProvidedByTheNextMiddlewareLayerIfRouteDoesNotRequireAuthenticationExampleOne() {
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        nextLayer.stubResponse(new Response(_418));
+        Response expectedResponse = new Response(_418);
+        nextLayer.stubResponse(expectedResponse);
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator(nextLayer);
         Request request = new Request("GET /i_am_not_so_authentic HTTP/1.1", new ArrayList<>(), Optional.empty());
 
         Response response = basicAuthenticator.generateResponseFor(request);
 
-        assertEquals(_418, response.getStatusCode());
+        assertEquals(expectedResponse, response);
     }
 
     @Test
     public void respondWithWhateverResponseIsProvidedByTheNextMiddlewareLayerIfRouteDoesNotRequireAuthenticationExampleTwo() {
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        nextLayer.stubResponse(new Response(_200));
+        Response expectedResponse = new Response(_200);
+        nextLayer.stubResponse(expectedResponse);
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator(nextLayer);
         Request request = new Request("GET /i_am_not_so_authentic HTTP/1.1", new ArrayList<>(), Optional.empty());
 
         Response response = basicAuthenticator.generateResponseFor(request);
 
-        assertEquals(_200, response.getStatusCode());
+        assertEquals(expectedResponse, response);
     }
 
     @Test
     public void respondWithWhateverResponseIsProvidedByTheNextMiddlewareLayerIfCredentialsAreValid() {
         FakeMiddleWare nextLayer = new FakeMiddleWare();
-        nextLayer.stubResponse(new Response(_418));
+        Response expectedResponse = new Response(_418);
+        nextLayer.stubResponse(expectedResponse);
         BasicAuthenticator basicAuthenticator = new BasicAuthenticator(nextLayer);
         basicAuthenticator.requireAuthenticationFor(URI.create("/i_am_not_so_authentic"));
         basicAuthenticator.addUser("admin", "monkey_password");
@@ -70,7 +73,7 @@ public class BasicAuthenticatorShould {
 
         Response response = basicAuthenticator.generateResponseFor(request);
 
-        assertEquals(_418, response.getStatusCode());
+        assertEquals(expectedResponse, response);
     }
 
     @Test

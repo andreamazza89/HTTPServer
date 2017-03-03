@@ -8,7 +8,6 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,21 +19,16 @@ public class FileSystem {
         this.resourcesBasePath = resourcesPath;
     }
 
-    public Optional<byte[]> getResource(URI uri, String dataRange) {
+    public byte[] getResource(URI uri, String dataRange) {
         File resource = retrieveResource(uri);
         int dataStart = parseDataStart(resource, dataRange);
         int dataEnd = parseDataEnd(resource, dataRange);
-        long resourceLength = resource.length();
 
-        if (resource.exists() && resourceLength > 0) {
-            try {
-                byte[] allResourceContent = Files.readAllBytes(resource.toPath());
-                return Optional.of(Arrays.copyOfRange(allResourceContent, dataStart, dataEnd));
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        } else {
-            return Optional.empty();
+        try {
+            byte[] allResourceContent = Files.readAllBytes(resource.toPath());
+            return Arrays.copyOfRange(allResourceContent, dataStart, dataEnd);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

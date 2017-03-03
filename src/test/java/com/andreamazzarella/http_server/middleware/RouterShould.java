@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.andreamazzarella.http_server.Response.StatusCode._200;
-import static com.andreamazzarella.http_server.Response.StatusCode._404;
 import static com.andreamazzarella.http_server.Response.StatusCode._418;
 import static org.junit.Assert.assertEquals;
 
@@ -22,54 +21,45 @@ public class RouterShould {
     @Test
     public void delegateResponseGenerationToAControllerIfOneExistsForTheRequestPathExampleOne() {
         FakeMiddleWare controller = new FakeMiddleWare();
-        controller.stubResponse(new Response(_200));
+        Response expectedResponse = new Response(_200);
+        controller.stubResponse(expectedResponse);
         Map<URI, MiddleWare> routes = new HashMap<>();
         URI test_path = URI.create("/test_route");
         routes.put(test_path, controller);
         Request request = new Request("GET /test_route HTTP/1.1", new ArrayList<>(), Optional.empty());
-        MiddleWare router = new Router(routes, new FakeMiddleWare(), new FakeFileSystem(URI.create("./path_to_public_directory")));
+        MiddleWare router = new Router(routes, new FakeMiddleWare());
 
         Response response = router.generateResponseFor(request);
 
-        assertEquals(_200, response.getStatusCode());
+        assertEquals(expectedResponse, response);
     }
 
     @Test
     public void delegateResponseGenerationToAControllerIfOneExistsForTheRequestPathExampleTwo() {
         FakeMiddleWare controller = new FakeMiddleWare();
-        controller.stubResponse(new Response(_418));
+        Response expectedResponse = new Response(_418);
+        controller.stubResponse(expectedResponse);
         Map<URI, MiddleWare> routes = new HashMap<>();
         URI test_path = URI.create("/test_route");
         routes.put(test_path, controller);
         Request request = new Request("GET /test_route HTTP/1.1", new ArrayList<>(), Optional.empty());
-        MiddleWare router = new Router(routes, new FakeMiddleWare(), new FakeFileSystem(URI.create("./path_to_public_directory")));
+        MiddleWare router = new Router(routes, new FakeMiddleWare());
 
         Response response = router.generateResponseFor(request);
 
-        assertEquals(_418, response.getStatusCode());
+        assertEquals(expectedResponse, response);
     }
 
     @Test
-    public void lookForTheResourceInTheFilesystemIfThereIsNoControllerForTheRequestPath() {
-        FakeFileSystem filesystem = new FakeFileSystem(URI.create("./path_to_public_directory"));
-        filesystem.setResourceExistsFlagTo(true);
+    public void delegateResponseGenerationToTheStaticResourcesControllerIfThereIsNoOtherControllerForTheRequestPath() {
         Request request = new Request("GET /path_to_static_resource HTTP/1.1", new ArrayList<>(), Optional.empty());
         FakeMiddleWare staticResourcesController = new FakeMiddleWare();
-        staticResourcesController.stubResponse(new Response(_200));
-        MiddleWare router = new Router(new HashMap<>(), staticResourcesController,filesystem);
+        Response expectedResponse = new Response(_200);
+        staticResourcesController.stubResponse(expectedResponse);
+        MiddleWare router = new Router(new HashMap<>(), staticResourcesController);
 
         Response response = router.generateResponseFor(request);
 
-        assertEquals(_200, response.getStatusCode());
-    }
-
-    @Test
-    public void respondsWith404IfAllElseFails() {
-        Request request = new Request("GET /lol/not/really/real/am/i HTTP/1.1", new ArrayList<>(), Optional.empty());
-        MiddleWare router = new Router(new HashMap<>(), new FakeMiddleWare(), new FakeFileSystem(URI.create("./path_to_public_directory")));
-
-        Response response = router.generateResponseFor(request);
-
-        assertEquals(_404, response.getStatusCode());
+        assertEquals(expectedResponse, response);
     }
 }

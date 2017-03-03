@@ -1,5 +1,6 @@
 # Checklist
 
+- try make as many fields final as possible
 - filesystem should probably be a singleton and have methods that are synchronised to ensure clients do not conflict with each other's requests
 - maybe system should not rely on preexisting directories? (logs & resources need to exist for the system to work, though
 that is also true for the public folder)

@@ -31,22 +31,6 @@ public class FileSystemShould {
     }
 
     @Test
-    public void supportMissingResources() {
-        FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
-
-        assertEquals(Optional.empty(), fileSystem.getResource(URI.create("/inexistent/resource"), null));
-    }
-
-    @Test
-    public void supportEmptyResources() {
-        FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
-        URI pathToResource = URI.create("/my_brand_new_empty_resource");
-        fileSystem.addOrReplaceResource(pathToResource, "".getBytes());
-
-        assertEquals(Optional.empty(), fileSystem.getResource(pathToResource, null));
-    }
-
-    @Test
     public void retrieveAnExistingResource() throws IOException {
         FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
         URI pathToResource = URI.create("/my_resource");
@@ -54,7 +38,7 @@ public class FileSystemShould {
         File resource = new File("./resources" + pathToResource);
         Files.write(resource.toPath(), "I am such a resourceful resource!".getBytes(), StandardOpenOption.CREATE);
 
-        assertEquals("I am such a resourceful resource!", new String(fileSystem.getResource(pathToResource, null).get()));
+        assertEquals("I am such a resourceful resource!", new String(fileSystem.getResource(pathToResource, null)));
     }
 
     @Test
@@ -65,7 +49,7 @@ public class FileSystemShould {
         File resource = new File("./resources" + pathToResource);
         Files.write(resource.toPath(), "Please enjoy this resource in chunks...".getBytes(), StandardOpenOption.CREATE);
 
-        assertEquals("Please ", new String(fileSystem.getResource(pathToResource, "bytes=0-6").get()));
+        assertEquals("Please ", new String(fileSystem.getResource(pathToResource, "bytes=0-6")));
     }
 
     @Test
@@ -76,7 +60,7 @@ public class FileSystemShould {
         File resource = new File("./resources" + pathToResource);
         Files.write(resource.toPath(), "Please enjoy this resource in chunks...".getBytes(), StandardOpenOption.CREATE);
 
-        assertEquals("chunks...", new String(fileSystem.getResource(pathToResource, "bytes=-9").get()));
+        assertEquals("chunks...", new String(fileSystem.getResource(pathToResource, "bytes=-9")));
     }
 
     @Test
@@ -87,7 +71,7 @@ public class FileSystemShould {
         File resource = new File("./resources" + pathToResource);
         Files.write(resource.toPath(), "Please enjoy this resource in chunks...".getBytes(), StandardOpenOption.CREATE);
 
-        assertEquals("enjoy this resource in chunks...", new String(fileSystem.getResource(pathToResource, "bytes=7-").get()));
+        assertEquals("enjoy this resource in chunks...", new String(fileSystem.getResource(pathToResource, "bytes=7-")));
     }
 
     @Test
@@ -97,7 +81,7 @@ public class FileSystemShould {
         URI pathToResource = URI.create("/my_brand_new_resource");
         fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
 
-        assertEquals("what a handsome resource", new String(fileSystem.getResource(pathToResource, null).get()));
+        assertEquals("what a handsome resource", new String(fileSystem.getResource(pathToResource, null)));
     }
 
     @Test
@@ -126,7 +110,7 @@ public class FileSystemShould {
         fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
         fileSystem.addOrReplaceResource(pathToResource, "not so fast Giacomo".getBytes());
 
-        assertEquals("not so fast Giacomo", new String(fileSystem.getResource(pathToResource, null).get()));
+        assertEquals("not so fast Giacomo", new String(fileSystem.getResource(pathToResource, null)));
     }
 
     @Test
@@ -137,7 +121,7 @@ public class FileSystemShould {
         fileSystem.addOrReplaceResource(pathToResource, "what a handsome resource".getBytes());
         fileSystem.appendContent(pathToResource, "not so fast Giacomo".getBytes());
 
-        assertEquals("what a handsome resourcenot so fast Giacomo", new String(fileSystem.getResource(pathToResource, null).get()));
+        assertEquals("what a handsome resourcenot so fast Giacomo", new String(fileSystem.getResource(pathToResource, null)));
     }
 
     @Test
@@ -147,7 +131,7 @@ public class FileSystemShould {
         URI pathToResource = URI.create("/my_brand_new_resource");
         fileSystem.appendContent(pathToResource, "not so fast Giacomo".getBytes());
 
-        assertEquals("not so fast Giacomo", new String(fileSystem.getResource(pathToResource, null).get()));
+        assertEquals("not so fast Giacomo", new String(fileSystem.getResource(pathToResource, null)));
     }
 
     @Test
@@ -159,7 +143,7 @@ public class FileSystemShould {
 
         fileSystem.deleteResource(pathToResource);
 
-        assertEquals(Optional.empty(), fileSystem.getResource(pathToResource, null));
+        assertEquals(false, fileSystem.doesResourceExist(pathToResource));
     }
 
 

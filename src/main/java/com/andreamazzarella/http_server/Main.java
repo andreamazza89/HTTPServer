@@ -33,10 +33,10 @@ public class Main {
         FileSystem loggingFileSystem = new FileSystem(URI.create(loggingDirectory));
         FileSystem staticFileSystem = new FileSystem(URI.create(publicDirectory));
 
-        MiddleWare staticResourcesController = new StaticAssetsController();
-        MiddleWare router = new Router(routes, staticResourcesController, staticFileSystem);
+        MiddleWare staticResourcesController = new StaticAssetsController(staticFileSystem);
+        MiddleWare router = new Router(routes, staticResourcesController);
         MiddleWare authenticator = new BasicAuthenticator(router);
-        MiddleWare logger = new Logger(authenticator, loggingFileSystem);
+        MiddleWare logger = new Logger(authenticator, loggingFileSystem, URI.create("/logs"));
 
         return logger;
     }

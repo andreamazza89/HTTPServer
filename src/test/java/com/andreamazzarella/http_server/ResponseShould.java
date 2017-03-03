@@ -8,10 +8,11 @@ import static org.junit.Assert.assertEquals;
 public class ResponseShould {
 
     @Test
-    public void convertASimple200ToBytes() {
-        Response response = new Response(_200);
+    public void convertA200WithHeadersAndBodyToBytes() {
+        Header header = new Header(Header.CONTENT_TYPE_HEADER_NAME, "image/gif");
+        Response response = new Response(_200).addHeader(header).setBody("I am a tropical priest".getBytes());
 
-        assertEquals("HTTP/1.1 200 OK\n\n", new String(response.toByteArray()));
+        assertEquals("HTTP/1.1 200 OK\nContent-Type: image/gif\n\nI am a tropical priest", new String(response.toByteArray()));
     }
 
     @Test

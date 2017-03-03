@@ -1,8 +1,12 @@
 package com.andreamazzarella.http_server;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 public class Response {
 
-    public final String END_OF_HEADERS = "\n";
+    private final String END_OF_HEADERS = "\n";
 
     public enum StatusCode {
         _200("HTTP/1.1 200 OK\n"),
@@ -23,7 +27,8 @@ public class Response {
 
 
     private final StatusCode statusCode;
-    private byte[] body;
+    private final List<Header> headers = new ArrayList<>();
+    private Optional<byte[]> body = Optional.empty();
 
     public Response(StatusCode statusCode) {
         this.statusCode = statusCode;
@@ -33,15 +38,37 @@ public class Response {
         return statusCode;
     }
 
-    public void setBody(byte[] body) {
-        this.body =  body;
+    public Response setBody(byte[] body) {
+        this.body =  Optional.of(body);
+        return this;
     }
 
-    public byte[] body() {
+    public Optional<byte[]> getBody() {
         return body;
     }
 
+    public Response addHeader(Header header) {
+        headers.add(header);
+        return this;
+    }
+
+    public List<Header> getHeaders() {
+        return headers;
+    }
+
     byte[] toByteArray() {
-        return (statusCode.getStatusLine() + END_OF_HEADERS).getBytes();
+        String headers = serialiseHeaders();
+        byte[] statusAndHeaders = (statusCode.getStatusLine() + headers + END_OF_HEADERS).getBytes();
+        return ArrayOperations.concatenateData(statusAndHeaders, body.orElse("".getBytes()));
+    }
+
+    private String serialiseHeaders() {
+        String serialisedHeaders = "";
+
+        for (Header header : headers) {
+            serialisedHeaders += header.toString();
+        }
+
+        return serialisedHeaders;
     }
 }
