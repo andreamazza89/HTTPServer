@@ -15,7 +15,7 @@ public class MWLogger implements MiddleWare {
     private final FileSystem fileSystem;
     private final List<URI> following = new ArrayList<>();
 
-    public MWLogger(MiddleWare nextLayer, FileSystem fileSystem) {
+    MWLogger(MiddleWare nextLayer, FileSystem fileSystem) {
         this.nextLayer = nextLayer;
         this.fileSystem = fileSystem;
     }
@@ -25,11 +25,11 @@ public class MWLogger implements MiddleWare {
         return nextLayer.generateResponseFor(request);
     }
 
-    public void follow(URI resourcePath) {
+    void follow(URI resourcePath) {
         following.add(resourcePath);
     }
 
-    public void log(Request request) {
+    void log(Request request) {
         if (following.contains(request.getUri())) {
             String requestLine = request.getRequestLine();
             byte[] requestLineWithNewLine = ArrayOperations.concatenateData(requestLine.getBytes(), "\n".getBytes());

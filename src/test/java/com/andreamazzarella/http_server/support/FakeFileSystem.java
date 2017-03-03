@@ -10,6 +10,7 @@ public class FakeFileSystem extends FileSystem {
 
     private Optional<byte[]> resourceContent = Optional.empty();
     private String contentType;
+    private boolean resourceExists = false;
 
     public FakeFileSystem(URI resourcesPath) {
         super(resourcesPath);
@@ -17,6 +18,10 @@ public class FakeFileSystem extends FileSystem {
 
     public void setContentTypeTo(URI uri, String contentType) {
         this.contentType = contentType;
+    }
+
+    public void setResourceExistsFlagTo(boolean resourceExists) {
+        this.resourceExists = resourceExists;
     }
 
     @Override
@@ -42,5 +47,10 @@ public class FakeFileSystem extends FileSystem {
     @Override
     public void deleteResource(URI uri) {
         this.resourceContent = Optional.empty();
+    }
+
+    @Override
+    public boolean doesResourceExist(URI uri) {
+        return resourceExists;
     }
 }

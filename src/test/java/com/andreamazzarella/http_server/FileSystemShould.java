@@ -1,6 +1,5 @@
 package com.andreamazzarella.http_server;
 
-import com.andreamazzarella.http_server.FileSystem;
 import org.junit.After;
 import org.junit.Test;
 
@@ -14,6 +13,22 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 
 public class FileSystemShould {
+
+    @Test
+    public void knowIfAResourceDoesNotExist() {
+        FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
+
+        assertEquals(false, fileSystem.doesResourceExist(URI.create("/vain_attempt_to_retrieve_resource")));
+    }
+
+    @Test
+    public void knowIfAResourceExists() {
+        FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
+        URI pathToResource = URI.create("/pretty_sure_this_one_exists");
+        fileSystem.addOrReplaceResource(pathToResource, "irrelevant content".getBytes());
+
+        assertEquals(true, fileSystem.doesResourceExist(pathToResource));
+    }
 
     @Test
     public void supportMissingResources() {

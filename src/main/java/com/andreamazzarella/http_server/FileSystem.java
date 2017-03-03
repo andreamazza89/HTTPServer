@@ -104,4 +104,9 @@ public class FileSystem {
     private File retrieveResource(URI uri) {
         return new File(resourcesBasePath.getPath(), uri.getPath());
     }
+
+    public boolean doesResourceExist(URI uri) {
+        File file = retrieveResource(uri);
+        return file.exists();
+    }
 }
