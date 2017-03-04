@@ -4,7 +4,6 @@ import com.andreamazzarella.http_server.Header;
 import com.andreamazzarella.http_server.Response;
 import com.andreamazzarella.http_server.middleware.MiddleWare;
 import com.andreamazzarella.http_server.request.Request;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.lang.reflect.Method;
 
@@ -19,7 +18,9 @@ abstract class BaseController implements MiddleWare{
                 Method[] methods = this.getClass().getDeclaredMethods();
                 String methodsAllowed = "";
                 for (Method method : methods) {
-                   methodsAllowed += method.getName().toUpperCase() + ",";
+                    if (!method.isBridge()) {
+                        methodsAllowed += method.getName().toUpperCase() + ",";
+                    }
                 }
                 methodsAllowed += "OPTIONS";
 
@@ -27,7 +28,7 @@ abstract class BaseController implements MiddleWare{
                 Response response = new Response(_200).addHeader(optionsHeader);
                 return response;
             default:
-                throw new NotImplementedException();
+                return new Response(_200);
         }
 
     }
