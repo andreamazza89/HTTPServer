@@ -1,14 +1,18 @@
 package com.andreamazzarella.http_server;
 
-import com.andreamazzarella.http_server.middleware.*;
+import com.andreamazzarella.http_server.middleware.BasicAuthenticator;
+import com.andreamazzarella.http_server.middleware.Logger;
+import com.andreamazzarella.http_server.middleware.MiddleWare;
+import com.andreamazzarella.http_server.middleware.Router;
 import com.andreamazzarella.http_server.middleware.controllers.*;
-import com.andreamazzarella.http_server.request.Request;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.*;
-
-import static com.andreamazzarella.http_server.Response.StatusCode._404;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -17,20 +21,20 @@ public class Main {
         String publicDirectory = inputParser.parseDirectoryPath();
         String loggingDirectory = "./logs/";
 
-        MiddleWare middleWareStack = createMiddleWareStack(publicDirectory, loggingDirectory);
+        MiddleWare middleWareStack = createMiddleWareStack(publicDirectory, loggingDirectory, new DirectoryExplorer(URI.create(publicDirectory)));
 
         HTTPServer server = new HTTPServer(portNumber, middleWareStack);
         System.out.println("Server running on port: " + portNumber);
         server.start();
     }
 
-    private static MiddleWare createMiddleWareStack(String publicDirectory, String loggingDirectory) {
+    private static MiddleWare createMiddleWareStack(String publicDirectory, String loggingDirectory, DirectoryExplorer directoryExplorer) {
         URI logsFileName = URI.create("/logs_are_here");
         FileSystem loggingFileSystem = new FileSystem(URI.create(loggingDirectory));
         FileSystem staticFileSystem = new FileSystem(URI.create(publicDirectory));
 
         Map<URI, MiddleWare> routes = new HashMap<>();
-        routes.put(URI.create("/"), new Bogus());
+        routes.put(URI.create("/"), new RootController(directoryExplorer));
         routes.put(URI.create("/logs"), new LogsController(loggingFileSystem, logsFileName));
         routes.put(URI.create("/coffee"), new TeaPotController());
         routes.put(URI.create("/tea"), new SimpleController());
@@ -47,12 +51,5 @@ public class Main {
         MiddleWare logger = new Logger(authenticator, loggingFileSystem, logsFileName, routesToLog);
 
         return logger;
-    }
-
-    private static class Bogus implements MiddleWare{
-        @Override
-        public Response generateResponseFor(Request request) {
-            return new Response(_404);
-        }
     }
 }

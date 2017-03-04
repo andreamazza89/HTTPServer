@@ -99,8 +99,8 @@ public class FileSystem {
         return new File(resourcesBasePath.getPath(), uri.getPath());
     }
 
-    public boolean doesResourceExist(URI uri) {
+    public boolean resourceDoesNotExist(URI uri) {
         File file = retrieveResource(uri);
-        return file.exists();
+        return !file.exists();
     }
 }

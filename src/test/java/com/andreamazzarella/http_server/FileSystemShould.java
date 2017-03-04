@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,7 +17,7 @@ public class FileSystemShould {
     public void knowIfAResourceDoesNotExist() {
         FileSystem fileSystem = new FileSystem(URI.create("./resources/"));
 
-        assertEquals(false, fileSystem.doesResourceExist(URI.create("/vain_attempt_to_retrieve_resource")));
+        assertEquals(true, fileSystem.resourceDoesNotExist(URI.create("/vain_attempt_to_retrieve_resource")));
     }
 
     @Test
@@ -27,7 +26,7 @@ public class FileSystemShould {
         URI pathToResource = URI.create("/pretty_sure_this_one_exists");
         fileSystem.addOrReplaceResource(pathToResource, "irrelevant content".getBytes());
 
-        assertEquals(true, fileSystem.doesResourceExist(pathToResource));
+        assertEquals(false, fileSystem.resourceDoesNotExist(pathToResource));
     }
 
     @Test
@@ -143,7 +142,7 @@ public class FileSystemShould {
 
         fileSystem.deleteResource(pathToResource);
 
-        assertEquals(false, fileSystem.doesResourceExist(pathToResource));
+        assertEquals(true, fileSystem.resourceDoesNotExist(pathToResource));
     }
 
 

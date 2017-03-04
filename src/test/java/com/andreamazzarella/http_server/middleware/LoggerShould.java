@@ -61,16 +61,13 @@ public class LoggerShould {
 
         URI resourcePath = URI.create("/looking_at_you");
         Request request = new Request("LOG_THIS " + resourcePath + " HTTP/1.1", new ArrayList<>(), Optional.empty());
-        FakeMiddleWare nextLayer = new FakeMiddleWare();
-        Response expectedResponse = new Response(_200);
-        nextLayer.stubResponse(expectedResponse);
 
         URI logsPath = URI.create("/logs");
         List<URI> routesToLog = new ArrayList<>();
-        Logger logger = new Logger(nextLayer, fileSystem, logsPath, routesToLog);
+        Logger logger = new Logger(new FakeMiddleWare(), fileSystem, logsPath, routesToLog);
 
         logger.generateResponseFor(request);
 
-        assertEquals(false, fileSystem.doesResourceExist(logsPath));
+        assertEquals(true, fileSystem.resourceDoesNotExist(logsPath));
     }
 }

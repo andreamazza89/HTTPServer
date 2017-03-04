@@ -21,10 +21,6 @@ public class FakeFileSystem extends FileSystem {
         this.contentType = contentType;
     }
 
-    public void setResourceExistsFlagTo(boolean resourceExists) {
-        this.resourceExists = resourceExists;
-    }
-
     @Override
     public byte[] getResource(URI uri, String dataRange) {
         return resources.get(uri);
@@ -57,7 +53,7 @@ public class FakeFileSystem extends FileSystem {
     }
 
     @Override
-    public boolean doesResourceExist(URI uri) {
-        return resources.containsKey(uri);
+    public boolean resourceDoesNotExist(URI uri) {
+        return !resources.containsKey(uri);
     }
 }

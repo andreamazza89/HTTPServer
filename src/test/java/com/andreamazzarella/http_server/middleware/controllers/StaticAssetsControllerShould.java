@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.andreamazzarella.http_server.Response.StatusCode._404;
+import static com.andreamazzarella.http_server.Response.StatusCode._405;
 import static org.junit.Assert.assertEquals;
 
 public class StaticAssetsControllerShould {
@@ -24,6 +25,20 @@ public class StaticAssetsControllerShould {
         Response response = staticAssetsController.generateResponseFor(request);
 
         assertEquals(_404, response.getStatusCode());
+    }
+
+    @Test
+    public void respondWith405WithAnyMethodOtherThanGet() {
+        FakeFileSystem publicFileSystem = new FakeFileSystem(URI.create("./path_to_public_directory"));
+        MiddleWare staticAssetsController = new StaticAssetsController(publicFileSystem);
+        URI pathToStaticResource = URI.create("/path_to_static_resource");
+        String resourceContent = "Planet Earth is full of resources!";
+        publicFileSystem.addOrReplaceResource(pathToStaticResource, resourceContent.getBytes());
+        Request request = new Request("POST " + pathToStaticResource + " HTTP/1.1", new ArrayList<>(), Optional.empty());
+
+        Response response = staticAssetsController.generateResponseFor(request);
+
+        assertEquals(_405, response.getStatusCode());
     }
 
     @Test
@@ -41,5 +56,4 @@ public class StaticAssetsControllerShould {
         assertEquals("image/gif", response.getHeaders().get(0).getValue());
         assertEquals(resourceContent, new String(response.getBody().get()));
     }
-
 }
