@@ -4,7 +4,6 @@ import com.andreamazzarella.http_server.Response;
 import com.andreamazzarella.http_server.middleware.MiddleWare;
 import com.andreamazzarella.http_server.request.Request;
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Optional;
