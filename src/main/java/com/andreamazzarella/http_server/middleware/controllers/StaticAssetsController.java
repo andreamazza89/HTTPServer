@@ -3,7 +3,6 @@ package com.andreamazzarella.http_server.middleware.controllers;
 import com.andreamazzarella.http_server.FileSystem;
 import com.andreamazzarella.http_server.Header;
 import com.andreamazzarella.http_server.Response;
-import com.andreamazzarella.http_server.middleware.MiddleWare;
 import com.andreamazzarella.http_server.request.Request;
 
 import java.net.URI;
@@ -11,7 +10,7 @@ import java.net.URI;
 import static com.andreamazzarella.http_server.Response.StatusCode._200;
 import static com.andreamazzarella.http_server.Response.StatusCode._404;
 
-public class StaticAssetsController implements MiddleWare {
+public class StaticAssetsController extends BaseController {
 
     private final FileSystem staticFileSystem;
 
@@ -19,8 +18,7 @@ public class StaticAssetsController implements MiddleWare {
         this.staticFileSystem = staticFileSystem;
     }
 
-    @Override
-    public Response generateResponseFor(Request request) {
+    protected Response get(Request request) {
         URI resourcePath = request.getUri();
 
         if (staticFileSystem.doesResourceExist(resourcePath)) {
