@@ -7,8 +7,7 @@ import com.andreamazzarella.http_server.request.Request;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.andreamazzarella.http_server.Response.StatusCode._404;
 
@@ -36,10 +35,14 @@ MiddleWare bogusIndex = new Bogus();
         FileSystem loggingFileSystem = new FileSystem(URI.create(loggingDirectory));
         FileSystem staticFileSystem = new FileSystem(URI.create(publicDirectory));
 
+        List<URI> routesToLog = new ArrayList<>(Arrays.asList(URI.create("log"), URI.create("these"), URI.create("requests")));
+
         MiddleWare staticResourcesController = new StaticAssetsController(staticFileSystem);
         MiddleWare router = new Router(routes, staticResourcesController);
-        MiddleWare authenticator = new BasicAuthenticator(router);
-        MiddleWare logger = new Logger(authenticator, loggingFileSystem, URI.create("/logs"));
+        List<User> users = new ArrayList<>(Arrays.asList(new User("admin", "hunter2")));
+        List<URI> routesToAuthenticate = new ArrayList<>(Arrays.asList(URI.create("/logs")));
+        MiddleWare authenticator = new BasicAuthenticator(router, users, routesToAuthenticate);
+        MiddleWare logger = new Logger(authenticator, loggingFileSystem, URI.create("/logs"), routesToLog);
 
         return logger;
     }
@@ -50,6 +53,4 @@ MiddleWare bogusIndex = new Bogus();
             return new Response(_404);
         }
     }
-
-
 }

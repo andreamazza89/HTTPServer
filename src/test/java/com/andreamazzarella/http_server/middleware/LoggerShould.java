@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static com.andreamazzarella.http_server.Response.StatusCode._200;
@@ -22,7 +24,8 @@ public class LoggerShould {
         Response expectedResponse = new Response(_200);
         nextLayer.stubResponse(expectedResponse);
         URI logsPath = URI.create("/logs");
-        MiddleWare mwLogger = new Logger(nextLayer, new FakeFileSystem(URI.create("./logs")), logsPath);
+        List<URI> routesToLog = new ArrayList<>();
+        MiddleWare mwLogger = new Logger(nextLayer, new FakeFileSystem(URI.create("./logs")), logsPath, routesToLog);
 
         Response actualResponse = mwLogger.generateResponseFor(request);
 
@@ -41,9 +44,8 @@ public class LoggerShould {
         Request otherRequest = new Request("AND_THIS " + otherResourcePath + " HTTP/1.1", new ArrayList<>(), Optional.empty());
 
         URI logsPath = URI.create("/logs");
-        Logger logger = new Logger(new FakeMiddleWare(), fileSystem, logsPath);
-        logger.follow(resourcePath);
-        logger.follow(otherResourcePath);
+        List<URI> routesToLog = new ArrayList<>(Arrays.asList(resourcePath, otherResourcePath));;
+        Logger logger = new Logger(new FakeMiddleWare(), fileSystem, logsPath, routesToLog);
 
         logger.generateResponseFor(request);
         logger.generateResponseFor(otherRequest);
@@ -64,7 +66,8 @@ public class LoggerShould {
         nextLayer.stubResponse(expectedResponse);
 
         URI logsPath = URI.create("/logs");
-        Logger logger = new Logger(nextLayer, fileSystem, logsPath);
+        List<URI> routesToLog = new ArrayList<>();
+        Logger logger = new Logger(nextLayer, fileSystem, logsPath, routesToLog);
 
         logger.generateResponseFor(request);
 
