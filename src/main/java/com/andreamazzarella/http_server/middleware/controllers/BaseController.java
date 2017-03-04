@@ -12,23 +12,26 @@ import java.util.Optional;
 
 import static com.andreamazzarella.http_server.Response.StatusCode._200;
 import static com.andreamazzarella.http_server.Response.StatusCode._405;
-import static com.andreamazzarella.http_server.request.Request.Method.OPTIONS;
 
 abstract class BaseController implements MiddleWare{
 
     @Override
     public Response generateResponseFor(Request request) {
         Method[] methodsAllowed = this.getClass().getDeclaredMethods();
-        String downCaseRequestMethod = request.getMethod().toString().toLowerCase();
 
-        if (request.getMethod() == OPTIONS) {
-            Header optionsHeader = generateOptionsHeader(methodsAllowed);
-            return new Response(_200).addHeader(optionsHeader);
-        } else {
-            Optional<Method> methodFound = searchMethod(methodsAllowed, downCaseRequestMethod);
-            return methodFound.isPresent() ? invokeMethod(request, methodFound) : new Response(_405);
+        switch (request.getMethod()) {
+            case OPTIONS:
+                Header optionsHeader = generateOptionsHeader(methodsAllowed);
+                return new Response(_200).addHeader(optionsHeader);
+            case HEAD:
+                Optional<Method> methodForGet = searchMethod(methodsAllowed, "get");
+                byte[] emptyBody = new byte[0];
+                return methodForGet.isPresent() ? invokeMethod(request, methodForGet).setBody(emptyBody) : new Response(_405);
+            default:
+                String downCaseRequestMethod = request.getMethod().toString().toLowerCase();
+                Optional<Method> methodFound = searchMethod(methodsAllowed, downCaseRequestMethod);
+                return methodFound.isPresent() ? invokeMethod(request, methodFound) : new Response(_405);
         }
-
     }
 
     private Header generateOptionsHeader(Method[] methodsAllowed) {

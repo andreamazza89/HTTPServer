@@ -41,6 +41,7 @@ public class Main {
         routes.put(URI.create("/method_options"), new MethodOptionsController());
         routes.put(URI.create("/method_options2"), new MethodOptionsTwoController());
         routes.put(URI.create("/parameters"), new ParametersController());
+        routes.put(URI.create("/form"), new FormController());
 
         List<URI> routesToLog = new ArrayList<>(Arrays.asList(URI.create("/log"), URI.create("/these"), URI.create("/requests")));
 
