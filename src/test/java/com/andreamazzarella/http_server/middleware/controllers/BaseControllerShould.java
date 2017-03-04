@@ -9,6 +9,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static com.andreamazzarella.http_server.Response.StatusCode._405;
+import static com.andreamazzarella.http_server.Response.StatusCode._418;
 import static org.junit.Assert.assertEquals;
 
 public class BaseControllerShould {
@@ -32,7 +34,27 @@ public class BaseControllerShould {
         Response response = testController.generateResponseFor(request);
 
         assertEquals("Allow", response.getHeaders().get(0).getName());
-        assertEquals("GET,POST,OPTIONS", response.getHeaders().get(0).getValue());
+        assertEquals("GET,OPTIONS", response.getHeaders().get(0).getValue());
+    }
+
+    @Test
+    public void generateA405NotAllowedIfTheMethodIsNotAllowed() {
+        Request request = new Request("GET /path HTTP/1.1", new ArrayList<>(), Optional.empty());
+        MiddleWare testController = new TestControllerOne();
+
+        Response response = testController.generateResponseFor(request);
+
+        assertEquals(_405, response.getStatusCode());
+    }
+
+    @Test
+    public void delegateToTheExtendedControllerIfTheMethodIsAllowed() {
+        Request request = new Request("GET /path HTTP/1.1", new ArrayList<>(), Optional.empty());
+        MiddleWare testController = new TestControllerTwo();
+
+        Response response = testController.generateResponseFor(request);
+
+        assertEquals(_418, response.getStatusCode());
     }
 
 
@@ -40,11 +62,7 @@ public class BaseControllerShould {
 
     private class TestControllerTwo extends BaseController {
         protected Response get(Request request) {
-            throw new NotImplementedException();
-        }
-
-        protected Response post(Request request) {
-            throw new NotImplementedException();
+            return new Response(_418);
         }
     }
 }

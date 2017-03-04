@@ -30,6 +30,13 @@ public class ResponseShould {
     }
 
     @Test
+    public void convertASimple405ToBytes() {
+        Response response = new Response(_405);
+
+        assertEquals("HTTP/1.1 405 Not Allowed\n\n", new String(response.toByteArray()));
+    }
+
+    @Test
     public void convertASimple418ToBytes() {
         Response response = new Response(_418);
 

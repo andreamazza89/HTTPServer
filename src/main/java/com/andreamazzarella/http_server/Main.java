@@ -2,6 +2,7 @@ package com.andreamazzarella.http_server;
 
 import com.andreamazzarella.http_server.middleware.*;
 import com.andreamazzarella.http_server.middleware.controllers.MethodOptionsController;
+import com.andreamazzarella.http_server.middleware.controllers.MethodOptionsTwoController;
 import com.andreamazzarella.http_server.middleware.controllers.StaticAssetsController;
 import com.andreamazzarella.http_server.middleware.controllers.TeaPotController;
 import com.andreamazzarella.http_server.request.Request;
@@ -33,6 +34,7 @@ MiddleWare bogusIndex = new Bogus();
         routes.put(URI.create("/"), bogusIndex);
         routes.put(URI.create("/coffee"), teapotRoute);
         routes.put(URI.create("/method_options"), new MethodOptionsController());
+        routes.put(URI.create("/method_options2"), new MethodOptionsTwoController());
 
         FileSystem loggingFileSystem = new FileSystem(URI.create(loggingDirectory));
         FileSystem staticFileSystem = new FileSystem(URI.create(publicDirectory));

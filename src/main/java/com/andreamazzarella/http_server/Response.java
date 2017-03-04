@@ -12,6 +12,7 @@ public class Response {
         _200("HTTP/1.1 200 OK\n"),
         _401("HTTP/1.1 401 Unauthorized\n"),
         _404("HTTP/1.1 404 Not Found\n"),
+        _405("HTTP/1.1 405 Not Allowed\n"),
         _418("HTTP/1.1 418 I'm a teapot\n");
 
         private final String status;
