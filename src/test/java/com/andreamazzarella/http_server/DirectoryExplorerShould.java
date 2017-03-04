@@ -1,16 +1,48 @@
 package com.andreamazzarella.http_server;
 
-import com.andreamazzarella.http_server.DirectoryExplorer;
+import com.andreamazzarella.http_server.middleware.MiddleWare;
+import com.andreamazzarella.http_server.request.Request;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
 
 public class DirectoryExplorerShould {
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    abstract class Foo implements MiddleWare {
+
+        public Response generateResponseFor(Request request) {
+            System.out.println(this.getClass().getDeclaredMethods()[0].toString());
+            return null;
+        }
+
+        public Response options() {
+            return null;
+        }
+
+    }
+
+    class Bar extends Foo {
+
+        public Response get() {
+            return null;
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+
+
 
     @Test
     public void generateEmptyDocumentWithNoFilesInDirectory() throws IOException {
