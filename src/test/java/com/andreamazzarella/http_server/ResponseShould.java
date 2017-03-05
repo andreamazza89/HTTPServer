@@ -16,28 +16,49 @@ public class ResponseShould {
     }
 
     @Test
-    public void convertASimple401ToBytes() {
+    public void convertA204ToBytes() {
+        Response response = new Response(_204);
+
+        assertEquals("HTTP/1.1 204 No Content\n\n", new String(response.toByteArray()));
+    }
+
+    @Test
+    public void convertA302ToBytes() {
+        Response response = new Response(_302);
+
+        assertEquals("HTTP/1.1 302 Found\n\n", new String(response.toByteArray()));
+    }
+
+    @Test
+    public void convertA401ToBytes() {
         Response response = new Response(_401);
 
         assertEquals("HTTP/1.1 401 Unauthorized\n\n", new String(response.toByteArray()));
     }
 
     @Test
-    public void convertASimple404ToBytes() {
+    public void convertA404ToBytes() {
         Response response = new Response(_404);
 
         assertEquals("HTTP/1.1 404 Not Found\n\n", new String(response.toByteArray()));
     }
 
     @Test
-    public void convertASimple405ToBytes() {
+    public void convertA405ToBytes() {
         Response response = new Response(_405);
 
         assertEquals("HTTP/1.1 405 Not Allowed\n\n", new String(response.toByteArray()));
     }
 
     @Test
-    public void convertASimple418ToBytes() {
+    public void convertA412ToBytes() {
+        Response response = new Response(_412);
+
+        assertEquals("HTTP/1.1 412 Precondition Failed\n\n", new String(response.toByteArray()));
+    }
+
+    @Test
+    public void convertA418ToBytes() {
         Response response = new Response(_418);
 
         assertEquals("HTTP/1.1 418 I'm a teapot\n\n", new String(response.toByteArray()));

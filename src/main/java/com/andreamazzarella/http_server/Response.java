@@ -10,9 +10,12 @@ public class Response {
 
     public enum StatusCode {
         _200("HTTP/1.1 200 OK\n"),
+        _204("HTTP/1.1 204 No Content\n"),
+        _302("HTTP/1.1 302 Found\n"),
         _401("HTTP/1.1 401 Unauthorized\n"),
         _404("HTTP/1.1 404 Not Found\n"),
         _405("HTTP/1.1 405 Not Allowed\n"),
+        _412("HTTP/1.1 412 Precondition Failed\n"),
         _418("HTTP/1.1 418 I'm a teapot\n");
 
         private final String status;

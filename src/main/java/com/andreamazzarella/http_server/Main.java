@@ -42,6 +42,9 @@ public class Main {
         routes.put(URI.create("/method_options2"), new MethodOptionsTwoController());
         routes.put(URI.create("/parameters"), new ParametersController());
         routes.put(URI.create("/form"), new FormController());
+        routes.put(URI.create("/redirect"), new RedirectController());
+        routes.put(URI.create("/cookie"), new CookieController());
+        routes.put(URI.create("/eat_cookie"), new EatCookieController());
 
         List<URI> routesToLog = new ArrayList<>(Arrays.asList(URI.create("/log"), URI.create("/these"), URI.create("/requests")));
 

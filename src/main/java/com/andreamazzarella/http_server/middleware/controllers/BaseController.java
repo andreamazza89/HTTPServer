@@ -19,6 +19,7 @@ abstract class BaseController implements MiddleWare{
     public Response generateResponseFor(Request request) {
         Method[] methodsAllowed = this.getClass().getDeclaredMethods();
 
+
         switch (request.getMethod()) {
             case OPTIONS:
                 Header optionsHeader = generateOptionsHeader(methodsAllowed);

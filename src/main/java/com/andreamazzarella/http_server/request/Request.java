@@ -140,6 +140,10 @@ public class Request {
         return searchHeaderByName(headers, COOKIE_HEADER_NAME);
     }
 
+    public Optional<Header> getIfMatchHeader() {
+        return searchHeaderByName(headers, IF_MATCH_HEADER_NAME);
+    }
+
     private static Optional<Header> searchHeaderByName(List<Header> headers, String name) {
         return headers.stream()
                 .filter((header) -> header.getName().equals(name))

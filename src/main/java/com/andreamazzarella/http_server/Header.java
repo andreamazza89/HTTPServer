@@ -7,6 +7,9 @@ public class Header {
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     public static final String RANGE_HEADER_NAME = "Range";
     public static final String COOKIE_HEADER_NAME = "Cookie";
+    public static final String SET_COOKIE_HEADER_NAME = "Set-Cookie";
+    public static final String REDIRECT_HEADER_NAME = "Location";
+    public static final String IF_MATCH_HEADER_NAME = "If-Match";
 
     private final String name;
     private final String value;
