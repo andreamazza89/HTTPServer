@@ -10,11 +10,11 @@ public class User {
         this.password = password;
     }
 
-    public String getUserName() {
+    String getUserName() {
         return userName;
     }
 
-    public String getPassword() {
+    String getPassword() {
         return password;
     }
 }

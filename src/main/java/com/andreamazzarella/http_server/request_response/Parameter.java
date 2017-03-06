@@ -4,7 +4,7 @@ public class Parameter {
     private final String key;
     private String value;
 
-    public Parameter(String key, String value) {
+    Parameter(String key, String value) {
         this.key = key;
         this.value = value;
     }

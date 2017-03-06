@@ -27,7 +27,7 @@ public class DirectoryExplorer {
         String[] fileNames = directory.list();
         String HTMLBodyContent;
 
-        if (fileNames.length == 0) {
+        if (fileNames != null && fileNames.length == 0) {
              HTMLBodyContent = String.format(HTML_PARAGRAPH_TEMPLATE, "No files were found");
         } else {
             HTMLBodyContent = createLinksToFiles(fileNames);

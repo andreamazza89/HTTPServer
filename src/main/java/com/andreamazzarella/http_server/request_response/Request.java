@@ -5,7 +5,11 @@ import com.andreamazzarella.http_server.socket_connection.DataExchange;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -15,7 +19,7 @@ import static com.andreamazzarella.http_server.request_response.Header.*;
 public class Request {
 
     public static Request parseFromSocket(DataExchange socketConnection) {
-        String requestLine = socketConnection.readLine().trim();
+        String requestLine = socketConnection.readLine();
         List<Header> headers = parseHeaders(socketConnection);
         Optional<byte[]> body = parseBody(socketConnection, headers);
 
@@ -24,6 +28,7 @@ public class Request {
 
     private static List<Header> parseHeaders(DataExchange socketConnection) {
         List<Header> headers = new ArrayList<>();
+
         while (true) {
             String headerOrEndOFHeaders = socketConnection.readLine();
             if (headerOrEndOFHeaders.matches(END_OF_HEADERS)) {
@@ -58,15 +63,6 @@ public class Request {
         this.body = body;
     }
 
-    public Map<String, String> getParams() {
-        Map<String, String> params = new TreeMap<>();
-        for (Optional<Parameter> optionalParameter : parameters) {
-            Parameter parameter = optionalParameter.get();
-            params.put(parameter.getKey(), parameter.getValue());
-        }
-        return params;
-    }
-
     public enum Method {
         POST, OPTIONS, DELETE, PUT, HEAD, UNRECOGNISED_METHOD, PATCH, GET
     }
@@ -74,9 +70,9 @@ public class Request {
     private static final String END_OF_HEADERS = "";
 
     private final String requestLine;
-    private List<Header> headers;
-    private Optional<byte[]> body;
-    private List<Optional<Parameter>> parameters = new ArrayList<>();
+    private final List<Header> headers;
+    private final Optional<byte[]> body;
+    private final List<Optional<Parameter>> parameters;
 
     public URI getUri() {
         String uriWithoutParams = extractUri(requestLine).getPath();
@@ -85,6 +81,15 @@ public class Request {
 
     public String getRequestLine() {
         return requestLine;
+    }
+
+    public Map<String, String> getParams() {
+        Map<String, String> params = new TreeMap<>();
+        for (Optional<Parameter> optionalParameter : parameters) {
+            Parameter parameter = optionalParameter.get();
+            params.put(parameter.getKey(), parameter.getValue());
+        }
+        return params;
     }
 
     public Request.Method getMethod() {
@@ -119,11 +124,11 @@ public class Request {
                 .findFirst();
     }
 
-    public Optional<Header> getContentLengthHeader() {
+    Optional<Header> getContentLengthHeader() {
         return searchHeaderByName(headers, CONTENT_LENGTH_HEADER_NAME);
     }
 
-    public Optional<Header> getContentTypeHeader() {
+    Optional<Header> getContentTypeHeader() {
         return searchHeaderByName(headers, CONTENT_TYPE_HEADER_NAME);
     }
 
