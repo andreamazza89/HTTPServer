@@ -12,16 +12,16 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-class HTTPServer {
+public class HTTPServer {
     private final int portNumber;
     private final MiddleWare middleWareStack;
 
-    HTTPServer(int portNumber, MiddleWare middleWareStack) {
+    public HTTPServer(int portNumber, MiddleWare middleWareStack) {
         this.portNumber = portNumber;
         this.middleWareStack = middleWareStack;
     }
 
-    void start() {
+    public void start() {
         ExecutorService connectionsPool = Executors.newCachedThreadPool();
 
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) {

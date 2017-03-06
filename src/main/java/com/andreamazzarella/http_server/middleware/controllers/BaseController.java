@@ -13,7 +13,7 @@ import java.util.Optional;
 import static com.andreamazzarella.http_server.request_response.Response.StatusCode._200;
 import static com.andreamazzarella.http_server.request_response.Response.StatusCode._405;
 
-abstract class BaseController implements MiddleWare{
+public abstract class BaseController implements MiddleWare{
 
     @Override
     public Response generateResponseFor(Request request) {
