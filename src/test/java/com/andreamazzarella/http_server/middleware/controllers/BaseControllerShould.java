@@ -57,20 +57,10 @@ public class BaseControllerShould {
         assertEquals("yet another response body", new String(response.getBody().get()));
     }
 
-    @Test
-    public void generateAHeadResponseIfTheGetMethodIsFound() {
-        Request request = new Request("HEAD /path HTTP/1.1", new ArrayList<>(), Optional.empty());
-        MiddleWare testController = new TestControllerTwo();
-
-        Response response = testController.generateResponseFor(request);
-
-        assertEquals(_418, response.getStatusCode());
-        assertEquals("", new String(response.getBody().get()));
-    }
-
     private class TestControllerOne extends BaseController {}
 
     private class TestControllerTwo extends BaseController {
+        @Override
         protected Response get(Request request) {
             return new Response(_418).setBody("yet another response body".getBytes());
         }

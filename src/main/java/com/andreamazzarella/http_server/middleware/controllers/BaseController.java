@@ -20,18 +20,48 @@ public abstract class BaseController implements MiddleWare{
         Method[] methodsAllowed = this.getClass().getDeclaredMethods();
 
         switch (request.getMethod()) {
+            case GET:
+                return get(request);
+            case HEAD:
+                return head(request);
+            case POST:
+                return post(request);
+            case PUT:
+                return put(request);
+            case PATCH:
+                return patch(request);
+            case DELETE:
+                return delete(request);
             case OPTIONS:
                 Header optionsHeader = generateOptionsHeader(methodsAllowed);
                 return new Response(_200).addHeader(optionsHeader);
-            case HEAD:
-                Optional<Method> methodForGet = searchMethod(methodsAllowed, "get");
-                byte[] emptyBody = new byte[0];
-                return methodForGet.isPresent() ? invokeMethod(request, methodForGet).setBody(emptyBody) : new Response(_405);
             default:
-                String downCaseRequestMethod = request.getMethod().toString().toLowerCase();
-                Optional<Method> methodFound = searchMethod(methodsAllowed, downCaseRequestMethod);
-                return methodFound.isPresent() ? invokeMethod(request, methodFound) : new Response(_405);
+                return new Response(_405);
         }
+    }
+
+    protected Response get(Request request) {
+        return new Response(_405); //method is not allowed unless a subclass overrides it
+    }
+
+    protected Response head(Request request) {
+        return new Response(_405); //method is not allowed unless a subclass overrides it
+    }
+
+    protected Response post(Request request) {
+        return new Response(_405); //method is not allowed unless a subclass overrides it
+    }
+
+    protected Response put(Request request) {
+        return new Response(_405); //method is not allowed unless a subclass overrides it
+    }
+
+    protected Response patch(Request request) {
+        return new Response(_405); //method is not allowed unless a subclass overrides it
+    }
+
+    protected Response delete(Request request) {
+        return new Response(_405); //method is not allowed unless a subclass overrides it
     }
 
     private Header generateOptionsHeader(Method[] methodsAllowed) {

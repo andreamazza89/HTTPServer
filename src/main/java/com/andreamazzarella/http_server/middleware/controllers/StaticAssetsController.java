@@ -39,6 +39,11 @@ public class StaticAssetsController extends BaseController {
         }
     }
 
+    protected Response head(Request request) {
+        Response response = get(request);
+        return response.setBody("".getBytes());
+    }
+
     protected Response patch(Request request) {
         URI resourcePath = request.getUri();
         if (staticFileSystem.resourceDoesNotExist(resourcePath)) return new Response(_404);
