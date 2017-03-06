@@ -1,11 +1,10 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
+import com.andreamazzarella.http_server.request_response.Header;
+import com.andreamazzarella.http_server.request_response.Request;
+import com.andreamazzarella.http_server.request_response.Response;
 import com.andreamazzarella.http_server.utilities.DataRange;
 import com.andreamazzarella.http_server.utilities.FileSystem;
-import com.andreamazzarella.http_server.request_response.Header;
-import com.andreamazzarella.http_server.request_response.Response;
-import com.andreamazzarella.http_server.middleware.MiddleWare;
-import com.andreamazzarella.http_server.request_response.Request;
 
 import javax.xml.bind.DatatypeConverter;
 import java.net.URI;
@@ -15,7 +14,7 @@ import java.util.Optional;
 
 import static com.andreamazzarella.http_server.request_response.Response.StatusCode.*;
 
-public class StaticAssetsController implements MiddleWare {
+public class StaticAssetsController extends BaseController {
 
     private final FileSystem staticFileSystem;
 
@@ -23,37 +22,32 @@ public class StaticAssetsController implements MiddleWare {
         this.staticFileSystem = staticFileSystem;
     }
 
-    @Override
-    public Response generateResponseFor(Request request) {
+    protected Response get(Request request) {
         URI resourcePath = request.getUri();
+        if (staticFileSystem.resourceDoesNotExist(resourcePath)) return new Response(_404);
 
-        if (staticFileSystem.resourceDoesNotExist(resourcePath)) {
-            return new Response(_404);
+        Header contentType = new Header(Header.CONTENT_TYPE_HEADER_NAME, staticFileSystem.getResourceContentType(resourcePath));
+        Optional<Header> partialContentHeader = request.getRangeHeader();
+
+        if (partialContentHeader.isPresent()) {
+            DataRange dataRange = DataRange.parseFromString(partialContentHeader.get());
+            byte[] partialResourceContent = staticFileSystem.getResource(resourcePath, dataRange);
+            return new Response(_206).addHeader(contentType).setBody(partialResourceContent);
+        } else {
+            byte[] fullResourceContent = staticFileSystem.getResource(resourcePath, new DataRange());
+            return new Response(_200).addHeader(contentType).setBody(fullResourceContent);
         }
+    }
 
-        switch (request.getMethod()) {
-            case GET:
-                Header contentType = new Header(Header.CONTENT_TYPE_HEADER_NAME, staticFileSystem.getResourceContentType(resourcePath));
-                Optional<Header> partialContentHeader = request.getRangeHeader();
-                byte[] fullResourceContent = staticFileSystem.getResource(resourcePath, new DataRange());
+    protected Response patch(Request request) {
+        URI resourcePath = request.getUri();
+        if (staticFileSystem.resourceDoesNotExist(resourcePath)) return new Response(_404);
 
-                if (partialContentHeader.isPresent()) {
-                    DataRange dataRange = DataRange.parseFromString(partialContentHeader.get());
-                    byte[] partialResourceContent = staticFileSystem.getResource(resourcePath, dataRange);
-                    return new Response(_206).addHeader(contentType).setBody(partialResourceContent);
-                } else {
-                    return new Response(_200).addHeader(contentType).setBody(fullResourceContent);
-                }
-
-            case PATCH:
-                if (eTagMatchesResourceContent(request, resourcePath)) {
-                    staticFileSystem.addOrReplaceResource(resourcePath, request.getBody().get());
-                    return new Response(_204);
-                } else {
-                    return new Response(_412);
-                }
-            default:
-                return new Response(_405);
+        if (eTagMatchesResourceContent(request, resourcePath)) {
+            staticFileSystem.addOrReplaceResource(resourcePath, request.getBody().get());
+            return new Response(_204);
+        } else {
+            return new Response(_412);
         }
     }
 
