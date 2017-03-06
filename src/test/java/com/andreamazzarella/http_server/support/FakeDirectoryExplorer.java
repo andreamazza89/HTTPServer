@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server.support;
 
-import com.andreamazzarella.http_server.DirectoryExplorer;
+import com.andreamazzarella.http_server.utilities.DirectoryExplorer;
 
 import java.net.URI;
 

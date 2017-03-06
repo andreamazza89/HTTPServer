@@ -1,11 +1,11 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
-import com.andreamazzarella.http_server.DataRange;
-import com.andreamazzarella.http_server.FileSystem;
-import com.andreamazzarella.http_server.Header;
-import com.andreamazzarella.http_server.Response;
+import com.andreamazzarella.http_server.utilities.DataRange;
+import com.andreamazzarella.http_server.utilities.FileSystem;
+import com.andreamazzarella.http_server.request_response.Header;
+import com.andreamazzarella.http_server.request_response.Response;
 import com.andreamazzarella.http_server.middleware.MiddleWare;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Request;
 
 import javax.xml.bind.DatatypeConverter;
 import java.net.URI;
@@ -13,7 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
-import static com.andreamazzarella.http_server.Response.StatusCode.*;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode.*;
 
 public class StaticAssetsController implements MiddleWare {
 

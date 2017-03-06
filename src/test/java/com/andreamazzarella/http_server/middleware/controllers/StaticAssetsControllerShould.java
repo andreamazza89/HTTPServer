@@ -1,10 +1,10 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
-import com.andreamazzarella.http_server.DataRange;
-import com.andreamazzarella.http_server.Header;
-import com.andreamazzarella.http_server.Response;
+import com.andreamazzarella.http_server.utilities.DataRange;
+import com.andreamazzarella.http_server.request_response.Header;
+import com.andreamazzarella.http_server.request_response.Response;
 import com.andreamazzarella.http_server.middleware.MiddleWare;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Request;
 import com.andreamazzarella.http_server.support.FakeFileSystem;
 import org.junit.Test;
 
@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.andreamazzarella.http_server.Header.CONTENT_LENGTH_HEADER_NAME;
-import static com.andreamazzarella.http_server.Header.IF_MATCH_HEADER_NAME;
-import static com.andreamazzarella.http_server.Header.RANGE_HEADER_NAME;
-import static com.andreamazzarella.http_server.Response.StatusCode.*;
+import static com.andreamazzarella.http_server.request_response.Header.CONTENT_LENGTH_HEADER_NAME;
+import static com.andreamazzarella.http_server.request_response.Header.IF_MATCH_HEADER_NAME;
+import static com.andreamazzarella.http_server.request_response.Header.RANGE_HEADER_NAME;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode.*;
 import static org.junit.Assert.assertEquals;
 
 public class StaticAssetsControllerShould {

@@ -1,10 +1,10 @@
 package com.andreamazzarella.http_server.middleware;
 
-import com.andreamazzarella.http_server.DataRange;
-import com.andreamazzarella.http_server.Response;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Response;
+import com.andreamazzarella.http_server.request_response.Request;
 import com.andreamazzarella.http_server.support.FakeFileSystem;
 import com.andreamazzarella.http_server.support.FakeMiddleWare;
+import com.andreamazzarella.http_server.utilities.DataRange;
 import org.junit.Test;
 
 import java.net.URI;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.andreamazzarella.http_server.Response.StatusCode._200;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode._200;
 import static org.junit.Assert.assertEquals;
 
 public class LoggerShould {

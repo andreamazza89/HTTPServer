@@ -1,4 +1,6 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.request_response;
+
+import com.andreamazzarella.http_server.ArrayOperations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +67,7 @@ public class Response {
         return headers;
     }
 
-    byte[] toByteArray() {
+    public byte[] toByteArray() {
         String headers = serialiseHeaders();
         byte[] statusAndHeaders = (statusCode.getStatusLine() + headers + END_OF_HEADERS).getBytes();
         return ArrayOperations.concatenateData(statusAndHeaders, body.orElse("".getBytes()));

@@ -1,16 +1,15 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.utilities;
 
 import com.andreamazzarella.http_server.middleware.MiddleWare;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.utilities.DirectoryExplorer;
+import com.andreamazzarella.http_server.request_response.Request;
+import com.andreamazzarella.http_server.request_response.Response;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
 

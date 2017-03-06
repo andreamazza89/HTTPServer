@@ -1,4 +1,4 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.utilities;
 
 import java.io.File;
 import java.io.IOException;

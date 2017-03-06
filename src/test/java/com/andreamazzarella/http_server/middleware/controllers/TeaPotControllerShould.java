@@ -1,15 +1,15 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
-import com.andreamazzarella.http_server.Header;
-import com.andreamazzarella.http_server.Response;
+import com.andreamazzarella.http_server.request_response.Header;
+import com.andreamazzarella.http_server.request_response.Response;
 import com.andreamazzarella.http_server.middleware.MiddleWare;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Request;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.andreamazzarella.http_server.Response.StatusCode._418;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode._418;
 import static org.junit.Assert.assertEquals;
 
 public class TeaPotControllerShould {

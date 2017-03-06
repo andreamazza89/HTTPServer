@@ -1,4 +1,4 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.socket_connection;
 
 public interface DataExchange {
     String readLine();

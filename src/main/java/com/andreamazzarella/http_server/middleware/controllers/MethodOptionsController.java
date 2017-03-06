@@ -1,9 +1,9 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
-import com.andreamazzarella.http_server.Response;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Response;
+import com.andreamazzarella.http_server.request_response.Request;
 
-import static com.andreamazzarella.http_server.Response.StatusCode._200;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode._200;
 
 public class MethodOptionsController extends BaseController {
 

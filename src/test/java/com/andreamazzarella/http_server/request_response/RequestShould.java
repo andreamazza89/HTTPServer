@@ -1,6 +1,5 @@
-package com.andreamazzarella.http_server.request;
+package com.andreamazzarella.http_server.request_response;
 
-import com.andreamazzarella.http_server.Header;
 import com.andreamazzarella.http_server.support.FakeSocketConnection;
 import org.junit.Test;
 
@@ -9,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.andreamazzarella.http_server.Header.CONTENT_LENGTH_HEADER_NAME;
-import static com.andreamazzarella.http_server.Header.CONTENT_TYPE_HEADER_NAME;
-import static com.andreamazzarella.http_server.request.Request.Method.GET;
+import static com.andreamazzarella.http_server.request_response.Header.CONTENT_LENGTH_HEADER_NAME;
+import static com.andreamazzarella.http_server.request_response.Header.CONTENT_TYPE_HEADER_NAME;
+import static com.andreamazzarella.http_server.request_response.Request.Method.GET;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

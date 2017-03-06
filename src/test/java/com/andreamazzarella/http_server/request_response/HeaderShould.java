@@ -1,5 +1,6 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.request_response;
 
+import com.andreamazzarella.http_server.request_response.Header;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

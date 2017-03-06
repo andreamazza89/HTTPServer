@@ -1,8 +1,8 @@
 package com.andreamazzarella.http_server.support;
 
 import com.andreamazzarella.http_server.ArrayOperations;
-import com.andreamazzarella.http_server.DataRange;
-import com.andreamazzarella.http_server.FileSystem;
+import com.andreamazzarella.http_server.utilities.DataRange;
+import com.andreamazzarella.http_server.utilities.FileSystem;
 
 import java.net.URI;
 import java.util.Arrays;

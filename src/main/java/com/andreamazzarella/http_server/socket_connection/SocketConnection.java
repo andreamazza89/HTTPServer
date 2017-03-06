@@ -1,4 +1,4 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.socket_connection;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ public class SocketConnection implements DataExchange {
     private final InputStream inputStream;
     private PrintStream writer;
 
-    SocketConnection(Socket socket) {
+    public SocketConnection(Socket socket) {
         try {
             this.writer = new PrintStream(socket.getOutputStream(), true, "UTF-8");
             this.inputStream = socket.getInputStream();
@@ -32,7 +32,7 @@ public class SocketConnection implements DataExchange {
             try {
                 nextCharacter = inputStream.read();
                 if (nextCharacter == LINE_FEED || nextCharacter == CARRIAGE_RETURN) {
-                    inputStream.read(); //this relies on the fact that the request send has two newline characters; would be good not to make this assumption
+                    inputStream.read(); //this relies on the fact that the request_response send has two newline characters; would be good not to make this assumption
                     break;
                 } else {
                     stringBuilder.append((char)nextCharacter);

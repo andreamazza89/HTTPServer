@@ -1,9 +1,8 @@
 package com.andreamazzarella.http_server.middleware;
 
-import com.andreamazzarella.http_server.Response;
-import com.andreamazzarella.http_server.Header;
-import com.andreamazzarella.http_server.User;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Response;
+import com.andreamazzarella.http_server.request_response.Header;
+import com.andreamazzarella.http_server.request_response.Request;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.andreamazzarella.http_server.Response.StatusCode._401;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode._401;
 
 public class BasicAuthenticator implements MiddleWare {
 

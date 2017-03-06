@@ -1,5 +1,7 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.utilities;
 
+import com.andreamazzarella.http_server.utilities.DataRange;
+import com.andreamazzarella.http_server.utilities.FileSystem;
 import org.junit.After;
 import org.junit.Test;
 
@@ -8,7 +10,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 

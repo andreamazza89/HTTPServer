@@ -1,7 +1,6 @@
-package com.andreamazzarella.http_server.request;
+package com.andreamazzarella.http_server.request_response;
 
-import com.andreamazzarella.http_server.DataExchange;
-import com.andreamazzarella.http_server.Header;
+import com.andreamazzarella.http_server.socket_connection.DataExchange;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -11,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.andreamazzarella.http_server.Header.*;
+import static com.andreamazzarella.http_server.request_response.Header.*;
 
 public class Request {
 

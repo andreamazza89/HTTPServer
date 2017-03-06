@@ -1,8 +1,8 @@
 package com.andreamazzarella.http_server.support;
 
-import com.andreamazzarella.http_server.Response;
+import com.andreamazzarella.http_server.request_response.Response;
 import com.andreamazzarella.http_server.middleware.MiddleWare;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Request;
 
 public class FakeMiddleWare implements MiddleWare {
 

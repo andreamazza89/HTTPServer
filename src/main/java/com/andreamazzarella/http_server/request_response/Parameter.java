@@ -1,4 +1,4 @@
-package com.andreamazzarella.http_server.request;
+package com.andreamazzarella.http_server.request_response;
 
 public class Parameter {
     private final String key;

@@ -1,6 +1,6 @@
 package com.andreamazzarella.http_server.support;
 
-import com.andreamazzarella.http_server.DataExchange;
+import com.andreamazzarella.http_server.socket_connection.DataExchange;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

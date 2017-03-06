@@ -1,4 +1,6 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.utilities;
+
+import com.andreamazzarella.http_server.request_response.Header;
 
 import java.util.Optional;
 import java.util.regex.Matcher;

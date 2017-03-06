@@ -1,4 +1,4 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.middleware;
 
 public class User {
 

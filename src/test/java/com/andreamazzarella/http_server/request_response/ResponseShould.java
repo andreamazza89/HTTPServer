@@ -1,8 +1,10 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.request_response;
 
+import com.andreamazzarella.http_server.request_response.Header;
+import com.andreamazzarella.http_server.request_response.Response;
 import org.junit.Test;
 
-import static com.andreamazzarella.http_server.Response.StatusCode.*;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode.*;
 import static org.junit.Assert.assertEquals;
 
 public class ResponseShould {

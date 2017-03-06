@@ -1,7 +1,9 @@
 package com.andreamazzarella.http_server;
 
 import com.andreamazzarella.http_server.middleware.MiddleWare;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Request;
+import com.andreamazzarella.http_server.request_response.Response;
+import com.andreamazzarella.http_server.socket_connection.SocketConnection;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

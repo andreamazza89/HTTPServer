@@ -1,8 +1,10 @@
-package com.andreamazzarella.http_server;
+package com.andreamazzarella.http_server.utilities;
 
+import com.andreamazzarella.http_server.utilities.DataRange;
+import com.andreamazzarella.http_server.request_response.Header;
 import org.junit.Test;
 
-import static com.andreamazzarella.http_server.Header.RANGE_HEADER_NAME;
+import static com.andreamazzarella.http_server.request_response.Header.RANGE_HEADER_NAME;
 import static org.junit.Assert.assertEquals;
 
 public class DataRangeShould {

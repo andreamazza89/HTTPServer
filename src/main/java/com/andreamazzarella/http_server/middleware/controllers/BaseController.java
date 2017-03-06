@@ -1,17 +1,17 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
-import com.andreamazzarella.http_server.Header;
-import com.andreamazzarella.http_server.Response;
+import com.andreamazzarella.http_server.request_response.Header;
+import com.andreamazzarella.http_server.request_response.Response;
 import com.andreamazzarella.http_server.middleware.MiddleWare;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Request;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static com.andreamazzarella.http_server.Response.StatusCode._200;
-import static com.andreamazzarella.http_server.Response.StatusCode._405;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode._200;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode._405;
 
 abstract class BaseController implements MiddleWare{
 

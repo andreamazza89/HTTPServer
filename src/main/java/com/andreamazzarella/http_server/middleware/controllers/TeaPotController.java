@@ -1,10 +1,10 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
-import com.andreamazzarella.http_server.Response;
+import com.andreamazzarella.http_server.request_response.Response;
 import com.andreamazzarella.http_server.middleware.MiddleWare;
-import com.andreamazzarella.http_server.request.Request;
+import com.andreamazzarella.http_server.request_response.Request;
 
-import static com.andreamazzarella.http_server.Response.StatusCode._418;
+import static com.andreamazzarella.http_server.request_response.Response.StatusCode._418;
 
 public class TeaPotController implements MiddleWare {
 
