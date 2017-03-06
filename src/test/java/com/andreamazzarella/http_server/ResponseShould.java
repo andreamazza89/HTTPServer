@@ -23,6 +23,12 @@ public class ResponseShould {
     }
 
     @Test
+    public void convertA206ToBytes() {
+        Response response = new Response(_206);
+
+        assertEquals("HTTP/1.1 206 Partial Content\n\n", new String(response.toByteArray()));
+    }
+    @Test
     public void convertA302ToBytes() {
         Response response = new Response(_302);
 

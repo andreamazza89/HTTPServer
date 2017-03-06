@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server.middleware;
 
+import com.andreamazzarella.http_server.DataRange;
 import com.andreamazzarella.http_server.Response;
 import com.andreamazzarella.http_server.request.Request;
 import com.andreamazzarella.http_server.support.FakeFileSystem;
@@ -51,7 +52,7 @@ public class LoggerShould {
         logger.generateResponseFor(otherRequest);
 
         String expectedLog = "LOG_THIS " + resourcePath + " HTTP/1.1\n" + "AND_THIS " + otherResourcePath + " HTTP/1.1\n";
-        assertEquals(expectedLog, new String(fileSystem.getResource(logsPath, null)));
+        assertEquals(expectedLog, new String(fileSystem.getResource(logsPath, new DataRange())));
     }
 
     @Test

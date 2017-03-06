@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
+import com.andreamazzarella.http_server.DataRange;
 import com.andreamazzarella.http_server.FileSystem;
 import com.andreamazzarella.http_server.Response;
 import com.andreamazzarella.http_server.request.Request;
@@ -19,7 +20,7 @@ public class LogsController extends BaseController {
     }
 
     protected Response get(Request request) {
-        byte[] logs = loggingFileSystem.getResource(logsFileName, null);
+        byte[] logs = loggingFileSystem.getResource(logsFileName, new DataRange());
         return new Response(_200).setBody(logs);
     }
 }

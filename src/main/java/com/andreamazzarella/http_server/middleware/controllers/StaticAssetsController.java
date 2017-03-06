@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
+import com.andreamazzarella.http_server.DataRange;
 import com.andreamazzarella.http_server.FileSystem;
 import com.andreamazzarella.http_server.Header;
 import com.andreamazzarella.http_server.Response;
@@ -10,6 +11,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 import static com.andreamazzarella.http_server.Response.StatusCode.*;
 
@@ -31,9 +33,18 @@ public class StaticAssetsController implements MiddleWare {
 
         switch (request.getMethod()) {
             case GET:
-                byte[] responseBody = staticFileSystem.getResource(resourcePath, null);
                 Header contentType = new Header(Header.CONTENT_TYPE_HEADER_NAME, staticFileSystem.getResourceContentType(resourcePath));
-                return new Response(_200).addHeader(contentType).setBody(responseBody);
+                Optional<Header> partialContentHeader = request.getRangeHeader();
+                byte[] fullResourceContent = staticFileSystem.getResource(resourcePath, new DataRange());
+
+                if (partialContentHeader.isPresent()) {
+                    DataRange dataRange = DataRange.parseFromString(partialContentHeader.get());
+                    byte[] partialResourceContent = staticFileSystem.getResource(resourcePath, dataRange);
+                    return new Response(_206).addHeader(contentType).setBody(partialResourceContent);
+                } else {
+                    return new Response(_200).addHeader(contentType).setBody(fullResourceContent);
+                }
+
             case PATCH:
                 if (eTagMatchesResourceContent(request, resourcePath)) {
                     staticFileSystem.addOrReplaceResource(resourcePath, request.getBody().get());
@@ -47,7 +58,7 @@ public class StaticAssetsController implements MiddleWare {
     }
 
     private boolean eTagMatchesResourceContent(Request request, URI resourcePath) {
-        byte[] existingResourceContent = staticFileSystem.getResource(resourcePath, null);
+        byte[] existingResourceContent = staticFileSystem.getResource(resourcePath, new DataRange());
         byte[] encodedExistingResourceContent = encodeContent(existingResourceContent);
         String encodedResourceContentInRequest = request.getIfMatchHeader().get().getValue();
         return convertToHexString(encodedExistingResourceContent).equalsIgnoreCase(encodedResourceContentInRequest);

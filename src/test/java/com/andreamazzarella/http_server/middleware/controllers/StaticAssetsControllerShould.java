@@ -1,5 +1,6 @@
 package com.andreamazzarella.http_server.middleware.controllers;
 
+import com.andreamazzarella.http_server.DataRange;
 import com.andreamazzarella.http_server.Header;
 import com.andreamazzarella.http_server.Response;
 import com.andreamazzarella.http_server.middleware.MiddleWare;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 import static com.andreamazzarella.http_server.Header.CONTENT_LENGTH_HEADER_NAME;
 import static com.andreamazzarella.http_server.Header.IF_MATCH_HEADER_NAME;
+import static com.andreamazzarella.http_server.Header.RANGE_HEADER_NAME;
 import static com.andreamazzarella.http_server.Response.StatusCode.*;
 import static org.junit.Assert.assertEquals;
 
@@ -61,6 +63,27 @@ public class StaticAssetsControllerShould {
 
         assertEquals("image/gif", response.getHeaders().get(0).getValue());
         assertEquals(resourceContent, new String(response.getBody().get()));
+        assertEquals(_200, response.getStatusCode());
+    }
+
+    @Test
+    public void includePartialResourceBodyAndContentTypeInTheResponse() {
+        FakeFileSystem publicFileSystem = new FakeFileSystem(URI.create("./path_to_public_directory"));
+        URI pathToStaticResource = URI.create("/path_to_static_resource");
+        String resourceContent = "Planet Earth is full of resources!";
+        publicFileSystem.addOrReplaceResource(pathToStaticResource, resourceContent.getBytes());
+        publicFileSystem.setContentTypeTo(pathToStaticResource, "text/plain");
+        MiddleWare staticAssetsController = new StaticAssetsController(publicFileSystem);
+        Header rangeHeader = new Header(RANGE_HEADER_NAME, "byte=0-5");
+        List<Header> headers = new ArrayList<>();
+        headers.add(rangeHeader);
+        Request request = new Request("GET " + pathToStaticResource + " HTTP/1.1", headers, Optional.empty());
+
+        Response response = staticAssetsController.generateResponseFor(request);
+
+        assertEquals("text/plain", response.getHeaders().get(0).getValue());
+        assertEquals("Planet", new String(response.getBody().get()));
+        assertEquals(_206, response.getStatusCode());
     }
 
     @Test
@@ -85,7 +108,7 @@ public class StaticAssetsControllerShould {
         Response response = staticAssetsController.generateResponseFor(request);
 
         assertEquals(_204, response.getStatusCode());
-        assertEquals(new String(newContent), new String(publicFileSystem.getResource(pathToStaticResource, null)));
+        assertEquals(new String(newContent), new String(publicFileSystem.getResource(pathToStaticResource, new DataRange())));
     }
 
     @Test
@@ -110,7 +133,7 @@ public class StaticAssetsControllerShould {
         Response response = staticAssetsController.generateResponseFor(request);
 
         assertEquals(_412, response.getStatusCode());
-        assertEquals(new String(resourceContent), new String(publicFileSystem.getResource(pathToStaticResource, null)));
+        assertEquals(new String(resourceContent), new String(publicFileSystem.getResource(pathToStaticResource, new DataRange())));
     }
 
     private byte[] encodeContent(byte[] content) {

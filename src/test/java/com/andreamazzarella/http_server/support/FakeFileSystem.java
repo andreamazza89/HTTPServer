@@ -1,9 +1,11 @@
 package com.andreamazzarella.http_server.support;
 
 import com.andreamazzarella.http_server.ArrayOperations;
+import com.andreamazzarella.http_server.DataRange;
 import com.andreamazzarella.http_server.FileSystem;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,8 +24,10 @@ public class FakeFileSystem extends FileSystem {
     }
 
     @Override
-    public byte[] getResource(URI uri, String dataRange) {
-        return resources.get(uri);
+    public byte[] getResource(URI uri, DataRange dataRange) {
+        byte[] resource = resources.get(uri);
+
+        return Arrays.copyOfRange(resource, dataRange.getStart(resource.length), dataRange.getEnd(resource.length) + 1);
     }
 
     @Override

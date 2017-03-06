@@ -11,6 +11,7 @@ public class Response {
     public enum StatusCode {
         _200("HTTP/1.1 200 OK\n"),
         _204("HTTP/1.1 204 No Content\n"),
+        _206("HTTP/1.1 206 Partial Content\n"),
         _302("HTTP/1.1 302 Found\n"),
         _401("HTTP/1.1 401 Unauthorized\n"),
         _404("HTTP/1.1 404 Not Found\n"),

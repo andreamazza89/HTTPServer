@@ -8,8 +8,6 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class FileSystem {
 
@@ -19,10 +17,10 @@ public class FileSystem {
         this.resourcesBasePath = resourcesPath;
     }
 
-    public byte[] getResource(URI uri, String dataRange) {
+    public byte[] getResource(URI uri, DataRange dataRange) {
         File resource = retrieveResource(uri);
-        int dataStart = parseDataStart(resource, dataRange);
-        int dataEnd = parseDataEnd(resource, dataRange);
+        int dataStart = dataRange.getStart((int)resource.length());
+        int dataEnd = dataRange.getEnd((int)resource.length()) + 1;
 
         try {
             byte[] allResourceContent = Files.readAllBytes(resource.toPath());
@@ -63,36 +61,6 @@ public class FileSystem {
     public void deleteResource(URI uri) {
         File resource = retrieveResource(uri);
         resource.delete();
-    }
-
-    private int parseDataStart(File resource, String dataRange) {
-        if (dataRange == null) {
-            return 0;
-        }
-
-        Pattern pattern = Pattern.compile(".*=(?<startByte>\\d*)-(?<endByte>\\d*).*");
-        Matcher matcher = pattern.matcher(dataRange);
-        matcher.matches();
-        if (matcher.group("startByte").equals("")) {
-            return (int)resource.length() - Integer.parseInt(matcher.group("endByte"));
-        } else {
-           return Integer.parseInt(matcher.group("startByte"));
-        }
-    }
-
-    private int parseDataEnd(File resource, String dataRange) {
-        if (dataRange == null) {
-            return (int)resource.length();
-        }
-
-        Pattern pattern = Pattern.compile(".*=(?<startByte>\\d*)-(?<endByte>\\d*).*");
-        Matcher matcher = pattern.matcher(dataRange);
-        matcher.matches();
-        if (matcher.group("endByte").equals("") || matcher.group("startByte").equals("")) {
-            return (int)resource.length();
-        } else {
-            return Integer.parseInt(matcher.group("endByte")) + 1;
-        }
     }
 
     private File retrieveResource(URI uri) {
