@@ -1,0 +1,16 @@
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/middleware/LoggerShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/support/FakeMiddleWare.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/middleware/RouterShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/ArrayOperationsShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/support/FakeDirectoryExplorer.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/middleware/controllers/BaseControllerShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/utilities/DataRangeShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/support/FakeFileSystem.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/middleware/BasicAuthenticatorShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/request_response/HeaderShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/middleware/controllers/StaticAssetsControllerShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/request_response/ResponseShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/support/FakeSocketConnection.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/utilities/FileSystemShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/request_response/RequestShould.java
+/Users/Andrea/Dropbox/Programming/repos/java/HTTPServer/src/test/java/com/andreamazzarella/http_server/utilities/DirectoryExplorerShould.java
