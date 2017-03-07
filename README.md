@@ -1,6 +1,32 @@
 # HTTP Server
 
-Small HTTP server implementation build as part of my apprenticeship at [8thLight](https://8thlight.com/).
+Small HTTP server implementation built as part of my apprenticeship at [8thLight](https://8thlight.com/).
 
-To run, install java and maven, then compile using `mvn package` and run with
-`java -jar /path/to/the/compiled/jar -p thePortNumberYouWantTheServerOn -d path/to/the/static/assets/folder`
+To use this server, include it as a maven dependency to your project like so:
+
+```
+...
+    <dependencies>
+        <dependency>
+            <groupId>com.andreamazzarella.http_server</groupId>
+            <artifactId>HTTPserver</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>HTTPServer-mvn-repo</id>
+            <url>https://raw.github.com/andreamazza89/HTTPServer/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+...
+```
+
+You can now use the HTTPServer by initialising it with a port number and a middleware stack, then call `start` on it.
+
+See [this repo](https://github.com/andreamazza89/CobServer) for an example usage of it.
